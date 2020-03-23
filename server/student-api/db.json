@@ -1,0 +1,16 @@
+{
+  "students": [
+    {
+      "id": 1,
+      "hoten": "Minh Tu",
+      "namsinh": "2000",
+      "diachi": "Thai Binh"
+    },
+    {
+      "hoten": "Nguyễn Thanh Dương",
+      "namsinh": "1999",
+      "diachi": "Nam Định",
+      "id": 2
+    }
+  ]
+}
