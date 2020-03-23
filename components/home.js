@@ -130,7 +130,7 @@ export default class home extends Component {
             <Image style={styles.imgVang} source={vang} />
           </View>
           <View style={styles.bxhND}>
-            <Text style={styles.txtInBXH}>Vũ Quang Thưởng </Text>
+            <Text style={styles.txtInBXH}>Trần Git Hub </Text>
           </View>
           <View style={styles.bxhQG}>
             <Text style={styles.txtInBXH}> 444.444.444 </Text>
