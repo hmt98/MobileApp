@@ -14,8 +14,7 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import coin from '../images/coin.png';
-import nguoigia from '../images/nguoigia.png';
+import coin from '../../images/coin.png';
 const {width: Width, height} = Dimensions.get('window');
 import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';

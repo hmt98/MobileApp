@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import getUser from '../api/getUser';
 import {
   StyleSheet,
   Text,
@@ -7,23 +9,18 @@ import {
   StatusBar,
   TextInput,
   SafeAreaView,
-  Keybroad,
-  keyboardType,
   TouchableOpacity,
   KeyboardAvoidingView,
-  Button,
-  Alert,
-  AsyncStorage,
-  FlatList,
 } from 'react-native';
-var URL = 'https://5e57414d4c695f001432fb16.mockapi.io/api/tblNguoiDung';
-import logo1 from '../images/logo.png';
-import {getUserFromServer} from '../networking/Server';
+import logo1 from '../../images/logo.png';
 import Entypo from 'react-native-vector-icons/Entypo';
+import {
+  startFetchData,
+  loginSuccess,
+  loginError,
+} from '../redux/actionCreaters';
 
-const userInfor = {email: 'tu', matkhau: '1'};
-
-export default class login extends Component {
+class login extends Component {
   static navigationOptions = ({navigation}) => {
     return {
       headerLeft: () => (
@@ -40,14 +37,37 @@ export default class login extends Component {
   };
   constructor(props) {
     super(props);
-    this.state = {email: '', matkhau: '', token: 'a'};
+    this.state = {username: '', password: ''};
   }
 
-  render(item) {
-    if (this.state.token !== null) {
-      this.props.navigation.navigate('Main');
-    }
+  getLoginStatus() {
+    const {username, password} = this.state;
+    const {myUserName, myError, myIsLoading, myPassWord} = this.props;
+    if (myIsLoading) return 'Đang đăng nhập...';
+    if (myError) return `Vui lòng thử lại!`;
+    if (username === '' || password === '')
+      return 'Vui lòng điền thông tin đăng nhập!';
+    if (`${myUserName}` !== username || `${myPassWord}` !== password)
+      return 'Sai thông tin đăng nhập!';
+    if (`${myUserName}` === username && `${myPassWord}` === password)
+      return 'Thành công';
+  }
 
+  login() {
+    const {username, password} = this.state;
+    this.props.startFetchData();
+    getUser()
+      .then(res => this.props.loginSuccess(res['email'], res['matkhau']))
+      .catch(() => this.props.loginError());
+  }
+
+  // login() {
+  //   getUser()
+  //     .then(user => console.log(user))
+  //     .catch(err => console.log(err));
+  // }
+
+  render(item) {
     const {navigate} = this.props.navigation;
     return (
       <SafeAreaView behavior="padding" style={styles.container}>
@@ -61,8 +81,8 @@ export default class login extends Component {
               style={styles.input}
               placeholder="Số điện thoại hoặc email"
               placeholderTextColor="#A0A0A0"
-              onChangeText={email => this.setState({email})}
-              value={this.state.email}
+              onChangeText={text => this.setState({username: text})}
+              value={this.state.username}
               keyboardType="email-address"
             />
           </View>
@@ -72,14 +92,18 @@ export default class login extends Component {
               placeholder="Mật khẩu"
               keyboardType="default"
               placeholderTextColor="#A0A0A0"
-              onChangeText={matkhau => this.setState({matkhau})}
-              value={this.state.matkhau}
+              onChangeText={text => this.setState({password: text})}
+              value={this.state.password}
               secureTextEntry={true}
             />
           </View>
-
+          <View style={styles.loginStatus}>
+            <Text style={styles.txtLoginStatus}>{this.getLoginStatus()}</Text>
+          </View>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={this._login} style={styles.btnLogin}>
+            <TouchableOpacity
+              onPress={this.login.bind(this)}
+              style={styles.btnLogin}>
               <Text style={styles.textbtnLogin}>Đăng nhập</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -103,36 +127,6 @@ export default class login extends Component {
       </SafeAreaView>
     );
   }
-
-  // ktra = async () => {
-  //   if (this.state.taikhoan === '') {
-  //     Alert.alert('Error!', 'Bạn chưa nhập tài khoản!');
-  //   } else if (this.state.matkhau === '') {
-  //     Alert.alert('Error!', 'Bạn chưa nhập mật khẩu!');
-  //   } else {
-  //     Alert.alert('Đăng nhập thành công!');
-  //     this.props.navigation.navigate('Home');
-  //   }
-  // };
-
-  _login = async () => {
-    if (this.state.email === '') {
-      Alert.alert('Error!', 'Bạn chưa nhập tài khoản!');
-    } else if (this.state.matkhau === '') {
-      Alert.alert('Error!', 'Bạn chưa nhập mật khẩu!');
-    } else {
-      if (
-        userInfor.email === this.state.email &&
-        userInfor.matkhau === this.state.matkhau
-      ) {
-        this.state.token = 'a';
-        alert('Đăng nhập thành công!');
-        this.props.navigation.navigate('Main');
-      } else {
-        alert('Thông tin tài khoản hoặc mật khẩu không đúng!');
-      }
-    }
-  };
 }
 const styles = StyleSheet.create({
   container: {
@@ -205,4 +199,26 @@ const styles = StyleSheet.create({
     marginTop: -10,
     textAlign: 'center',
   },
+  loginStatus: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  txtLoginStatus: {
+    color: '#545454',
+    fontSize: 15,
+  },
 });
+
+function mapStateToProps(state) {
+  return {
+    myUserName: state.username,
+    myPassWord: state.password,
+    myError: state.err,
+    myIsLoading: state.isLoading,
+  };
+}
+export default connect(mapStateToProps, {
+  startFetchData,
+  loginSuccess,
+  loginError,
+})(login);

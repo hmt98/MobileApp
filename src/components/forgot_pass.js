@@ -16,8 +16,8 @@ import {
   ToastAndroid,
   Alert,
 } from 'react-native';
-import logo from '../images/logo.png';
-import mail from '../images/mail.png';
+import logo from '../../images/logo.png';
+import mail from '../../images/mail.png';
 
 export default class forgot_pass extends Component {
   constructor(props) {

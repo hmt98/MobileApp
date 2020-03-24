@@ -18,7 +18,7 @@ import {
   FlatList,
 } from 'react-native';
 import datathongbao from '../flatlist/datathongbao';
-import logo from '../images/logo.png';
+import logo from '../../images/logo.png';
 export default class thongbao extends Component {
   render() {
     return (

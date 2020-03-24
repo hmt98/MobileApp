@@ -11,8 +11,7 @@ import {
   ScrollView,
 } from 'react-native';
 var {width, height} = Dimensions.get('window');
-import {getBlogFromServer} from '../networking/Server';
-import avatar from '../images/canhan.png';
+import {getBlogFromServer} from '../../networking/Server';
 import Item_blog from './item_blog';
 
 export default class thongbao extends Component {

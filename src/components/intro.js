@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
-
+import logo from '../../images/logo.png';
 export default class intro extends Component {
   render() {
     const {navigate} = this.props.navigation;
     return (
       <View style={styles.container}>
         <View style={styles.logo}>
-          <Image source={require('../images/logo.png')}></Image>
+          <Image source={logo} />
         </View>
         <View>
           <Text style={styles.title}>Small Giving</Text>

@@ -17,12 +17,12 @@ import {
   ImageBackground,
 } from 'react-native';
 
-import heart from '../images/heart.png';
-import khaosat from '../images/khaosat.png';
-import iconHeart from '../images/iconHeart.png';
-import kimcuong from '../images/kimcuong.png';
-import vang from '../images/vang.png';
-import bac from '../images/bac.png';
+import heart from '../../images/heart.png';
+import khaosat from '../../images/khaosat.png';
+import iconHeart from '../../images/iconHeart.png';
+import kimcuong from '../../images/kimcuong.png';
+import vang from '../../images/vang.png';
+import bac from '../../images/bac.png';
 import FontAwesomefrom from 'react-native-vector-icons/FontAwesome';
 
 export default class home extends Component {

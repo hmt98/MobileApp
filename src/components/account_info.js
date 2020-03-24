@@ -17,8 +17,8 @@ import {
   Dimensions,
 } from 'react-native';
 var {width, height} = Dimensions.get('window');
-import heart from '../images/heart.png';
-import canhan from '../images/canhan.png';
+import heart from '../../images/heart.png';
+import canhan from '../../images/canhan.png';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
 

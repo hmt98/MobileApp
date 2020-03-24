@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 var {width, height} = Dimensions.get('window');
-import Anh from '../images/canhan.png';
+import Anh from '../../images/canhan.png';
 import Entypo from 'react-native-vector-icons/Entypo';
 
 export default class menu extends React.Component {

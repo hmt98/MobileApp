@@ -15,8 +15,8 @@ import {
   Button,
   ToastAndroid,
 } from 'react-native';
-import nguoigia from '../images/nguoigia.png';
-import coin from '../images/coin.png';
+import nguoigia from '../../images/nguoigia.png';
+import coin from '../../images/coin.png';
 export default class changepass extends Component {
   render() {
     return (

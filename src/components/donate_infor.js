@@ -16,11 +16,8 @@ import * as Animatable from 'react-native-animatable';
 import Carousel, {ParallaxImage} from 'react-native-snap-carousel';
 import * as Progress from 'react-native-progress';
 const {width: screenWidth, height} = Dimensions.get('window');
-import {getBlogFromServer} from '../networking/Server';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import coin from '../images/coin.png';
+import {getBlogFromServer} from '../../networking/Server';
+import coin from '../../images/coin.png';
 import Donate_infor_items from './donate_infor_items';
 
 export default class donate_infor extends Component {

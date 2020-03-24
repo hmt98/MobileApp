@@ -1,13 +1,14 @@
-import React, {Component} from 'react';
+import React from 'react';
+import {connect} from 'react-redux';
 import {View, Image} from 'react-native';
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
-import {createBottomTabNavigator, tabBarOptions} from 'react-navigation-tabs';
+import {createBottomTabNavigator} from 'react-navigation-tabs';
 import {createDrawerNavigator} from 'react-navigation-drawer';
-import quyengop from './images/quyengop.png';
-import thongbao from './images/account.png';
-import newIcon from './images/news.png';
-import homeIcon from './images/Home1.png';
+import quyengop from '../images/quyengop.png';
+import thongbao from '../images/account.png';
+import newIcon from '../images/news.png';
+import homeIcon from '../images/Home1.png';
 
 import intro from './components/intro';
 import login from './components/login';
@@ -338,4 +339,4 @@ const Switch = createSwitchNavigator(
   },
 );
 
-export default createAppContainer(Switch);
+export default connect()(createAppContainer(Switch));

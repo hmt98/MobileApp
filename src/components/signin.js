@@ -15,7 +15,7 @@ import {
   Alert,
 } from 'react-native';
 
-import logo from '../images/logo.png';
+import logo from '../../images/logo.png';
 import {Easing} from 'react-native-reanimated';
 
 var URL = 'https://5e57414d4c695f001432fb16.mockapi.io/api/tblNguoiDung';

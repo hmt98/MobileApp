@@ -11,7 +11,7 @@ import {
   ScrollView,
 } from 'react-native';
 var {width, height} = Dimensions.get('window');
-import avatar from '../images/canhan.png';
+import avatar from '../../images/canhan.png';
 export default class Item_blog extends Component {
   constructor(props) {
     super(props);
