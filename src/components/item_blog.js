@@ -5,10 +5,7 @@ import {
   View,
   Image,
   TouchableOpacity,
-  RefreshControl,
-  FlatList,
   Dimensions,
-  ScrollView,
 } from 'react-native';
 var {width, height} = Dimensions.get('window');
 import avatar from '../../images/canhan.png';

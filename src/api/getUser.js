@@ -1,7 +1,17 @@
-const URL = 'https://5e57414d4c695f001432fb16.mockapi.io/api/tblNguoiDung/6';
+const URL = 'https://jwtdemo.000webhostapp.com';
 
-function getUser() {
-  return fetch(URL).then(res => res.json());
+function getUser(username, password) {
+  return fetch(URL, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      USERNAME: username,
+      PASSWORD: password,
+    }),
+  }).then(response => response.json());
 }
 
 export default getUser;

@@ -41,23 +41,38 @@ class login extends Component {
     this.state = {username: '', password: ''};
   }
 
+  componentWillReceiveProps(nextProps) {
+    //kiểm tra xem có kết nối mạng chưa
+    if (nextProps.myError) {
+      Alert.alert('Error!', 'Vui lòng kiểm tra kết nối mạng!');
+    }
+    //kiểm tra xem thông tin đăng nhập đúng chưa
+    if (nextProps.myToken === 'ERROR') {
+      Alert.alert('Error!', 'Thông tin đăng nhập không chính xác!');
+    }
+    if (nextProps.myToken !== 'ERROR' && nextProps.myToken !== null) {
+      Alert.alert('Đăng nhập thành công!');
+      this.props.navigation.navigate('Main');
+    }
+  }
+
+  getLoginStatus() {
+    const {myUserName, myError, myPassWord, myToken} = this.props;
+    if (myError) return `Vui lòng kiểm tra lại kết nối mạng!`;
+    else return `${myUserName},${myPassWord} là ${myToken} `;
+  }
+
   login() {
     const {username, password} = this.state;
-    const {myUserName, myError, myToken, myPassWord} = this.props;
-    this.props.startFetchData();
-    getUser()
-      .then(res => this.props.loginSuccess(res['email'], res['matkhau']))
-      .catch(() => this.props.loginError());
-    // if (myIsLoading) Alert.alert('Error!', 'Bạn chưa nhập email!');
-    if (myError) Alert.alert('Error!', 'Vui lòng kiểm tra lại kết nối mạng!');
-    else if (username === '' || password === '')
+    //kiểm tra xem điền thông tin đăng nhập chưa
+    if (username === '' || password === '') {
       Alert.alert('Error!', 'Vui lòng điền thông tin đăng nhập!');
-    else if (`${myUserName}` !== username || `${myPassWord}` !== password)
-      Alert.alert('Error!', 'Sai thông tin đăng nhập!');
-    else if (`${myUserName}` === username && `${myPassWord}` === password) {
-      Alert.alert('Đăng nhập thành công!');
-      this.props.navigation.navigate('Main', {myToken});
+      return;
     }
+    this.props.startFetchData();
+    getUser(username, password)
+      .then(res => this.props.loginSuccess(username, password, res['token']))
+      .catch(() => this.props.loginError());
   }
 
   render(item) {
@@ -190,12 +205,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   loginStatus: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  txtLoginStatus: {
-    color: '#545454',
+    alignSelf: 'center',
     fontSize: 15,
+    paddingTop: 5,
   },
 });
 

@@ -4,17 +4,12 @@ import {
   Text,
   View,
   Image,
-  TouchableWithoutFeedback,
-  StatusBar,
-  TextInput,
   SafeAreaView,
-  Keybroad,
-  keyboardType,
   TouchableOpacity,
-  KeyboardAvoidingView,
-  Button,
-  ToastAndroid,
   ImageBackground,
+  FlatList,
+  RefreshControl,
+  Dimensions,
 } from 'react-native';
 
 import heart from '../../images/heart.png';
@@ -23,142 +18,93 @@ import iconHeart from '../../images/iconHeart.png';
 import kimcuong from '../../images/kimcuong.png';
 import vang from '../../images/vang.png';
 import bac from '../../images/bac.png';
-import FontAwesomefrom from 'react-native-vector-icons/FontAwesome';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import {getBXHFromServer} from '../../networking/Server';
+import Home_item from './home_item';
+var {Width, Height} = Dimensions.get('window');
 
 export default class home extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      refreshing: false,
+      bxhFromServer: [],
+      readfull: false,
+    };
+  }
+  componentDidMount() {
+    this.refreshDataFromServer();
+  }
+  refreshDataFromServer = () => {
+    this.setState({refreshing: true});
+    getBXHFromServer()
+      .then(blog => {
+        this.setState({bxhFromServer: blog});
+        this.setState({refreshing: false});
+      })
+      .catch(error => {
+        this.setState({bxhFromServer: []});
+        this.setState({refreshing: false});
+      });
+  };
+  onRefresh = () => {
+    this.refreshDataFromServer();
+  };
+
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <ImageBackground style={styles.imgNguoigia} source={heart}>
-          <TouchableOpacity onPress={() => this.props.navigation.openDrawer()}>
-            <FontAwesomefrom
-              style={styles.menuIcon}
-              name={'bars'}
-              size={40}
-              color={'#AE1F17'}
-            />
-          </TouchableOpacity>
-        </ImageBackground>
-        <View style={styles.cover}>
-          <TouchableOpacity style={styles.left}>
-            <Image style={styles.imgKS} source={khaosat} />
-            <Text style={styles.txtLeft}> Làm phiếu khảo sát </Text>
-          </TouchableOpacity>
-          <View style={styles.right}>
-            <Image style={styles.imgKS} source={iconHeart} />
-            <Text style={styles.txtLeft}>40.000 </Text>
+        <View style={styles.header}>
+          <ImageBackground style={styles.headerImage} source={heart}>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.openDrawer()}>
+              <FontAwesome
+                style={styles.menuIcon}
+                name={'bars'}
+                size={40}
+                color={'#AE1F17'}
+              />
+            </TouchableOpacity>
+          </ImageBackground>
+        </View>
+        <View style={styles.between}>
+          <View style={styles.betweenLeft}>
+            <TouchableOpacity style={styles.betweenLeftTO}>
+              <AntDesign style={styles.imgKS} name={'profile'} size={35} />
+              <Text style={styles.txtKS}> Làm phiếu khảo sát </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.betweenRight}>
+            <Text style={styles.thank}>SMALL GIVING</Text>
           </View>
         </View>
-
-        <View style={styles.BXH}>
-          <Text style={styles.txtBXH}>BẢNG XẾP HẠNG</Text>
-        </View>
-
-        <View style={styles.coverDown}>
-          <View style={styles.leftDown1}>
-            <Text style={styles.txtDown}> HUY HIỆU </Text>
+        <View style={styles.footer}>
+          <View style={styles.bxh}>
+            <Text style={styles.txtBXH}>BẢNG XẾP HẠNG</Text>
           </View>
-          <View style={styles.leftDown2}>
-            <Text style={styles.txtDown}>NGƯỜI DÙNG </Text>
+          <View style={styles.colName}>
+            <View style={styles.colNameLeft}>
+              <Text style={styles.txtColName}>HUY HIỆU</Text>
+            </View>
+            <View style={styles.colNameBetween}>
+              <Text style={styles.txtColName}>NGƯỜI DÙNG</Text>
+            </View>
+            <View style={styles.colNameRight}>
+              <Text style={styles.txtColName}>QUYÊN GÓP</Text>
+            </View>
           </View>
-          <View style={styles.leftDown3}>
-            <Text style={styles.txtDown}>QUYÊN GÓP </Text>
-          </View>
-        </View>
-
-        <View style={styles.coverBXH}>
-          <View style={styles.bxhHH}>
-            <Image style={styles.imgKC} source={kimcuong} />
-          </View>
-          <View style={styles.bxhND}>
-            <Text style={styles.txtInBXH}>Hà Minh Tú </Text>
-          </View>
-          <View style={styles.bxhQG}>
-            <Text style={styles.txtInBXH}> 999.999.999 </Text>
-          </View>
-        </View>
-
-        <View style={styles.coverBXH}>
-          <View style={styles.bxhHH}>
-            <Image style={styles.imgKC} source={kimcuong} />
-          </View>
-          <View style={styles.bxhND}>
-            <Text style={styles.txtInBXH}>Nguyễn Thanh Dương </Text>
-          </View>
-          <View style={styles.bxhQG}>
-            <Text style={styles.txtInBXH}> 888.888.888 </Text>
-          </View>
-        </View>
-
-        <View style={styles.coverBXH}>
-          <View style={styles.bxhHH}>
-            <Image style={styles.imgKC} source={kimcuong} />
-          </View>
-          <View style={styles.bxhND}>
-            <Text style={styles.txtInBXH}>Nguyễn Thị Phấn </Text>
-          </View>
-          <View style={styles.bxhQG}>
-            <Text style={styles.txtInBXH}> 777.777.777 </Text>
-          </View>
-        </View>
-
-        <View style={styles.coverBXH}>
-          <View style={styles.bxhHH}>
-            <Image style={styles.imgVang} source={vang} />
-          </View>
-          <View style={styles.bxhND}>
-            <Text style={styles.txtInBXH}>Vũ Hồng Phượng </Text>
-          </View>
-          <View style={styles.bxhQG}>
-            <Text style={styles.txtInBXH}> 666.666.666 </Text>
-          </View>
-        </View>
-        <View style={styles.coverBXH}>
-          <View style={styles.bxhHH}>
-            <Image style={styles.imgVang} source={vang} />
-          </View>
-          <View style={styles.bxhND}>
-            <Text style={styles.txtInBXH}>Bùi Minh Thu </Text>
-          </View>
-          <View style={styles.bxhQG}>
-            <Text style={styles.txtInBXH}> 555.555.555 </Text>
-          </View>
-        </View>
-
-        <View style={styles.coverBXH}>
-          <View style={styles.bxhHH}>
-            <Image style={styles.imgVang} source={vang} />
-          </View>
-          <View style={styles.bxhND}>
-            <Text style={styles.txtInBXH}>Trần Git Hub </Text>
-          </View>
-          <View style={styles.bxhQG}>
-            <Text style={styles.txtInBXH}> 444.444.444 </Text>
-          </View>
-        </View>
-
-        <View style={styles.coverBXH}>
-          <View style={styles.bxhHH}>
-            <Image style={styles.imgVang} source={bac} />
-          </View>
-          <View style={styles.bxhND}>
-            <Text style={styles.txtInBXH}>Nguyễn Thị Tuyến Dung </Text>
-          </View>
-          <View style={styles.bxhQG}>
-            <Text style={styles.txtInBXH}> 333.333.333 </Text>
-          </View>
-        </View>
-
-        <View style={styles.coverBXH}>
-          <View style={styles.bxhHH}>
-            <Image style={styles.imgVang} source={bac} />
-          </View>
-          <View style={styles.bxhND}>
-            <Text style={styles.txtInBXH}>Trần Phúc Chiêu </Text>
-          </View>
-          <View style={styles.bxhQG}>
-            <Text style={styles.txtInBXH}> 222.222.222 </Text>
-          </View>
+          <FlatList
+            data={this.state.bxhFromServer}
+            renderItem={({item, index}) => <Home_item item={item} />}
+            keyExtractor={(item, index) => item.ID}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this.onRefresh}
+              />
+            }
+          />
         </View>
       </SafeAreaView>
     );
@@ -167,106 +113,90 @@ export default class home extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-    backgroundColor: 'white',
   },
-  imgNguoigia: {
-    height: 270,
-    width: 420,
+  header: {
+    flex: 4,
+    backgroundColor: 'red',
   },
-  imgKS: {
-    height: 50,
-    width: 50,
-  },
-  cover: {
-    flex: 1,
+  between: {
+    flex: 0.8,
     flexDirection: 'row',
   },
-  left: {
-    flex: 5,
-    flexDirection: 'row',
-    marginLeft: 20,
+  footer: {
+    flex: 4,
   },
-  right: {
-    flex: 5,
-    flexDirection: 'row',
-    marginLeft: 90,
-  },
-  txtLeft: {
-    paddingTop: 15,
-    fontSize: 15,
-    fontWeight: 'bold',
-  },
-  BXH: {
-    height: 30,
+  headerImage: {
     width: '100%',
-    marginHorizontal: 50,
-    backgroundColor: '#AE1F17',
-    justifyContent: 'center',
-    alignItems: 'center',
+    height: '100%',
   },
-  txtBXH: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 15,
+  menuIcon: {
+    margin: '5%',
   },
-  coverDown: {
-    flex: 1,
-    flexDirection: 'row',
-    marginLeft: 20,
-    paddingTop: 5,
+  betweenLeft: {
+    flex: 6,
+    borderRightWidth: 2,
+    borderRightColor: '#AE1F17',
   },
-  leftDown1: {
+  betweenRight: {
     flex: 4,
     flexDirection: 'row',
+    alignItems: 'center',
   },
-  leftDown2: {
-    flex: 6,
+  betweenLeftTO: {
+    flex: 1,
     flexDirection: 'row',
-    marginLeft: 20,
+    alignItems: 'center',
+    marginLeft: '5%',
   },
-  leftDown3: {
-    flex: 3,
-    flexDirection: 'row',
-    paddingRight: 10,
+  imgKS: {
+    flex: 2,
   },
-  txtDown: {
+  txtKS: {
+    flex: 8,
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  thank: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#AE1F17',
   },
-  coverBXH: {
-    flex: 1,
-    flexDirection: 'row',
-    marginLeft: 20,
-    marginTop: -20,
+  bxh: {
+    width: '100%',
+    height: '12%',
+    backgroundColor: '#AE1F17',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  bxhHH: {
-    flex: 4,
-    flexDirection: 'row',
+  txtBXH: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: 'bold',
   },
-  bxhND: {
-    flex: 6,
+  colName: {
     flexDirection: 'row',
+    height: '12%',
   },
-  bxhQG: {
+  colNameLeft: {
     flex: 3,
-    flexDirection: 'row',
-    marginRight: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  imgKC: {
-    height: 30,
-    width: 30,
-    marginLeft: 20,
-    marginTop: -5,
+  colNameBetween: {
+    flex: 3,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  imgVang: {
-    height: 33,
-    width: 33,
-    marginLeft: 17,
-    marginTop: -5,
+  colNameRight: {
+    flex: 3,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  menuIcon: {
-    margin: 15,
+  txtColName: {
+    color: '#AE1F17',
+    fontWeight: 'bold',
+    fontSize: 15,
   },
 });

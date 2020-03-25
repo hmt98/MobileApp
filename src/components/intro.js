@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 class intro extends Component {
   checkToken() {
     const {myToken} = this.props;
-    if (myToken !== '') this.props.navigation.navigate('Main');
+    if (myToken !== null) this.props.navigation.navigate('Main');
     else this.props.navigation.navigate('Login');
   }
 
@@ -26,7 +26,8 @@ class intro extends Component {
         </View>
         <View>
           <TouchableOpacity
-            onPress={this.checkToken.bind(this)}
+            onPress={() => this.props.navigation.navigate('Main')}
+            // onPress={this.checkToken.bind(this)}
             style={styles.buttonContainer}>
             <Text style={styles.textButton}>Tiếp tục</Text>
           </TouchableOpacity>
