@@ -2,27 +2,27 @@ import {createStore} from 'redux';
 const defaultStateLogin = {
   username: null,
   password: null,
-  isLoading: false,
+  token: '',
   err: false,
 };
 
 const reducer = (state = defaultStateLogin, action) => {
   switch (action.type) {
     case 'START_FETCH':
-      return {username: null, password: null, isLoading: true, err: false};
+      return {username: null, password: null, token: '', err: false};
     case 'LOGIN_SUCCESS':
       return {
         username: action.username,
         password: action.password,
         err: false,
-        isLoading: false,
+        token: 'a',
       };
     case 'LOGIN_ERROR':
       return {
         username: null,
         password: null,
         err: true,
-        isLoading: false,
+        token: '',
       };
     default:
       return state;

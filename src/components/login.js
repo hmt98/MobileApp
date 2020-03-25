@@ -11,6 +11,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Alert,
 } from 'react-native';
 import logo1 from '../../images/logo.png';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -40,32 +41,24 @@ class login extends Component {
     this.state = {username: '', password: ''};
   }
 
-  getLoginStatus() {
-    const {username, password} = this.state;
-    const {myUserName, myError, myIsLoading, myPassWord} = this.props;
-    if (myIsLoading) return 'Đang đăng nhập...';
-    if (myError) return `Vui lòng thử lại!`;
-    if (username === '' || password === '')
-      return 'Vui lòng điền thông tin đăng nhập!';
-    if (`${myUserName}` !== username || `${myPassWord}` !== password)
-      return 'Sai thông tin đăng nhập!';
-    if (`${myUserName}` === username && `${myPassWord}` === password)
-      return 'Thành công';
-  }
-
   login() {
     const {username, password} = this.state;
+    const {myUserName, myError, myToken, myPassWord} = this.props;
     this.props.startFetchData();
     getUser()
       .then(res => this.props.loginSuccess(res['email'], res['matkhau']))
       .catch(() => this.props.loginError());
+    // if (myIsLoading) Alert.alert('Error!', 'Bạn chưa nhập email!');
+    if (myError) Alert.alert('Error!', 'Vui lòng kiểm tra lại kết nối mạng!');
+    else if (username === '' || password === '')
+      Alert.alert('Error!', 'Vui lòng điền thông tin đăng nhập!');
+    else if (`${myUserName}` !== username || `${myPassWord}` !== password)
+      Alert.alert('Error!', 'Sai thông tin đăng nhập!');
+    else if (`${myUserName}` === username && `${myPassWord}` === password) {
+      Alert.alert('Đăng nhập thành công!');
+      this.props.navigation.navigate('Main', {myToken});
+    }
   }
-
-  // login() {
-  //   getUser()
-  //     .then(user => console.log(user))
-  //     .catch(err => console.log(err));
-  // }
 
   render(item) {
     const {navigate} = this.props.navigation;
@@ -96,9 +89,6 @@ class login extends Component {
               value={this.state.password}
               secureTextEntry={true}
             />
-          </View>
-          <View style={styles.loginStatus}>
-            <Text style={styles.txtLoginStatus}>{this.getLoginStatus()}</Text>
           </View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
@@ -214,7 +204,7 @@ function mapStateToProps(state) {
     myUserName: state.username,
     myPassWord: state.password,
     myError: state.err,
-    myIsLoading: state.isLoading,
+    myToken: state.token,
   };
 }
 export default connect(mapStateToProps, {

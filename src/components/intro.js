@@ -1,7 +1,14 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
 import logo from '../../images/logo.png';
-export default class intro extends Component {
+import {connect} from 'react-redux';
+class intro extends Component {
+  checkToken() {
+    const {myToken} = this.props;
+    if (myToken !== '') this.props.navigation.navigate('Main');
+    else this.props.navigation.navigate('Login');
+  }
+
   render() {
     const {navigate} = this.props.navigation;
     return (
@@ -19,9 +26,7 @@ export default class intro extends Component {
         </View>
         <View>
           <TouchableOpacity
-            onPress={() => {
-              navigate('Login');
-            }}
+            onPress={this.checkToken.bind(this)}
             style={styles.buttonContainer}>
             <Text style={styles.textButton}>Tiếp tục</Text>
           </TouchableOpacity>
@@ -80,3 +85,9 @@ const styles = StyleSheet.create({
     fontSize: 30,
   },
 });
+function mapStateToProps(state) {
+  return {
+    myToken: state.token,
+  };
+}
+export default connect(mapStateToProps)(intro);

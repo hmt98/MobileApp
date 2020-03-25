@@ -4,19 +4,14 @@ import {
   Text,
   View,
   Image,
-  TouchableWithoutFeedback,
-  StatusBar,
   TextInput,
   SafeAreaView,
-  Keybroad,
-  keyboardType,
   TouchableOpacity,
   KeyboardAvoidingView,
   Alert,
 } from 'react-native';
-
+import Entypo from 'react-native-vector-icons/Entypo';
 import logo from '../../images/logo.png';
-import {Easing} from 'react-native-reanimated';
 
 var URL = 'https://5e57414d4c695f001432fb16.mockapi.io/api/tblNguoiDung';
 
@@ -25,7 +20,20 @@ export default class sigin extends Component {
     super(props);
     this.state = {email: '', sdt: '', matkhau: ''};
   }
-
+  static navigationOptions = ({navigation}) => {
+    return {
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Entypo
+            name="chevron-left"
+            color="#ffffff"
+            size={25}
+            style={{paddingLeft: 10}}
+          />
+        </TouchableOpacity>
+      ),
+    };
+  };
   render() {
     const {navigate} = this.props.navigation;
     return (
