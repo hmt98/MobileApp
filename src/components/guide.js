@@ -10,7 +10,7 @@ import {
 var {width, height} = Dimensions.get('window');
 import Anh from '../../images/canhan.png';
 import Entypo from 'react-native-vector-icons/Entypo';
-
+import Swiper from 'react-native-swiper';
 export default class menu extends React.Component {
   static navigationOptions = ({navigation}) => {
     return {

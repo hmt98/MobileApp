@@ -1,5 +1,8 @@
-export function startFetchData() {
-  return {type: 'START_FETCH'};
+export function startGetToken() {
+  return {type: 'GET_TOKEN'};
+}
+export function startSetToken() {
+  return {type: 'SET_TOKEN'};
 }
 
 export function loginSuccess(username, password, token) {

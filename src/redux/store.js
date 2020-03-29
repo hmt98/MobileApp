@@ -8,21 +8,19 @@ const defaultStateLogin = {
 
 const reducer = (state = defaultStateLogin, action) => {
   switch (action.type) {
-    case 'START_FETCH':
-      return {username: null, password: null, token: null, err: false};
+    case 'GET_TOKEN': //LẤY TOKEN TỪ LOCAL RA
+      return {...state};
     case 'LOGIN_SUCCESS':
       return {
+        ...state,
         username: action.username,
         password: action.password,
-        err: false,
         token: action.token,
       };
     case 'LOGIN_ERROR':
       return {
-        username: null,
-        password: null,
+        ...state,
         err: true,
-        token: null,
       };
     default:
       return state;

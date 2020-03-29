@@ -1,13 +1,24 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  AsyncStorage,
+  Alert,
+} from 'react-native';
 import logo from '../../images/logo.png';
 import {connect} from 'react-redux';
 class intro extends Component {
-  checkToken() {
-    const {myToken} = this.props;
-    if (myToken !== null) this.props.navigation.navigate('Main');
-    else this.props.navigation.navigate('Login');
-  }
+  checkToken = async () => {
+    var tokenAsync = await AsyncStorage.getItem('tokenLogin');
+    if (tokenAsync === null) {
+      this.props.navigation.navigate('Login');
+      return;
+    }
+    if (tokenAsync !== null) this.props.navigation.navigate('Main');
+  };
 
   render() {
     const {navigate} = this.props.navigation;
@@ -26,8 +37,10 @@ class intro extends Component {
         </View>
         <View>
           <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('Main')}
-            // onPress={this.checkToken.bind(this)}
+            // onPress={() => this.props.navigation.navigate('Main')}
+            onPress={() => {
+              this.checkToken();
+            }}
             style={styles.buttonContainer}>
             <Text style={styles.textButton}>Tiếp tục</Text>
           </TouchableOpacity>

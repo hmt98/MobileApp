@@ -1,4 +1,5 @@
 const apiBlog = 'https://apiofblog.000webhostapp.com/';
+// 'https://misappmobile.000webhostapp.com/Tinhoatdong/tinhoatdong.php';
 const apiNguoiDung =
   'https://misappmobile.000webhostapp.com/Bangxephang/bangxephang.php';
 

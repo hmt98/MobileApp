@@ -12,13 +12,13 @@ import {
 } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import logo from '../../images/logo.png';
-
+import register from '../api/register';
 var URL = 'https://5e57414d4c695f001432fb16.mockapi.io/api/tblNguoiDung';
 
 export default class sigin extends Component {
   constructor(props) {
     super(props);
-    this.state = {email: '', sdt: '', matkhau: ''};
+    this.state = {name: '', sdt: '', email: '', matkhau: ''};
   }
   static navigationOptions = ({navigation}) => {
     return {
@@ -34,6 +34,37 @@ export default class sigin extends Component {
       ),
     };
   };
+
+  onSuccess() {
+    Alert.alert(
+      'Notice',
+      'Sign up successfully',
+      [{text: 'OK', onPress: this.props.navigation.navigate('Login')}],
+      {cancelable: false},
+    );
+  }
+
+  onFail() {
+    Alert.alert(
+      'Notice',
+      'Email has been used by other',
+      [{text: 'OK', onPress: () => this.removeEmail.bind(this)}],
+      {cancelable: false},
+    );
+  }
+
+  removeEmail() {
+    this.setState({email: ''});
+  }
+
+  registerUser() {
+    const {name, sdt, email, password} = this.state;
+    register(name, sdt, email, password).then(res => {
+      if (res === 'THANH_CONG') return this.onSuccess();
+      this.onFail();
+    });
+  }
+
   render() {
     const {navigate} = this.props.navigation;
     return (
@@ -50,10 +81,10 @@ export default class sigin extends Component {
           <View style={styles.email}>
             <TextInput
               style={styles.ipEmail}
-              placeholder="Nhập email"
+              placeholder="Nhập họ tên"
               placeholderTextColor="#BAA8A8"
-              onChangeText={email => this.setState({email})}
-              value={this.state.email}
+              onChangeText={name => this.setState({name})}
+              value={this.state.name}
               keyboardType="email-address"
             />
           </View>
@@ -65,6 +96,17 @@ export default class sigin extends Component {
               placeholderTextColor="#BAA8A8"
               onChangeText={sdt => this.setState({sdt})}
               value={this.state.sdt}
+              keyboardType="email-address"
+            />
+          </View>
+          {/*---Text nhập email*/}
+          <View style={styles.email}>
+            <TextInput
+              style={styles.ipEmail}
+              placeholder="Nhập email"
+              placeholderTextColor="#BAA8A8"
+              onChangeText={email => this.setState({email})}
+              value={this.state.email}
               keyboardType="email-address"
             />
           </View>
@@ -94,7 +136,9 @@ export default class sigin extends Component {
           </View>
 
           <View style={{paddingTop: 15}}>
-            <TouchableOpacity onPress={this.sigin} style={styles.btnDangki}>
+            <TouchableOpacity
+              onPress={this.registerUser.bind(this)}
+              style={styles.btnDangki}>
               <Text style={styles.ttdangki}>Đăng ký</Text>
             </TouchableOpacity>
             <View style={styles.btnThem}>

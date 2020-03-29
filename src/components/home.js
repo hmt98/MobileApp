@@ -3,15 +3,15 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
   SafeAreaView,
   TouchableOpacity,
   ImageBackground,
   FlatList,
   RefreshControl,
   Dimensions,
+  Alert,
+  AsyncStorage,
 } from 'react-native';
-
 import heart from '../../images/heart.png';
 import khaosat from '../../images/khaosat.png';
 import iconHeart from '../../images/iconHeart.png';
@@ -23,8 +23,9 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {getBXHFromServer} from '../../networking/Server';
 import Home_item from './home_item';
 var {Width, Height} = Dimensions.get('window');
-
-export default class home extends Component {
+import getUser from '../api/getUser';
+import {connect} from 'react-redux';
+class home extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -70,7 +71,9 @@ export default class home extends Component {
         </View>
         <View style={styles.between}>
           <View style={styles.betweenLeft}>
-            <TouchableOpacity style={styles.betweenLeftTO}>
+            <TouchableOpacity
+              onPress={() => this.test()}
+              style={styles.betweenLeftTO}>
               <AntDesign style={styles.imgKS} name={'profile'} size={35} />
               <Text style={styles.txtKS}> Làm phiếu khảo sát </Text>
             </TouchableOpacity>
@@ -97,7 +100,6 @@ export default class home extends Component {
           <FlatList
             data={this.state.bxhFromServer}
             renderItem={({item, index}) => <Home_item item={item} />}
-            keyExtractor={(item, index) => item.ID}
             refreshControl={
               <RefreshControl
                 refreshing={this.state.refreshing}
@@ -185,7 +187,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   colNameBetween: {
-    flex: 3,
+    flex: 5,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -200,3 +202,9 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
 });
+function mapStateToProps(state) {
+  return {
+    myToken: state.token,
+  };
+}
+export default connect(mapStateToProps)(home);

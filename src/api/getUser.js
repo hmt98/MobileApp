@@ -1,17 +1,7 @@
-const URL = 'https://jwtdemo.000webhostapp.com';
+const URL = 'https://misappmobile.000webhostapp.com/checktoken.php?token=';
 
-function getUser(username, password) {
-  return fetch(URL, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      USERNAME: username,
-      PASSWORD: password,
-    }),
-  }).then(response => response.json());
+function getUser(token) {
+  return fetch(URL + token).then(res => res.json());
 }
 
 export default getUser;

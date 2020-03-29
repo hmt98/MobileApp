@@ -6,24 +6,48 @@ import {
   Image,
   Dimensions,
   TouchableOpacity,
+  AsyncStorage,
+  Alert,
 } from 'react-native';
 var {width, height} = Dimensions.get('window');
 import Anh from '../../images/canhan.png';
 import Entypo from 'react-native-vector-icons/Entypo';
+import getUser from '../api/getUser';
 
 export default class menu extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {token: '', name: ''};
+  }
+
+  logout = async () => {
+    this.setState({toke: null});
+    await AsyncStorage.setItem('tokenLogin', this.state.token);
+    this.props.navigation.navigate('Intro');
+  };
+
+  componentDidMount = async () => {
+    var tokenAsync = await AsyncStorage.getItem('tokenLogin');
+    getUser(tokenAsync)
+      .then(resName => resName['TenNguoiDung'])
+      .then(resJSON => {
+        this.setState({name: resJSON});
+      })
+      .catch(error => console.log(error));
+  };
+
   render() {
     return (
       <View style={styles.container}>
         <View>
           <View style={styles.TboCanhan}>
             <Image source={Anh} style={styles.imgCanhan} />
-            <Text style={styles.txtCanhan}>Phạm Thị A</Text>
+            <Text style={styles.txtCanhan}>{this.state.name}</Text>
           </View>
         </View>
         <TouchableOpacity
           onPress={() => {
-            this.props.navigation.goBack();
+            this.props.navigation.closeDrawer();
           }}
           style={styles.tboMenu}>
           <Entypo name={'home'} size={30} style={styles.imgLogo} />
@@ -48,7 +72,7 @@ export default class menu extends React.Component {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              this.props.navigation.navigate('Intro');
+              this.logout();
             }}
             style={styles.tboMenu}>
             <Entypo name={'log-out'} size={30} style={styles.imgLogo} />

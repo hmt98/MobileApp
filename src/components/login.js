@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import getToken from '../api/getToken';
 import getUser from '../api/getUser';
+
 import {
   StyleSheet,
   Text,
@@ -12,14 +14,11 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Alert,
+  AsyncStorage,
 } from 'react-native';
 import logo1 from '../../images/logo.png';
 import Entypo from 'react-native-vector-icons/Entypo';
-import {
-  startFetchData,
-  loginSuccess,
-  loginError,
-} from '../redux/actionCreaters';
+import {startGetToken, loginSuccess, loginError} from '../redux/actionCreaters';
 
 class login extends Component {
   static navigationOptions = ({navigation}) => {
@@ -41,20 +40,21 @@ class login extends Component {
     this.state = {username: '', password: ''};
   }
 
-  componentWillReceiveProps(nextProps) {
-    //kiểm tra xem có kết nối mạng chưa
-    if (nextProps.myError) {
-      Alert.alert('Error!', 'Vui lòng kiểm tra kết nối mạng!');
-    }
-    //kiểm tra xem thông tin đăng nhập đúng chưa
-    if (nextProps.myToken === 'ERROR') {
-      Alert.alert('Error!', 'Thông tin đăng nhập không chính xác!');
-    }
-    if (nextProps.myToken !== 'ERROR' && nextProps.myToken !== null) {
-      Alert.alert('Đăng nhập thành công!');
-      this.props.navigation.navigate('Main');
-    }
-  }
+  // componentWillReceiveProps = async nextProps => {
+  //   //kiểm tra xem có kết nối mạng chưa
+  //   if (nextProps.myError) {
+  //     Alert.alert('Error!', 'Vui lòng kiểm tra kết nối mạng!');
+  //   }
+  //   //kiểm tra xem thông tin đăng nhập đúng chưa
+  //   if (nextProps.myToken === 'ERROR') {
+  //     Alert.alert('Error!', 'Thông tin đăng nhập không chính xác!');
+  //   }
+  //   if (nextProps.myToken !== 'ERROR' && nextProps.myToken !== null) {
+  //     await AsyncStorage.setItem('tokenLogin', nextProps.myToken);
+  //     Alert.alert('Đăng nhập thành công!');
+  //     this.props.navigation.navigate('Main');
+  //   }
+  // };
 
   getLoginStatus() {
     const {myUserName, myError, myPassWord, myToken} = this.props;
@@ -62,18 +62,37 @@ class login extends Component {
     else return `${myUserName},${myPassWord} là ${myToken} `;
   }
 
-  login() {
+  login = async () => {
     const {username, password} = this.state;
+    const {myError, myPassWord, myToken, myUserName} = this.props;
     //kiểm tra xem điền thông tin đăng nhập chưa
     if (username === '' || password === '') {
       Alert.alert('Error!', 'Vui lòng điền thông tin đăng nhập!');
       return;
     }
-    this.props.startFetchData();
-    getUser(username, password)
+    this.props.startGetToken();
+    getToken(username, password)
       .then(res => this.props.loginSuccess(username, password, res['token']))
       .catch(() => this.props.loginError());
-  }
+    //kiểm tra xem có kết nối mạng chưa
+    if (myError) {
+      Alert.alert('Error!', 'Vui lòng kiểm tra kết nối mạng!');
+      return;
+    }
+    //kiểm tra xem thông tin đăng nhập đúng chưa
+    if (myToken === 'ERROR') {
+      Alert.alert('Error!', 'Thông tin đăng nhập không chính xác!');
+      return;
+    }
+    if (myToken !== 'ERROR' && myToken !== null) {
+      await AsyncStorage.setItem('tokenLogin', myToken);
+      getUser(myToken)
+        .then(res => res.json())
+        .then(resJSON => console.log(resJSON));
+      Alert.alert('Đăng nhập thành công!');
+      this.props.navigation.navigate('Main');
+    }
+  };
 
   render(item) {
     const {navigate} = this.props.navigation;
@@ -91,7 +110,7 @@ class login extends Component {
               placeholderTextColor="#A0A0A0"
               onChangeText={text => this.setState({username: text})}
               value={this.state.username}
-              keyboardType="email-address"
+              //keyboardType="email-address"
             />
           </View>
           <View style={{paddingTop: 10}}>
@@ -220,7 +239,7 @@ function mapStateToProps(state) {
   };
 }
 export default connect(mapStateToProps, {
-  startFetchData,
+  startGetToken,
   loginSuccess,
   loginError,
 })(login);

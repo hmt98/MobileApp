@@ -34,9 +34,9 @@ export default class Item_blog extends Component {
                 eclipSizeMode={'tail'}
                 numberOfLines={1}
                 allowFontScaling={false}>
-                {item.Ten}
+                {item.TenTin}
               </Text>
-              <Text style={styles.ngaygio}> {item.NgayDang}</Text>
+              <Text style={styles.ngaygio}> {item.ThoiGian}</Text>
             </View>
           </View>
           <Text

@@ -24,7 +24,13 @@ export default class Home_item extends Component {
           <Text style={styles.txtColName}>{this.state.huyhieu}</Text>
         </View>
         <View style={styles.colNameBetween}>
-          <Text style={styles.txtColName}>{item.TenNguoiDung}</Text>
+          <Text
+            eclipSizeMode={'tail'}
+            numberOfLines={1}
+            allowFontScaling={false}
+            style={styles.txtColName}>
+            {item.TenNguoiDung}
+          </Text>
         </View>
         <View style={styles.colNameRight}>
           <Text style={styles.txtColName}>{item.SoTien}</Text>
@@ -44,7 +50,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   colNameBetween: {
-    flex: 3,
+    flex: 5,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -54,8 +60,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   txtColName: {
-    color: '#AE1F17',
-    fontWeight: 'bold',
     fontSize: 15,
   },
 });
