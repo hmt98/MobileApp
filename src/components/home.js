@@ -24,6 +24,7 @@ import {getBXHFromServer} from '../../networking/Server';
 import Home_item from './home_item';
 var {Width, Height} = Dimensions.get('window');
 import getUser from '../api/getUser';
+import getUserName from '../global';
 import {connect} from 'react-redux';
 class home extends Component {
   constructor(props) {
@@ -32,11 +33,15 @@ class home extends Component {
       refreshing: false,
       bxhFromServer: [],
       readfull: false,
+      networkError: false,
+      userName: '',
     };
   }
-  componentDidMount() {
+
+  componentDidMount = async () => {
     this.refreshDataFromServer();
-  }
+  };
+
   refreshDataFromServer = () => {
     this.setState({refreshing: true});
     getBXHFromServer()
@@ -51,6 +56,12 @@ class home extends Component {
   };
   onRefresh = () => {
     this.refreshDataFromServer();
+  };
+
+  test = async () => {
+    getUserName;
+    var UserName = await AsyncStorage.getItem('userName');
+    Alert.alert(UserName);
   };
 
   render() {

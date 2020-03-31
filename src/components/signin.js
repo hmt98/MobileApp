@@ -13,12 +13,11 @@ import {
 import Entypo from 'react-native-vector-icons/Entypo';
 import logo from '../../images/logo.png';
 import register from '../api/register';
-var URL = 'https://5e57414d4c695f001432fb16.mockapi.io/api/tblNguoiDung';
 
 export default class sigin extends Component {
   constructor(props) {
     super(props);
-    this.state = {name: '', sdt: '', email: '', matkhau: ''};
+    this.state = {name: '', sdt: '', email: '', matkhau: '', matkhau2: ''};
   }
   static navigationOptions = ({navigation}) => {
     return {
@@ -36,33 +35,34 @@ export default class sigin extends Component {
   };
 
   onSuccess() {
-    Alert.alert(
-      'Notice',
-      'Sign up successfully',
-      [{text: 'OK', onPress: this.props.navigation.navigate('Login')}],
-      {cancelable: false},
-    );
+    Alert.alert('Đăng ký thành công!');
+    this.props.navigation.navigate('Login');
   }
 
   onFail() {
-    Alert.alert(
-      'Notice',
-      'Email has been used by other',
-      [{text: 'OK', onPress: () => this.removeEmail.bind(this)}],
-      {cancelable: false},
-    );
-  }
-
-  removeEmail() {
+    Alert.alert('Error!', 'Email hoặc SĐT đã tồn tại!');
     this.setState({email: ''});
+    this.setState({sdt: ''});
   }
 
   registerUser() {
-    const {name, sdt, email, password} = this.state;
-    register(name, sdt, email, password).then(res => {
-      if (res === 'THANH_CONG') return this.onSuccess();
-      this.onFail();
-    });
+    const {name, sdt, email, matkhau, matkhau2} = this.state;
+    if (
+      name === '' ||
+      sdt === '' ||
+      email === '' ||
+      matkhau === '' ||
+      matkhau2 === ''
+    ) {
+      Alert.alert('Error!', 'Vui lòng điền đầy đủ thông tin!');
+      return;
+    }
+    register(name, sdt, email, matkhau)
+      .then(res => res['message'])
+      .then(result => {
+        if (result === 'Dang ki thanh cong') return this.onSuccess();
+        else this.onFail();
+      });
   }
 
   render() {

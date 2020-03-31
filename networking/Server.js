@@ -8,7 +8,9 @@ async function getBlogFromServer() {
     let respond = await fetch(apiBlog);
     let respondJson = await respond.json();
     return respondJson;
-  } catch (error) {}
+  } catch (error) {
+    console.log('Lỗi Mạng');
+  }
 }
 
 async function getBXHFromServer() {
@@ -16,7 +18,9 @@ async function getBXHFromServer() {
     let respond = await fetch(apiNguoiDung);
     let respondJson = await respond.json();
     return respondJson;
-  } catch (error) {}
+  } catch (error) {
+    console.log('Lỗi Mạng');
+  }
 }
 
 export {getBlogFromServer};

@@ -1,18 +1,17 @@
 const URL = 'https://misappmobile.000webhostapp.com/Dangnhap/dangnhap.php';
 
-function getToken(username, password) {
+function getTokenSDT(SDT, MatKhau) {
   return fetch(URL, {
     method: 'POST',
     headers: {
-      Accept: 'application/json',
       'Content-Type': 'application/json',
+      Accept: 'application/json',
     },
     body: JSON.stringify({
-      SDT: username,
-      Email: username,
-      MatKhau: password,
+      SDT,
+      MatKhau,
     }),
   }).then(response => response.json());
 }
 
-export default getToken;
+export default getTokenSDT;

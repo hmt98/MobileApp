@@ -1,5 +1,8 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, Image, Dimensions} from 'react-native';
+import huyhieuVang from '../../images/huyhieuVang.png';
+import huyhieuBac from '../../images/huyhieuBac.png';
+import huyhieuDong from '../../images/huyhieuDong.png';
 export default class Home_item extends Component {
   constructor(props) {
     super(props);
@@ -11,17 +14,17 @@ export default class Home_item extends Component {
     const item = this.props.item;
 
     if (item.SoTien >= 1000000) {
-      this.state.huyhieu = 'Vàng';
+      this.state.huyhieu = huyhieuVang;
     } else if (item.SoTien >= 500000) {
-      this.state.huyhieu = 'Bạc';
+      this.state.huyhieu = huyhieuBac;
     } else if (item.SoTien >= 100000) {
-      this.state.huyhieu = 'Đồng';
+      this.state.huyhieu = huyhieuDong;
     }
 
     return (
       <View style={styles.colName}>
         <View style={styles.colNameLeft}>
-          <Text style={styles.txtColName}>{this.state.huyhieu}</Text>
+          <Image style={styles.imgHuyHieu} source={this.state.huyhieu} />
         </View>
         <View style={styles.colNameBetween}>
           <Text
@@ -61,5 +64,9 @@ const styles = StyleSheet.create({
   },
   txtColName: {
     fontSize: 15,
+  },
+  imgHuyHieu: {
+    height: 20,
+    width: 20,
   },
 });

@@ -318,7 +318,7 @@ const Menutab = createDrawerNavigator(
   },
   {
     contentComponent: menu,
-    drawerWidth: '60%',
+    drawerWidth: '70%',
   },
 );
 

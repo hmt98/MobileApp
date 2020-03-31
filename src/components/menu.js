@@ -21,7 +21,7 @@ export default class menu extends React.Component {
   }
 
   logout = async () => {
-    this.setState({toke: null});
+    this.setState({token: null});
     await AsyncStorage.setItem('tokenLogin', this.state.token);
     this.props.navigation.navigate('Intro');
   };
@@ -42,18 +42,25 @@ export default class menu extends React.Component {
         <View>
           <View style={styles.TboCanhan}>
             <Image source={Anh} style={styles.imgCanhan} />
-            <Text style={styles.txtCanhan}>{this.state.name}</Text>
+            <Text
+              eclipSizeMode={'tail'}
+              numberOfLines={1}
+              allowFontScaling={false}
+              style={styles.txtCanhan}>
+              {this.state.name}
+            </Text>
           </View>
         </View>
-        <TouchableOpacity
-          onPress={() => {
-            this.props.navigation.closeDrawer();
-          }}
-          style={styles.tboMenu}>
-          <Entypo name={'home'} size={30} style={styles.imgLogo} />
-          <Text style={styles.txtMenu}>Trang chủ</Text>
-        </TouchableOpacity>
-        <View style={styles.Menus}>
+
+        <View style={styles.menu}>
+          <TouchableOpacity
+            onPress={() => {
+              this.props.navigation.closeDrawer();
+            }}
+            style={styles.tboMenu}>
+            <Entypo name={'home'} size={30} style={styles.imgLogo} />
+            <Text style={styles.txtMenu}>Trang chủ</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
               this.props.navigation.navigate('Contact');
@@ -96,11 +103,14 @@ const styles = StyleSheet.create({
   imgCanhan: {
     width: 150,
     height: 150,
-    marginLeft: '20%',
+    alignSelf: 'center',
   },
   txtCanhan: {
     textAlign: 'center',
     fontSize: 25,
+  },
+  menu: {
+    marginTop: '5%',
   },
   tboMenu: {
     flexDirection: 'row',

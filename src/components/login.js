@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import getToken from '../api/getToken';
-import getUser from '../api/getUser';
 
 import {
   StyleSheet,
@@ -19,6 +17,9 @@ import {
 import logo1 from '../../images/logo.png';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {startGetToken, loginSuccess, loginError} from '../redux/actionCreaters';
+import getTokenEmail from '../api/getTokenEmail';
+import getTokenSDT from '../api/getTokenSDT';
+import getUser from '../api/getUser';
 
 class login extends Component {
   static navigationOptions = ({navigation}) => {
@@ -37,24 +38,26 @@ class login extends Component {
   };
   constructor(props) {
     super(props);
-    this.state = {username: '', password: ''};
+    this.state = {username: '', password: '', name: ''};
   }
 
-  // componentWillReceiveProps = async nextProps => {
-  //   //kiểm tra xem có kết nối mạng chưa
-  //   if (nextProps.myError) {
-  //     Alert.alert('Error!', 'Vui lòng kiểm tra kết nối mạng!');
-  //   }
-  //   //kiểm tra xem thông tin đăng nhập đúng chưa
-  //   if (nextProps.myToken === 'ERROR') {
-  //     Alert.alert('Error!', 'Thông tin đăng nhập không chính xác!');
-  //   }
-  //   if (nextProps.myToken !== 'ERROR' && nextProps.myToken !== null) {
-  //     await AsyncStorage.setItem('tokenLogin', nextProps.myToken);
-  //     Alert.alert('Đăng nhập thành công!');
-  //     this.props.navigation.navigate('Main');
-  //   }
-  // };
+  componentWillReceiveProps = async nextProps => {
+    //kiểm tra xem có kết nối mạng chưa
+    if (nextProps.myError) {
+      Alert.alert('Error!', 'Vui lòng kiểm tra kết nối mạng!');
+      return;
+    }
+    //kiểm tra xem thông tin đăng nhập đúng chưa
+    if (nextProps.myToken === 'ERROR') {
+      Alert.alert('Error!', 'Thông tin đăng nhập không chính xác!');
+      return;
+    }
+    if (nextProps.myToken !== 'ERROR' && nextProps.myToken !== null) {
+      await AsyncStorage.setItem('tokenLogin', nextProps.myToken);
+      Alert.alert('Đăng nhập thành công!');
+      this.props.navigation.navigate('Main');
+    }
+  };
 
   getLoginStatus() {
     const {myUserName, myError, myPassWord, myToken} = this.props;
@@ -71,38 +74,43 @@ class login extends Component {
       return;
     }
     this.props.startGetToken();
-    getToken(username, password)
-      .then(res => this.props.loginSuccess(username, password, res['token']))
-      .catch(() => this.props.loginError());
-    //kiểm tra xem có kết nối mạng chưa
-    if (myError) {
-      Alert.alert('Error!', 'Vui lòng kiểm tra kết nối mạng!');
-      return;
+    if (username.includes('@')) {
+      getTokenEmail(username, password)
+        .then(res => this.props.loginSuccess(username, password, res['token']))
+        .catch(() => this.props.loginError());
+    } else {
+      getTokenSDT(username, password)
+        .then(res => this.props.loginSuccess(username, password, res['token']))
+        .catch(() => this.props.loginError());
     }
-    //kiểm tra xem thông tin đăng nhập đúng chưa
-    if (myToken === 'ERROR') {
-      Alert.alert('Error!', 'Thông tin đăng nhập không chính xác!');
-      return;
-    }
-    if (myToken !== 'ERROR' && myToken !== null) {
-      await AsyncStorage.setItem('tokenLogin', myToken);
-      getUser(myToken)
-        .then(res => res.json())
-        .then(resJSON => console.log(resJSON));
-      Alert.alert('Đăng nhập thành công!');
-      this.props.navigation.navigate('Main');
-    }
+    // //kiểm tra xem có kết nối mạng chưa
+    // if (myError) {
+    //   Alert.alert('Error!', 'Vui lòng kiểm tra kết nối mạng!');
+    //   return;
+    // }
+    // //kiểm tra xem thông tin đăng nhập đúng chưa
+    // if (myToken === 'ERROR') {
+    //   Alert.alert('Error!', 'Thông tin đăng nhập không chính xác!');
+    //   return;
+    // }
+    // if (myToken !== 'ERROR' && myToken !== null) {
+    //   await AsyncStorage.setItem('tokenLogin', myToken);
+    //   getUser(myToken)
+    //     .then(res => res.json())
+    //     .then(resJSON => console.log(resJSON));
+    //   Alert.alert('Đăng nhập thành công!');
+    //   this.props.navigation.navigate('Main');
+    // }
   };
 
   render(item) {
     const {navigate} = this.props.navigation;
     return (
-      <SafeAreaView behavior="padding" style={styles.container}>
-        <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
-          <StatusBar barStyle="light-content" />
-          <View style={styles.logoconatainer}>
-            <Image style={styles.logo} source={logo1} />
-          </View>
+      <View style={styles.container}>
+        <View style={styles.logoconatainer}>
+          <Image style={styles.logo} source={logo1} />
+        </View>
+        <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={20}>
           <View style={{paddingTop: 20}}>
             <TextInput
               style={styles.input}
@@ -138,17 +146,17 @@ class login extends Component {
               <Text style={styles.textbtnSignin}>Đăng ký</Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            onPress={() => {
-              navigate('Forgot_pass');
-            }}
-            style={styles.btnQuenpass}>
-            <Text style={styles.quenpass} placeholderTextColor="ra(255,0)">
-              Quên mật khẩu?
-            </Text>
-          </TouchableOpacity>
         </KeyboardAvoidingView>
-      </SafeAreaView>
+        <TouchableOpacity
+          onPress={() => {
+            navigate('Forgot_pass');
+          }}
+          style={styles.btnQuenpass}>
+          <Text style={styles.quenpass} placeholderTextColor="ra(255,0)">
+            Quên mật khẩu?
+          </Text>
+        </TouchableOpacity>
+      </View>
     );
   }
 }
