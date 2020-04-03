@@ -8,7 +8,7 @@ const defaultStateLogin = {
 
 const reducer = (state = defaultStateLogin, action) => {
   switch (action.type) {
-    case 'GET_TOKEN': //LẤY TOKEN TỪ LOCAL RA
+    case 'GET_TOKEN':
       return {...state};
     case 'LOGIN_SUCCESS':
       return {

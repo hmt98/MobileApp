@@ -6,21 +6,21 @@ import {
   Text,
   View,
   Image,
-  StatusBar,
+  ImageBackground,
   TextInput,
-  SafeAreaView,
   TouchableOpacity,
-  KeyboardAvoidingView,
   Alert,
   AsyncStorage,
+  Dimensions,
 } from 'react-native';
-import logo1 from '../../images/logo.png';
+import logo from '../../images/logo.png';
 import Entypo from 'react-native-vector-icons/Entypo';
+import Feather from 'react-native-vector-icons/Feather';
 import {startGetToken, loginSuccess, loginError} from '../redux/actionCreaters';
 import getTokenEmail from '../api/getTokenEmail';
 import getTokenSDT from '../api/getTokenSDT';
-import getUser from '../api/getUser';
-
+import {round} from 'react-native-reanimated';
+var {width, height} = Dimensions.get('window');
 class login extends Component {
   static navigationOptions = ({navigation}) => {
     return {
@@ -38,7 +38,7 @@ class login extends Component {
   };
   constructor(props) {
     super(props);
-    this.state = {username: '', password: '', name: ''};
+    this.state = {username: '', password: '', name: '', hindPass: true};
   }
 
   componentWillReceiveProps = async nextProps => {
@@ -83,158 +83,150 @@ class login extends Component {
         .then(res => this.props.loginSuccess(username, password, res['token']))
         .catch(() => this.props.loginError());
     }
-    // //kiểm tra xem có kết nối mạng chưa
-    // if (myError) {
-    //   Alert.alert('Error!', 'Vui lòng kiểm tra kết nối mạng!');
-    //   return;
-    // }
-    // //kiểm tra xem thông tin đăng nhập đúng chưa
-    // if (myToken === 'ERROR') {
-    //   Alert.alert('Error!', 'Thông tin đăng nhập không chính xác!');
-    //   return;
-    // }
-    // if (myToken !== 'ERROR' && myToken !== null) {
-    //   await AsyncStorage.setItem('tokenLogin', myToken);
-    //   getUser(myToken)
-    //     .then(res => res.json())
-    //     .then(resJSON => console.log(resJSON));
-    //   Alert.alert('Đăng nhập thành công!');
-    //   this.props.navigation.navigate('Main');
-    // }
   };
+
+  showPass() {
+    this.setState({hindPass: !this.state.hindPass});
+  }
 
   render(item) {
     const {navigate} = this.props.navigation;
     return (
       <View style={styles.container}>
-        <View style={styles.logoconatainer}>
-          <Image style={styles.logo} source={logo1} />
+        <View style={styles.header}>
+          <Image source={logo} style={styles.logo} />
         </View>
-        <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={20}>
-          <View style={{paddingTop: 20}}>
+        <View style={styles.main}>
+          <View style={styles.textInput}>
             <TextInput
-              style={styles.input}
-              placeholder="Số điện thoại hoặc email"
-              placeholderTextColor="#A0A0A0"
+              style={styles.textInputIn}
+              placeholder={'Nhập Email hoặc SĐT'}
               onChangeText={text => this.setState({username: text})}
               value={this.state.username}
-              //keyboardType="email-address"
+              keyboardType="email-address"
             />
           </View>
-          <View style={{paddingTop: 10}}>
+          <ImageBackground style={styles.textInputPass}>
             <TextInput
-              style={styles.input}
-              placeholder="Mật khẩu"
-              keyboardType="default"
-              placeholderTextColor="#A0A0A0"
+              style={styles.textInputInPass}
+              placeholder={'Nhập mật khẩu'}
               onChangeText={text => this.setState({password: text})}
               value={this.state.password}
-              secureTextEntry={true}
+              secureTextEntry={this.state.hindPass}
             />
-          </View>
-          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.showPass}
+              onPress={this.showPass.bind(this)}>
+              <Feather
+                name={this.state.hindPass ? 'eye' : 'eye-off'}
+                size={20}
+              />
+            </TouchableOpacity>
+          </ImageBackground>
+          <TouchableOpacity style={styles.forgotPass}>
+            <Text style={styles.txtForgotPass}>Quên mật khẩu?</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.footer}>
+          <View style={styles.button}>
             <TouchableOpacity
               onPress={this.login.bind(this)}
-              style={styles.btnLogin}>
-              <Text style={styles.textbtnLogin}>Đăng nhập</Text>
+              style={styles.buttonIn}>
+              <Text style={styles.buttonText}>Đăng nhập</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
                 navigate('Signin');
               }}
-              style={styles.btnSignin}>
-              <Text style={styles.textbtnSignin}>Đăng ký</Text>
+              style={styles.buttonIn}>
+              <Text style={styles.buttonText}>Đăng ký</Text>
             </TouchableOpacity>
           </View>
-        </KeyboardAvoidingView>
-        <TouchableOpacity
-          onPress={() => {
-            navigate('Forgot_pass');
-          }}
-          style={styles.btnQuenpass}>
-          <Text style={styles.quenpass} placeholderTextColor="ra(255,0)">
-            Quên mật khẩu?
-          </Text>
-        </TouchableOpacity>
+        </View>
       </View>
     );
   }
 }
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
     flex: 1,
     flexDirection: 'column',
   },
+  header: {
+    flex: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  main: {
+    flex: 2,
+  },
+  footer: {
+    flex: 4,
+  },
   logo: {
-    width: 190,
-    height: 209,
-    marginLeft: 110,
+    height: height / 3,
   },
-  title: {
-    fontSize: 20,
-    color: '#AE1F17',
-    textAlign: 'center',
-    paddingTop: 20,
-  },
-  input: {
-    borderRadius: 10,
-    paddingVertical: 7,
-    marginHorizontal: 20,
-    fontSize: 24,
-    borderWidth: 2,
-    borderColor: '#A0A0A0',
-    padding: 15,
-  },
-  buttonContainer: {
-    paddingVertical: 30,
-    marginHorizontal: 50,
-    flexDirection: 'row',
-  },
-  btnLogin: {
-    flexDirection: 'row',
-    flex: 5,
+  textInput: {
+    height: height / 15,
+    width: width / 1.2,
+    borderColor: '#545454',
     borderRadius: 10,
     borderWidth: 2,
-    padding: 5,
-    alignItems: 'center',
-    height: 40,
-    borderColor: '#AE1F17',
-    marginRight: 20,
-  },
-  btnSignin: {
-    flexDirection: 'row',
-    flex: 5,
-    borderRadius: 10,
-    height: 40,
-    alignItems: 'center',
-    borderColor: 'white',
-    backgroundColor: '#AE1F17',
-    marginLeft: 20,
-  },
-  textbtnLogin: {
-    fontSize: 20,
-    color: '#AE1F17',
-    padding: 15,
-  },
-  textbtnSignin: {
-    fontSize: 20,
-    color: 'white',
-    padding: 27,
-  },
-  btnquenpass: {
-    marginLeft: 40,
-  },
-  quenpass: {
-    fontSize: 20,
-    color: '#545454',
-    marginTop: -10,
-    textAlign: 'center',
-  },
-  loginStatus: {
     alignSelf: 'center',
-    fontSize: 15,
-    paddingTop: 5,
+    margin: 5,
+    paddingLeft: 10,
+  },
+  textInputPass: {
+    height: height / 15,
+    width: width / 1.2,
+    borderColor: '#545454',
+    borderRadius: 10,
+    borderWidth: 2,
+    alignSelf: 'center',
+    margin: 5,
+    paddingLeft: 10,
+    flexDirection: 'row',
+  },
+  textInputIn: {
+    fontSize: 20,
+    padding: 5,
+  },
+  textInputInPass: {
+    fontSize: 20,
+    padding: 5,
+    flex: 9,
+    justifyContent: 'center',
+  },
+  showPass: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  forgotPass: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  txtForgotPass: {
+    fontSize: 18,
+    color: '#545454',
+  },
+  button: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonIn: {
+    height: height / 15,
+    width: width / 3,
+    backgroundColor: '#AE1F17',
+    margin: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 15,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 20,
   },
 });
 

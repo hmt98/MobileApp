@@ -8,23 +8,12 @@ import {
   ImageBackground,
   FlatList,
   RefreshControl,
-  Dimensions,
-  Alert,
-  AsyncStorage,
 } from 'react-native';
 import heart from '../../images/heart.png';
-import khaosat from '../../images/khaosat.png';
-import iconHeart from '../../images/iconHeart.png';
-import kimcuong from '../../images/kimcuong.png';
-import vang from '../../images/vang.png';
-import bac from '../../images/bac.png';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {getBXHFromServer} from '../../networking/Server';
 import Home_item from './home_item';
-var {Width, Height} = Dimensions.get('window');
-import getUser from '../api/getUser';
-import getUserName from '../global';
 import {connect} from 'react-redux';
 class home extends Component {
   constructor(props) {
@@ -38,9 +27,9 @@ class home extends Component {
     };
   }
 
-  componentDidMount = async () => {
+  componentDidMount() {
     this.refreshDataFromServer();
-  };
+  }
 
   refreshDataFromServer = () => {
     this.setState({refreshing: true});
@@ -56,12 +45,6 @@ class home extends Component {
   };
   onRefresh = () => {
     this.refreshDataFromServer();
-  };
-
-  test = async () => {
-    getUserName;
-    var UserName = await AsyncStorage.getItem('userName');
-    Alert.alert(UserName);
   };
 
   render() {

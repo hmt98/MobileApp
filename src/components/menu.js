@@ -12,7 +12,7 @@ import {
 var {width, height} = Dimensions.get('window');
 import Anh from '../../images/canhan.png';
 import Entypo from 'react-native-vector-icons/Entypo';
-import getUser from '../api/getUser';
+import getUserByToken from '../api/getUserByToken';
 
 export default class menu extends React.Component {
   constructor(props) {
@@ -28,10 +28,10 @@ export default class menu extends React.Component {
 
   componentDidMount = async () => {
     var tokenAsync = await AsyncStorage.getItem('tokenLogin');
-    getUser(tokenAsync)
+    getUserByToken(tokenAsync)
       .then(resName => resName['TenNguoiDung'])
-      .then(resJSON => {
-        this.setState({name: resJSON});
+      .then(resJSONName => {
+        this.setState({name: resJSONName});
       })
       .catch(error => console.log(error));
   };

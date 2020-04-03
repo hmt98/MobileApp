@@ -44,7 +44,7 @@ export default class account extends Component {
             <View style={styles.tennguoidung}>
               <Entypo
                 name={'v-card'}
-                size={15}
+                size={30}
                 style={styles.imgLogo}
                 color={'#545454'}
               />
@@ -57,7 +57,7 @@ export default class account extends Component {
             <View style={styles.tennguoidung}>
               <FontAwesome5
                 name={'medal'}
-                size={15}
+                size={30}
                 style={styles.imgLogo}
                 color={'#545454'}
               />
@@ -70,7 +70,7 @@ export default class account extends Component {
             <View style={styles.tennguoidung}>
               <Entypo
                 name={'back-in-time'}
-                size={15}
+                size={30}
                 style={styles.imgLogo}
                 color={'#545454'}
               />
@@ -83,7 +83,7 @@ export default class account extends Component {
             <View style={styles.tennguoidung}>
               <Entypo
                 name={'magnifying-glass'}
-                size={15}
+                size={30}
                 style={styles.imgLogo}
                 color={'#545454'}
               />
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   },
   nguoidung: {
     flexDirection: 'row',
-    height: 30,
+    height: 50,
     borderBottomWidth: 1,
     alignItems: 'center',
   },
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   giaodich: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#545454',
   },

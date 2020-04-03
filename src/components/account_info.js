@@ -4,24 +4,24 @@ import {
   Text,
   View,
   Image,
-  TouchableWithoutFeedback,
-  StatusBar,
   TextInput,
-  SafeAreaView,
-  Keybroad,
-  keyboardType,
   TouchableOpacity,
   KeyboardAvoidingView,
-  Button,
   ImageBackground,
   Dimensions,
+  AsyncStorage,
+  RefreshControl,
+  Alert,
 } from 'react-native';
 var {width, height} = Dimensions.get('window');
 import heart from '../../images/heart.png';
 import canhan from '../../images/canhan.png';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
-
+import getUserByToken from '../api/getUserByToken';
+import getUserByID from '../api/getUserByID';
+import updateInfor from '../api/updateInfor';
+import Feather from 'react-native-vector-icons/Feather';
 export default class account_info extends Component {
   static navigationOptions = ({navigation}) => {
     return {
@@ -41,14 +41,99 @@ export default class account_info extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tennguoidung: 'Hà Minh Tú',
-      matkhau: '123456789',
-      ngaysinh: '01/11/1998',
-      sdt: '0942646398',
-      email: 'minhtuha98@gmail.com',
-      stk: '0451000504125',
+      id: '',
+      name: '',
+      pass: '',
+      ngaysinh: '',
+      sdt: '',
+      email: '',
+      stk: '',
+      hindPass: true,
     };
   }
+
+  componentDidMount = async () => {
+    var tokenAsync = await AsyncStorage.getItem('tokenLogin');
+    getUserByToken(tokenAsync)
+      .then(resID => resID['idNguoiDung'])
+      .then(resJSON => {
+        this.setState({id: resJSON});
+      })
+      .catch(error => console.log(error));
+  };
+
+  componentDidUpdate(preProps, preState, a) {
+    const {id} = this.state;
+    if (preState.id !== id) {
+      getUserByID(id)
+        .then(resName => resName[0]['TenNguoiDung'])
+        .then(resJSON => {
+          this.setState({name: resJSON});
+        })
+        .catch(error => console.log(error));
+
+      getUserByID(id)
+        .then(resPass => resPass[0]['MatKhau'])
+        .then(resJSON => {
+          this.setState({pass: resJSON});
+        })
+        .catch(error => console.log(error));
+
+      getUserByID(id)
+        .then(resSDT => resSDT[0]['SDT'])
+        .then(resJSON => {
+          this.setState({sdt: resJSON});
+        })
+        .catch(error => console.log(error));
+
+      getUserByID(id)
+        .then(resEmail => resEmail[0]['Email'])
+        .then(resJSON => {
+          this.setState({email: resJSON});
+        })
+        .catch(error => console.log(error));
+
+      getUserByID(id)
+        .then(resDate => resDate[0]['NgaySinh'])
+        .then(resJSON => {
+          this.setState({ngaysinh: resJSON});
+        })
+        .catch(error => console.log(error));
+
+      getUserByID(id)
+        .then(resSTK => resSTK[0]['STK'])
+        .then(resJSON => {
+          this.setState({stk: resJSON});
+        })
+        .catch(error => console.log(error));
+    }
+  }
+  showPass() {
+    this.setState({hindPass: !this.state.hindPass});
+  }
+  boqua() {
+    this.props.navigation.goBack(null);
+  }
+  onSuccess() {
+    Alert.alert('Cập nhật thành công!');
+  }
+
+  onFail() {
+    Alert.alert('Error!', 'Email hoặc SĐT đã tồn tại!');
+    this.setState({email: ''});
+    this.setState({sdt: ''});
+  }
+  update = async () => {
+    const {id, name, pass, sdt, email, ngaysinh, stk} = this.state;
+    updateInfor(id, name, pass, sdt, email, ngaysinh, stk)
+      .then(res => res['message'])
+      .then(result => {
+        if (result === 'Success') return this.onSuccess();
+        else this.onFail();
+      })
+      .catch(error => console.log(error));
+  };
+
   render() {
     const {navigate} = this.props.navigation;
     return (
@@ -61,8 +146,8 @@ export default class account_info extends Component {
                 <TextInput
                   ref={view => (this.textInput_name = view)}
                   style={styles.nameIn}
-                  onChangeText={tennguoidung => this.setState(tennguoidung)}
-                  value={this.state.tennguoidung}
+                  onChangeText={text => this.setState({name: text})}
+                  value={this.state.name}
                 />
                 <TouchableOpacity onPress={() => this.textInput_name.focus()}>
                   <Icon
@@ -82,41 +167,26 @@ export default class account_info extends Component {
             <View style={styles.ten}>
               <TextInput
                 ref={view => (this.textInput_pass = view)}
-                onChangeText={matkhau => this.setState(matkhau)}
-                value={this.state.matkhau}
-                secureTextEntry={true}
+                onChangeText={text => this.setState({pass: text})}
+                value={this.state.pass}
+                secureTextEntry={this.state.hindPass}
               />
             </View>
-            <TouchableOpacity
-              onPress={() => this.textInput_pass.focus()}
-              style={styles.img}>
-              <Icon
-                name="pencil-square-o"
-                style={{marginHorizontal: 30}}
-                size={20}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.nguoidung}>
-            <View style={styles.tennguoidung}>
-              <Text>Ngày sinh</Text>
+            <View style={[styles.img, {flexDirection: 'row'}]}>
+              <TouchableOpacity onPress={this.showPass.bind(this)}>
+                <Feather
+                  name={this.state.hindPass ? 'eye' : 'eye-off'}
+                  size={20}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => this.textInput_pass.focus()}>
+                <Icon
+                  name="pencil-square-o"
+                  style={{marginHorizontal: 30}}
+                  size={20}
+                />
+              </TouchableOpacity>
             </View>
-            <View style={styles.ten}>
-              <TextInput
-                ref={view => (this.textInput_date = view)}
-                onChangeText={ngaysinh => this.setState(ngaysinh)}
-                value={this.state.ngaysinh}
-              />
-            </View>
-            <TouchableOpacity
-              onPress={() => this.textInput_date.focus()}
-              style={styles.img}>
-              <Icon
-                name="pencil-square-o"
-                style={{marginHorizontal: 30}}
-                size={20}
-              />
-            </TouchableOpacity>
           </View>
           <View style={styles.nguoidung}>
             <View style={styles.tennguoidung}>
@@ -125,7 +195,7 @@ export default class account_info extends Component {
             <View style={styles.ten}>
               <TextInput
                 ref={view => (this.textInput_sdt = view)}
-                onChangeText={sdt => this.setState(sdt)}
+                onChangeText={text => this.setState({sdt: text})}
                 value={this.state.sdt}
               />
             </View>
@@ -146,7 +216,7 @@ export default class account_info extends Component {
             <View style={styles.ten}>
               <TextInput
                 ref={view => (this.textInput_email = view)}
-                onChangeText={email => this.setState(email)}
+                onChangeText={text => this.setState({email: text})}
                 value={this.state.email}
               />
             </View>
@@ -162,12 +232,34 @@ export default class account_info extends Component {
           </View>
           <View style={styles.nguoidung}>
             <View style={styles.tennguoidung}>
+              <Text>Ngày sinh</Text>
+            </View>
+            <View style={styles.ten}>
+              <TextInput
+                ref={view => (this.textInput_date = view)}
+                onChangeText={text => this.setState({ngaysinh: text})}
+                value={this.state.ngaysinh}
+              />
+            </View>
+            <TouchableOpacity
+              onPress={() => this.textInput_date.focus()}
+              style={styles.img}>
+              <Icon
+                name="pencil-square-o"
+                style={{marginHorizontal: 30}}
+                size={20}
+              />
+            </TouchableOpacity>
+          </View>
+          <RefreshControl refreshing={true} />
+          <View style={styles.nguoidung}>
+            <View style={styles.tennguoidung}>
               <Text>Số tài khoản</Text>
             </View>
             <View style={styles.ten}>
               <TextInput
                 ref={view => (this.textInput_stk = view)}
-                onChangeText={stk => this.setState(stk)}
+                onChangeText={text => this.setState({stk: text})}
                 value={this.state.stk}
               />
             </View>
@@ -184,11 +276,13 @@ export default class account_info extends Component {
 
           <View style={styles.btnThem}>
             <TouchableOpacity
-              onPress={() => this.props.navigation.goBack(null)}
+              onPress={() => this.boqua()}
               style={styles.btnquaylai}>
               <Text style={styles.ttquaylai}>Bỏ qua</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.btnhotro}>
+            <TouchableOpacity
+              onPress={this.update.bind(this)}
+              style={styles.btnhotro}>
               <Text style={styles.tthotro}>Cập nhật</Text>
             </TouchableOpacity>
           </View>
@@ -220,23 +314,18 @@ const styles = StyleSheet.create({
   name: {
     flexDirection: 'row',
     backgroundColor: '#AE1E17',
-    height: 40,
+    height: height / 15,
     width: width - 100,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 10,
     marginTop: height - 450,
-    flexDirection: 'row',
   },
   nameIn: {
     fontSize: 20,
     color: 'white',
-    flex: 5,
-    padding: 5,
-    marginLeft: 50,
   },
   imgEditName: {
-    margin: 40,
     height: 20,
     width: 20,
   },

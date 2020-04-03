@@ -8,16 +8,28 @@ import {
   SafeAreaView,
   TouchableOpacity,
   KeyboardAvoidingView,
+  ImageBackground,
   Alert,
+  Dimensions,
 } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import logo from '../../images/logo.png';
 import register from '../api/register';
-
+import {round, block} from 'react-native-reanimated';
+import Feather from 'react-native-vector-icons/Feather';
+var {width, height} = Dimensions.get('window');
 export default class sigin extends Component {
   constructor(props) {
     super(props);
-    this.state = {name: '', sdt: '', email: '', matkhau: '', matkhau2: ''};
+    this.state = {
+      name: '',
+      sdt: '',
+      email: '',
+      matkhau: '',
+      matkhau2: '',
+      hindPass: true,
+      hindPassRe: true,
+    };
   }
   static navigationOptions = ({navigation}) => {
     return {
@@ -57,6 +69,10 @@ export default class sigin extends Component {
       Alert.alert('Error!', 'Vui lòng điền đầy đủ thông tin!');
       return;
     }
+    if (matkhau !== matkhau2) {
+      Alert.alert('Error!', 'Mật khẩu không trùng khớp!');
+      return;
+    }
     register(name, sdt, email, matkhau)
       .then(res => res['message'])
       .then(result => {
@@ -65,269 +81,191 @@ export default class sigin extends Component {
       });
   }
 
+  showPass() {
+    this.setState({hindPass: !this.state.hindPass});
+  }
+  showPassRe() {
+    this.setState({hindPassRe: !this.state.hindPassRe});
+  }
+
   render() {
     const {navigate} = this.props.navigation;
     return (
-      <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={20}>
-        <SafeAreaView>
+      <View style={styles.container}>
+        <View style={styles.header}>
           <View style={styles.logo}>
-            <Image source={logo} style={styles.logoapp} />
-            <Text style={styles.title1}>Small Giving</Text>
+            <Image source={logo} style={styles.imgLogo} />
           </View>
-          <View style={styles.label}>
-            <Text style={styles.title2}>Tạo tài khoản</Text>
+          <View style={styles.logo}>
+            <Text style={styles.txtHeader}>Small Giving</Text>
           </View>
-          {/*---Text nhập email*/}
-          <View style={styles.email}>
+        </View>
+        <View style={styles.main}>
+          <View style={styles.textInput}>
             <TextInput
-              style={styles.ipEmail}
-              placeholder="Nhập họ tên"
-              placeholderTextColor="#BAA8A8"
-              onChangeText={name => this.setState({name})}
+              style={styles.textInputIn}
+              placeholder={'Nhập họ tên'}
+              onChangeText={text => this.setState({name: text})}
               value={this.state.name}
-              keyboardType="email-address"
             />
           </View>
-          {/*---Text nhập số điện thoại*/}
-          <View style={styles.sodienthoai}>
+          <View style={styles.textInput}>
             <TextInput
-              style={styles.ipsodienthoai}
-              placeholder="Nhập số điện thoại"
-              placeholderTextColor="#BAA8A8"
-              onChangeText={sdt => this.setState({sdt})}
+              style={styles.textInputIn}
+              placeholder={'Nhập số điện thoại'}
+              onChangeText={text => this.setState({sdt: text})}
               value={this.state.sdt}
-              keyboardType="email-address"
             />
           </View>
-          {/*---Text nhập email*/}
-          <View style={styles.email}>
+          <View style={styles.textInput}>
             <TextInput
-              style={styles.ipEmail}
-              placeholder="Nhập email"
-              placeholderTextColor="#BAA8A8"
-              onChangeText={email => this.setState({email})}
+              style={styles.textInputIn}
+              placeholder={'Nhập email'}
+              onChangeText={text => this.setState({email: text})}
               value={this.state.email}
               keyboardType="email-address"
             />
           </View>
-          {/*---Text nhập password*/}
-          <View style={styles.pass}>
+          <ImageBackground style={styles.textInputPass}>
             <TextInput
-              style={styles.ipPass}
-              placeholder="Nhập mật khẩu"
-              placeholderTextColor="#BAA8A8"
-              keyboardType="default"
-              onChangeText={matkhau => this.setState({matkhau})}
+              style={styles.textInputInPass}
+              placeholder={'Nhập mật khẩu'}
+              onChangeText={text => this.setState({matkhau: text})}
               value={this.state.matkhau}
-              secureTextEntry={true}
+              secureTextEntry={this.state.hindPass}
             />
-          </View>
-          {/*---Text nhập lại password*/}
-          <View style={styles.pass1}>
+            <TouchableOpacity
+              style={styles.showPass}
+              onPress={this.showPass.bind(this)}>
+              <Feather
+                name={this.state.hindPass ? 'eye' : 'eye-off'}
+                size={20}
+              />
+            </TouchableOpacity>
+          </ImageBackground>
+          <ImageBackground style={styles.textInputPass}>
             <TextInput
-              style={styles.ipPass1}
-              placeholder="Nhập lại mật khẩu"
-              placeholderTextColor="#BAA8A8"
-              keyboardType="default"
-              onChangeText={matkhau2 => this.setState({matkhau2})}
+              style={styles.textInputInPass}
+              placeholder={'Nhập mật khẩu'}
+              onChangeText={text => this.setState({matkhau2: text})}
               value={this.state.matkhau2}
-              secureTextEntry={true}
+              secureTextEntry={this.state.hindPassRe}
             />
-          </View>
-
-          <View style={{paddingTop: 15}}>
+            <TouchableOpacity
+              style={styles.showPass}
+              onPress={this.showPassRe.bind(this)}>
+              <Feather
+                name={this.state.hindPassRe ? 'eye' : 'eye-off'}
+                size={20}
+              />
+            </TouchableOpacity>
+          </ImageBackground>
+        </View>
+        <View style={styles.footer}>
+          <View style={styles.button}>
+            <TouchableOpacity
+              onPress={() => {
+                navigate('Login');
+              }}
+              style={styles.buttonIn}>
+              <Text style={styles.buttonText}>Bỏ qua</Text>
+            </TouchableOpacity>
             <TouchableOpacity
               onPress={this.registerUser.bind(this)}
-              style={styles.btnDangki}>
-              <Text style={styles.ttdangki}>Đăng ký</Text>
+              style={styles.buttonIn}>
+              <Text style={styles.buttonText}>Đăng ký</Text>
             </TouchableOpacity>
-            <View style={styles.btnThem}>
-              <TouchableOpacity
-                onPress={() => {
-                  navigate('Login');
-                }}
-                style={styles.btnquaylai}>
-                <Text style={styles.ttquaylai}>Quay lại</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.btnhotro}>
-                <Text style={styles.tthotro}>Hỗ trợ</Text>
-              </TouchableOpacity>
-            </View>
           </View>
-        </SafeAreaView>
-      </KeyboardAvoidingView>
+        </View>
+      </View>
     );
   }
-
-  sigin = async () => {
-    if (this.state.email === '') {
-      Alert.alert('Error!', 'Bạn chưa nhập email!');
-    } else if (this.state.sdt === '') {
-      Alert.alert('Error!', 'Bạn chưa nhập số điện thoại!');
-    } else if (this.state.matkhau === '') {
-      Alert.alert('Error!', 'Bạn chưa nhập mật khẩu!');
-    } else if (this.state.matkhau2 === '') {
-      Alert.alert('Error!', 'Bạn chưa nhập lại mật khẩu!');
-    } else if (this.state.matkhau !== this.state.matkhau2) {
-      Alert.alert('Error!', 'Mật khẩu nhập không giống nhau!');
-    } else {
-      fetch(URL, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: this.state.email,
-          sdt: this.state.sdt,
-          matkhau: this.state.matkhau,
-        }),
-      })
-        .then(response => response.json())
-        .then(res => {
-          alert('Đăng ký thành công');
-          this.props.navigation.navigate('Login');
-        })
-        .done();
-    }
-  };
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  header: {
+    flex: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  main: {
+    flex: 4,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  footer: {
+    flex: 2,
+    flexDirection: 'row',
+  },
   logo: {
-    flexDirection: 'row',
+    margin: 10,
   },
-  logoapp: {
-    width: 100,
-    height: 110,
-    marginLeft: 50,
-    marginTop: 20,
+  imgLogo: {
+    height: height / 4.5,
+    width: width / 3,
   },
-  title1: {
-    color: '#CD0606',
+  txtHeader: {
     fontSize: 35,
-    marginTop: 45,
-    marginLeft: 20,
+    color: '#CD0606',
     fontWeight: 'bold',
   },
-  title2: {
-    fontSize: 20,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    paddingTop: 5,
-  },
-  email: {
-    width: 350,
-    height: 35,
-    marginTop: 10,
-    marginLeft: 30,
-  },
-  ipEmail: {
-    borderColor: '#7E5D5D',
+  textInput: {
+    height: height / 17,
+    width: width / 1.2,
+    borderColor: '#545454',
+    borderRadius: 10,
     borderWidth: 1,
-    borderRadius: 5,
+    margin: 5,
+    paddingLeft: 10,
+  },
+  textInputIn: {
+    fontSize: 17,
     padding: 5,
   },
-  sodienthoai: {
-    width: 350,
-    height: 35,
-    marginTop: 15,
-    marginLeft: 30,
-  },
-  ipsodienthoai: {
-    borderColor: '#7E5D5D',
+  textInputPass: {
+    height: height / 17,
+    width: width / 1.2,
+    borderColor: '#545454',
+    borderRadius: 10,
     borderWidth: 1,
-    borderRadius: 5,
-    padding: 5,
-  },
-  pass: {
-    width: 350,
-    height: 35,
-    marginTop: 15,
-    marginLeft: 30,
-  },
-  ipPass: {
-    borderColor: '#7E5D5D',
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 5,
-  },
-  pass1: {
-    textAlign: 'center',
-    width: 350,
-    height: 35,
-    marginTop: 15,
-    marginLeft: 30,
-  },
-  ipPass1: {
-    borderColor: '#7E5D5D',
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 5,
-  },
-  gioitinh: {
-    marginTop: 30,
-    marginLeft: 30,
-  },
-  ttgioitinh: {
-    fontSize: 15,
-    color: '#474747',
-    fontWeight: 'bold',
-  },
-  rdgioitinh: {
-    marginLeft: 80,
-    marginTop: -20,
-    paddingRight: 90,
-  },
-  btnDangki: {
-    height: 40,
-    borderWidth: 1,
-    width: 110,
-    borderRadius: 5,
-    marginLeft: 150,
-    marginTop: 20,
-    borderColor: '#DE1F28',
-    backgroundColor: '#B00C14',
-  },
-  ttdangki: {
-    textAlign: 'center',
-    fontSize: 18,
-    padding: 5,
-    color: '#F8F3F3',
-  },
-  btnThem: {
+    alignSelf: 'center',
+    margin: 5,
+    paddingLeft: 10,
     flexDirection: 'row',
   },
-  btnquaylai: {
-    height: 40,
-    borderWidth: 1,
-    width: 110,
-    borderRadius: 5,
-    marginLeft: 37,
-    marginTop: 20,
-    borderColor: '#DE1F28',
-    backgroundColor: '#F8F3F3',
-  },
-  ttquaylai: {
-    textAlign: 'center',
-    fontSize: 18,
+  textInputInPass: {
+    fontSize: 17,
     padding: 5,
-    color: '#B00C14',
+    flex: 9,
+    justifyContent: 'center',
   },
-  btnhotro: {
-    height: 40,
-    borderWidth: 1,
-    width: 110,
-    borderRadius: 5,
-    marginLeft: 120,
-    marginTop: 20,
-    borderColor: '#DE1F28',
-    backgroundColor: '#F8F3F3',
+  showPass: {
+    flex: 1,
+    justifyContent: 'center',
   },
-  tthotro: {
-    textAlign: 'center',
-    fontSize: 18,
-    padding: 5,
-    color: '#B00C14',
+  button: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonIn: {
+    height: height / 15,
+    width: width / 3,
+    backgroundColor: '#AE1F17',
+    margin: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 15,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 20,
   },
 });
