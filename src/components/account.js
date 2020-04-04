@@ -8,14 +8,59 @@ import {
   KeyboardAvoidingView,
   ImageBackground,
   Dimensions,
+  AsyncStorage,
 } from 'react-native';
 var {width, height} = Dimensions.get('window');
 import heart from '../../images/heart.png';
 import canhan from '../../images/canhan.png';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-
+import getUserByToken from '../api/getUserByToken';
+import getUserByID from '../api/getUserByID';
 export default class account extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      id: '',
+      name: '',
+      sodu: '',
+    };
+  }
+
+  componentDidMount = async () => {
+    var tokenAsync = await AsyncStorage.getItem('tokenLogin');
+    getUserByToken(tokenAsync)
+      .then(resID => resID['idNguoiDung'])
+      .then(resJSON => {
+        this.setState({id: resJSON});
+      })
+      .catch(error => console.log(error));
+  };
+
+  componentDidUpdate(preProps, preState, a) {
+    const {id} = this.state;
+    if (preState.id !== id) {
+      this.getdata();
+    }
+  }
+
+  getdata() {
+    const {id} = this.state;
+    getUserByID(id)
+      .then(resName => resName[0]['TenNguoiDung'])
+      .then(resJSON => {
+        this.setState({name: resJSON});
+      })
+      .catch(error => console.log(error));
+
+    getUserByID(id)
+      .then(resPass => resPass[0]['SoDuTK'])
+      .then(resJSON => {
+        this.setState({sodu: resJSON});
+      })
+      .catch(error => console.log(error));
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -24,7 +69,7 @@ export default class account extends Component {
             <View style={styles.profile}>
               <Image style={styles.avata} source={canhan} />
               <ImageBackground style={styles.name}>
-                <Text style={styles.nameIn}>Hà Minh Tú</Text>
+                <Text style={styles.nameIn}>{this.state.name}</Text>
               </ImageBackground>
             </View>
           </ImageBackground>
@@ -35,7 +80,7 @@ export default class account extends Component {
             </View>
             <View style={styles.sodu}>
               <Text style={styles.txtTaikhoan}>Số dư</Text>
-              <Text>4000000</Text>
+              <Text>{this.state.sodu}</Text>
             </View>
           </View>
           <TouchableOpacity
@@ -96,7 +141,6 @@ export default class account extends Component {
       </View>
     );
   }
-  _edit = () => {};
 }
 const styles = StyleSheet.create({
   container: {

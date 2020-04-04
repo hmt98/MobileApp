@@ -1,12 +1,4 @@
-const updateInfor = (
-  idNguoiDung,
-  TenNguoiDung,
-  MatKhau,
-  SDT,
-  Email,
-  NgaySinh,
-  STK,
-) =>
+const updateInfor = (idNguoiDung, TenNguoiDung, MatKhau, NgaySinh, STK) =>
   fetch('https://misappmobile.000webhostapp.com/Doithongtin/update.php', {
     method: 'POST',
     headers: {
@@ -17,8 +9,6 @@ const updateInfor = (
       idNguoiDung,
       TenNguoiDung,
       MatKhau,
-      SDT,
-      Email,
       NgaySinh,
       STK,
     }),

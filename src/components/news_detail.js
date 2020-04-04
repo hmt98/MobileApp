@@ -59,7 +59,13 @@ export default class changepass extends Component {
         <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={10}>
           <View style={styles.down}>
             <Image style={styles.imgNguoigia} source={{uri: item.Anh}} />
-            <Text style={styles.titleNews}>{item.Ten}</Text>
+            <Text
+              eclipSizeMode={'tail'}
+              numberOfLines={1}
+              allowFontScaling={false}
+              style={styles.titleNews}>
+              {item.TenHoatDong}
+            </Text>
             <ImageBackground style={styles.News}>
               <ScrollView style={{height: 200}}>
                 <Text style={styles.News}>{item.NoiDung}</Text>
@@ -155,7 +161,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#CD0606',
     fontWeight: 'bold',
-    paddingTop: 5,
+    padding: 5,
   },
   News: {
     fontSize: 20,

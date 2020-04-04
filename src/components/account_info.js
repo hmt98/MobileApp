@@ -65,69 +65,78 @@ export default class account_info extends Component {
   componentDidUpdate(preProps, preState, a) {
     const {id} = this.state;
     if (preState.id !== id) {
-      getUserByID(id)
-        .then(resName => resName[0]['TenNguoiDung'])
-        .then(resJSON => {
-          this.setState({name: resJSON});
-        })
-        .catch(error => console.log(error));
-
-      getUserByID(id)
-        .then(resPass => resPass[0]['MatKhau'])
-        .then(resJSON => {
-          this.setState({pass: resJSON});
-        })
-        .catch(error => console.log(error));
-
-      getUserByID(id)
-        .then(resSDT => resSDT[0]['SDT'])
-        .then(resJSON => {
-          this.setState({sdt: resJSON});
-        })
-        .catch(error => console.log(error));
-
-      getUserByID(id)
-        .then(resEmail => resEmail[0]['Email'])
-        .then(resJSON => {
-          this.setState({email: resJSON});
-        })
-        .catch(error => console.log(error));
-
-      getUserByID(id)
-        .then(resDate => resDate[0]['NgaySinh'])
-        .then(resJSON => {
-          this.setState({ngaysinh: resJSON});
-        })
-        .catch(error => console.log(error));
-
-      getUserByID(id)
-        .then(resSTK => resSTK[0]['STK'])
-        .then(resJSON => {
-          this.setState({stk: resJSON});
-        })
-        .catch(error => console.log(error));
+      this.getdata();
     }
   }
+
+  getdata() {
+    const {id} = this.state;
+    getUserByID(id)
+      .then(resName => resName[0]['TenNguoiDung'])
+      .then(resJSON => {
+        this.setState({name: resJSON});
+      })
+      .catch(error => console.log(error));
+
+    getUserByID(id)
+      .then(resPass => resPass[0]['MatKhau'])
+      .then(resJSON => {
+        this.setState({pass: resJSON});
+      })
+      .catch(error => console.log(error));
+
+    getUserByID(id)
+      .then(resSDT => resSDT[0]['SDT'])
+      .then(resJSON => {
+        this.setState({sdt: resJSON});
+      })
+      .catch(error => console.log(error));
+
+    getUserByID(id)
+      .then(resEmail => resEmail[0]['Email'])
+      .then(resJSON => {
+        this.setState({email: resJSON});
+      })
+      .catch(error => console.log(error));
+
+    getUserByID(id)
+      .then(resDate => resDate[0]['NgaySinh'])
+      .then(resJSON => {
+        this.setState({ngaysinh: resJSON});
+      })
+      .catch(error => console.log(error));
+
+    getUserByID(id)
+      .then(resSTK => resSTK[0]['STK'])
+      .then(resJSON => {
+        this.setState({stk: resJSON});
+      })
+      .catch(error => console.log(error));
+  }
+
   showPass() {
     this.setState({hindPass: !this.state.hindPass});
   }
+
   boqua() {
-    this.props.navigation.goBack(null);
+    this.getdata();
   }
+
   onSuccess() {
     Alert.alert('Cập nhật thành công!');
+    this.getdata();
   }
 
   onFail() {
-    Alert.alert('Error!', 'Email hoặc SĐT đã tồn tại!');
-    this.setState({email: ''});
-    this.setState({sdt: ''});
+    Alert.alert('Error!', 'Thông tin bạn điền không hợp lệ!');
   }
+
   update = async () => {
-    const {id, name, pass, sdt, email, ngaysinh, stk} = this.state;
-    updateInfor(id, name, pass, sdt, email, ngaysinh, stk)
+    const {id, name, pass, ngaysinh, stk} = this.state;
+    updateInfor(id, name, pass, ngaysinh, stk)
       .then(res => res['message'])
       .then(result => {
+        console.log(result);
         if (result === 'Success') return this.onSuccess();
         else this.onFail();
       })
@@ -162,6 +171,24 @@ export default class account_info extends Component {
           </ImageBackground>
           <View style={styles.nguoidung}>
             <View style={styles.tennguoidung}>
+              <Text>Số điện thoại</Text>
+            </View>
+            <View style={styles.ten}>
+              <Text>{this.state.sdt}</Text>
+            </View>
+            <View style={styles.img}></View>
+          </View>
+          <View style={styles.nguoidung}>
+            <View style={styles.tennguoidung}>
+              <Text>Email</Text>
+            </View>
+            <View style={styles.ten}>
+              <Text>{this.state.email}</Text>
+            </View>
+            <View style={styles.img}></View>
+          </View>
+          <View style={styles.nguoidung}>
+            <View style={styles.tennguoidung}>
               <Text>Mật khẩu</Text>
             </View>
             <View style={styles.ten}>
@@ -187,48 +214,6 @@ export default class account_info extends Component {
                 />
               </TouchableOpacity>
             </View>
-          </View>
-          <View style={styles.nguoidung}>
-            <View style={styles.tennguoidung}>
-              <Text>Số điện thoại</Text>
-            </View>
-            <View style={styles.ten}>
-              <TextInput
-                ref={view => (this.textInput_sdt = view)}
-                onChangeText={text => this.setState({sdt: text})}
-                value={this.state.sdt}
-              />
-            </View>
-            <TouchableOpacity
-              onPress={() => this.textInput_sdt.focus()}
-              style={styles.img}>
-              <Icon
-                name="pencil-square-o"
-                style={{marginHorizontal: 30}}
-                size={20}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.nguoidung}>
-            <View style={styles.tennguoidung}>
-              <Text>Email</Text>
-            </View>
-            <View style={styles.ten}>
-              <TextInput
-                ref={view => (this.textInput_email = view)}
-                onChangeText={text => this.setState({email: text})}
-                value={this.state.email}
-              />
-            </View>
-            <TouchableOpacity
-              onPress={() => this.textInput_email.focus()}
-              style={styles.img}>
-              <Icon
-                name="pencil-square-o"
-                style={{marginHorizontal: 30}}
-                size={20}
-              />
-            </TouchableOpacity>
           </View>
           <View style={styles.nguoidung}>
             <View style={styles.tennguoidung}>
@@ -404,5 +389,4 @@ const styles = StyleSheet.create({
     padding: 5,
     color: 'white',
   },
-  imgEditdate: {},
 });

@@ -51,7 +51,7 @@ export default class thongbao extends Component {
         <FlatList
           data={this.state.blogFromServer}
           renderItem={({item, index}) => <Item_blog item={item} />}
-          keyExtractor={(item, index) => item.ID}
+          keyExtractor={(item, index) => item.idTin}
           refreshControl={
             <RefreshControl
               refreshing={this.state.refreshing}

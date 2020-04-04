@@ -26,7 +26,11 @@ export default class menu extends React.Component {
     this.props.navigation.navigate('Intro');
   };
 
-  componentDidMount = async () => {
+  componentDidMount() {
+    this.getData();
+  }
+
+  getData = async () => {
     var tokenAsync = await AsyncStorage.getItem('tokenLogin');
     getUserByToken(tokenAsync)
       .then(resName => resName['TenNguoiDung'])

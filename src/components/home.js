@@ -94,6 +94,7 @@ class home extends Component {
           <FlatList
             data={this.state.bxhFromServer}
             renderItem={({item, index}) => <Home_item item={item} />}
+            keyExtractor={(item, index) => item.id}
             refreshControl={
               <RefreshControl
                 refreshing={this.state.refreshing}

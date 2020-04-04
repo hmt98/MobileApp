@@ -25,11 +25,17 @@ export default class Donate_infor_items extends Component {
     super(props);
     this.state = {
       follow: false,
+      follower: this.props.item.SoNguoi,
     };
   }
 
   follow = () => {
     this.setState({follow: !this.state.follow});
+    if (this.state.follow) {
+      this.setState({follower: this.state.follower - 1});
+    } else {
+      this.setState({follower: this.state.follower * 1 + 1});
+    }
     this.bell.shake(2000);
   };
 
@@ -75,11 +81,11 @@ export default class Donate_infor_items extends Component {
                 eclipSizeMode={'tail'}
                 numberOfLines={1}
                 allowFontScaling={false}>
-                {item.Ten}
+                {item.TenHoatDong}
               </Text>
             </View>
             <Progress.Bar
-              progress={item.MoneyStart / item.MoneyEnd}
+              progress={item.SoDuTK / item.ChiDK}
               width={300}
               height={15}
               color={'#AE1F17'}
@@ -88,10 +94,10 @@ export default class Donate_infor_items extends Component {
             />
             <View style={styles.money}>
               <View style={styles.moneyStart}>
-                <Text style={styles.txtMoneyStart}>{item.MoneyStart}</Text>
+                <Text style={styles.txtMoneyStart}>{item.SoDuTK}</Text>
               </View>
               <View style={styles.moneyEnd}>
-                <Text style={styles.txtMoneyEnd}>{item.MoneyEnd}</Text>
+                <Text style={styles.txtMoneyEnd}>{item.ChiDK}</Text>
               </View>
             </View>
             <Animatable.View>
@@ -109,22 +115,24 @@ export default class Donate_infor_items extends Component {
               <View style={styles.followIcon}>
                 <FontAwesome5
                   name={'user-friends'}
-                  size={35}
+                  size={30}
                   color={'#545454'}
                 />
               </View>
               <View style={styles.followCount}>
                 <Text style={styles.txtCount}>
-                  {item.Follower} người đã theo dõi
+                  {this.state.follower} người đã quyên góp
                 </Text>
               </View>
             </View>
             <View style={styles.follow}>
               <View style={styles.followIcon}>
-                <Ionicons name={'ios-time'} size={35} color={'#545454'} />
+                <Ionicons name={'ios-time'} size={30} color={'#545454'} />
               </View>
               <View style={styles.followCount}>
-                <Text style={styles.txtCount}>{item.DayLeft} ngày còn lại</Text>
+                <Text style={styles.txtCount}>
+                  {item.ThoiGian} ngày còn lại
+                </Text>
               </View>
             </View>
           </View>
@@ -211,7 +219,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#CD0606',
-    paddingTop: 10,
+    padding: 10,
   },
   money: {
     flex: 1,
@@ -259,17 +267,17 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   followIcon: {
-    flex: 3,
+    flex: 2,
     flexDirection: 'row',
     alignSelf: 'center',
   },
   followCount: {
-    flex: 7,
+    flex: 8,
     flexDirection: 'row',
     alignSelf: 'center',
   },
   txtCount: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     alignSelf: 'center',
     color: '#545454',

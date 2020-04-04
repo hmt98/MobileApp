@@ -16,7 +16,7 @@ import * as Animatable from 'react-native-animatable';
 import Carousel, {ParallaxImage} from 'react-native-snap-carousel';
 import * as Progress from 'react-native-progress';
 const {width: screenWidth, height} = Dimensions.get('window');
-import {getBlogFromServer} from '../../networking/Server';
+import {getHoatDongFromServer} from '../../networking/Server';
 import coin from '../../images/coin.png';
 import Donate_infor_items from './donate_infor_items';
 
@@ -24,7 +24,7 @@ export default class donate_infor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      blogFromServer: [],
+      hoatdongFromServer: [],
       xValue: new Animated.Value(-350),
       follow: false,
       shake: true,
@@ -45,13 +45,13 @@ export default class donate_infor extends Component {
 
   refreshDataFromServer = () => {
     this.setState({refreshing: true});
-    getBlogFromServer()
-      .then(blog => {
-        this.setState({blogFromServer: blog});
+    getHoatDongFromServer()
+      .then(hoatdong => {
+        this.setState({hoatdongFromServer: hoatdong});
         this.setState({refreshing: false});
       })
       .catch(error => {
-        this.setState({blogFromServer: []});
+        this.setState({hoatdongFromServer: []});
         this.setState({refreshing: false});
       });
   };
@@ -82,7 +82,7 @@ export default class donate_infor extends Component {
           sliderWidth={screenWidth}
           sliderHeight={screenWidth}
           itemWidth={screenWidth - 60}
-          data={this.state.blogFromServer}
+          data={this.state.hoatdongFromServer}
           renderItem={item => (
             <Donate_infor_items
               item={item.item}

@@ -1,7 +1,10 @@
-const apiBlog = 'https://apiofblog.000webhostapp.com/';
-// 'https://misappmobile.000webhostapp.com/Tinhoatdong/tinhoatdong.php';
+const apiBlog =
+  'https://misappmobile.000webhostapp.com/Tinhoatdong/tinhoatdong.php';
 const apiNguoiDung =
   'https://misappmobile.000webhostapp.com/Bangxephang/bangxephang.php';
+
+const apiHoatDong =
+  'https://misappmobile.000webhostapp.com/Hoatdong/hoatdong.php';
 
 async function getBlogFromServer() {
   try {
@@ -23,5 +26,16 @@ async function getBXHFromServer() {
   }
 }
 
+async function getHoatDongFromServer() {
+  try {
+    let respond = await fetch(apiHoatDong);
+    let respondJson = await respond.json();
+    return respondJson;
+  } catch (error) {
+    console.log('Lỗi Mạng');
+  }
+}
+
 export {getBlogFromServer};
 export {getBXHFromServer};
+export {getHoatDongFromServer};
