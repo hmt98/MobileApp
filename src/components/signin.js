@@ -186,6 +186,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
+    backgroundColor: 'white',
   },
   header: {
     flex: 3,
@@ -208,7 +209,7 @@ const styles = StyleSheet.create({
   },
   imgLogo: {
     height: height / 4.5,
-    width: width / 3,
+    width: width / 2.8,
   },
   txtHeader: {
     fontSize: 35,
@@ -223,6 +224,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     margin: 5,
     paddingLeft: 10,
+    alignSelf: 'center',
+    backgroundColor: 'white',
+    justifyContent: 'center',
   },
   textInputIn: {
     fontSize: 17,
@@ -238,6 +242,7 @@ const styles = StyleSheet.create({
     margin: 5,
     paddingLeft: 10,
     flexDirection: 'row',
+    backgroundColor: 'white',
   },
   textInputInPass: {
     fontSize: 17,

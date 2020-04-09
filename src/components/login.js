@@ -19,7 +19,6 @@ import Feather from 'react-native-vector-icons/Feather';
 import {startGetToken, loginSuccess, loginError} from '../redux/actionCreaters';
 import getTokenEmail from '../api/getTokenEmail';
 import getTokenSDT from '../api/getTokenSDT';
-import {round} from 'react-native-reanimated';
 var {width, height} = Dimensions.get('window');
 class login extends Component {
   static navigationOptions = ({navigation}) => {
@@ -89,6 +88,12 @@ class login extends Component {
     this.setState({hindPass: !this.state.hindPass});
   }
 
+  forgotPass() {
+    Alert.alert(
+      'Notice!',
+      'Bạn vui lòng truy cập website http://smallgiving.com để được hỗ trợ! Trân trọng!',
+    );
+  }
   render(item) {
     const {navigate} = this.props.navigation;
     return (
@@ -123,7 +128,9 @@ class login extends Component {
               />
             </TouchableOpacity>
           </ImageBackground>
-          <TouchableOpacity style={styles.forgotPass}>
+          <TouchableOpacity
+            onPress={this.forgotPass.bind(this)}
+            style={styles.forgotPass}>
             <Text style={styles.txtForgotPass}>Quên mật khẩu?</Text>
           </TouchableOpacity>
         </View>
@@ -151,6 +158,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
+    backgroundColor: 'white',
   },
   header: {
     flex: 4,
@@ -165,6 +173,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     height: height / 3,
+    width: width / 1.8,
   },
   textInput: {
     height: height / 15,
@@ -174,7 +183,9 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     alignSelf: 'center',
     margin: 5,
-    paddingLeft: 10,
+    paddingLeft: 5,
+    backgroundColor: 'white',
+    justifyContent: 'center',
   },
   textInputPass: {
     height: height / 15,
@@ -184,11 +195,13 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     alignSelf: 'center',
     margin: 5,
-    paddingLeft: 10,
+    paddingLeft: 5,
     flexDirection: 'row',
+    backgroundColor: 'white',
   },
   textInputIn: {
     fontSize: 20,
+    justifyContent: 'center',
     padding: 5,
   },
   textInputInPass: {
@@ -238,8 +251,11 @@ function mapStateToProps(state) {
     myToken: state.token,
   };
 }
-export default connect(mapStateToProps, {
-  startGetToken,
-  loginSuccess,
-  loginError,
-})(login);
+export default connect(
+  mapStateToProps,
+  {
+    startGetToken,
+    loginSuccess,
+    loginError,
+  },
+)(login);

@@ -6,12 +6,27 @@ import {
   Image,
   Dimensions,
   TouchableOpacity,
+  AsyncStorage,
+  ScrollView,
+  RefreshControl,
 } from 'react-native';
 var {width, height} = Dimensions.get('window');
 import Anh from '../../images/canhan.png';
 import Entypo from 'react-native-vector-icons/Entypo';
-import Swiper from 'react-native-swiper';
-export default class menu extends React.Component {
+import getUserByToken from '../api/getUserByToken';
+import getUserByID from '../api/getUserByID';
+export default class Guide extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      token: '',
+      name: '',
+      id: '',
+      sdt: '',
+      email: '',
+      refreshing: false,
+    };
+  }
   static navigationOptions = ({navigation}) => {
     return {
       headerLeft: () => (
@@ -26,119 +41,220 @@ export default class menu extends React.Component {
       ),
     };
   };
+
+  componentDidMount = async () => {
+    var tokenAsync = await AsyncStorage.getItem('tokenLogin');
+    getUserByToken(tokenAsync)
+      .then(resID => resID['idNguoiDung'])
+      .then(resJSON => {
+        this.setState({id: resJSON});
+      })
+      .catch(error => console.log(error));
+  };
+
+  componentDidUpdate(preProps, preState, a) {
+    const {id} = this.state;
+    if (preState.id !== id) {
+      this.getdata();
+    }
+  }
+
+  getdata() {
+    this.setState({refreshing: true});
+    const {id} = this.state;
+    getUserByID(id)
+      .then(resName => resName[0]['TenNguoiDung'])
+      .then(resJSON => {
+        this.setState({name: resJSON});
+      })
+      .catch(error => console.log(error));
+    getUserByID(id)
+      .then(resName => resName[0]['SDT'])
+      .then(resJSON => {
+        this.setState({sdt: resJSON});
+      })
+      .catch(error => console.log(error));
+    getUserByID(id)
+      .then(resName => resName[0]['Email'])
+      .then(resJSON => {
+        this.setState({email: resJSON});
+      })
+      .catch(error => console.log(error));
+    this.setState({refreshing: false});
+  }
+  onRefresh = () => {
+    this.getdata();
+  };
   render() {
     return (
-      <View style={styles.container}>
-        <View style={styles.TboCanhan}>
-          <Image source={Anh} style={styles.imgCanhan} />
-          <Text style={styles.txtName}>Phạm Thị A</Text>
-          <Text style={styles.txtSdt}>0942646398</Text>
-          <Text style={styles.txtMail}>minhtuha98@gmail.com</Text>
-        </View>
-        <View style={styles.thanks}>
-          <Text style={styles.txtThanks}>
-            Cảm ơn bạn đã tin tưởng chúng tôi!
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this.onRefresh}
+          />
+        }
+        style={styles.container}>
+        <View style={styles.header}>
+          <Image style={styles.imgCaNhan} source={Anh} />
+          <Text
+            eclipSizeMode={'tail'}
+            numberOfLines={1}
+            allowFontScaling={false}
+            style={styles.txtName}>
+            {this.state.name}
+          </Text>
+          <Text
+            eclipSizeMode={'tail'}
+            numberOfLines={1}
+            allowFontScaling={false}
+            style={styles.txtInfor}>
+            {this.state.sdt}
+          </Text>
+          <Text
+            eclipSizeMode={'tail'}
+            numberOfLines={1}
+            allowFontScaling={false}
+            style={styles.txtInfor}>
+            {this.state.email}
           </Text>
         </View>
-        <View style={[{borderBottomWidth: 1}]}>
-          <View style={styles.info}>
-            <Text style={styles.col1}>Chủ thẻ:</Text>
-            <Text style={styles.col2}>Sinh Tồn</Text>
+        <View style={styles.main}>
+          <View style={styles.thank}>
+            <Text style={styles.txtThank}>
+              Cảm ơn bạn đã tin tưởng chúng tôi!
+            </Text>
           </View>
-          <View style={styles.info}>
-            <Text style={styles.col1}>Số tài khoản:</Text>
-            <Text style={styles.col2}>0123456789999</Text>
+          <View style={styles.card}>
+            <View style={styles.cardInfor}>
+              <View style={styles.colName}>
+                <Text style={styles.txtColName}>Chủ thẻ:</Text>
+              </View>
+              <View style={styles.colValue}>
+                <Text style={styles.txtColValue}>Sinh Tồn</Text>
+              </View>
+            </View>
+            <View style={styles.cardInfor}>
+              <View style={styles.colName}>
+                <Text style={styles.txtColName}>Số tài khoản:</Text>
+              </View>
+              <View style={styles.colValue}>
+                <Text style={styles.txtColValue}>0123456789999</Text>
+              </View>
+            </View>
+            <View style={styles.cardInfor}>
+              <View style={styles.colName}>
+                <Text style={styles.txtColName}>Ngân hàng:</Text>
+              </View>
+              <View style={styles.colValue}>
+                <Text style={styles.txtColValue}>Small Giving</Text>
+              </View>
+            </View>
           </View>
-          <View style={styles.info}>
-            <Text style={styles.col1}>Ngân hàng:</Text>
-            <Text style={styles.col2}>Ngân hàng Small Giving</Text>
+          <View style={styles.guide}>
+            <View style={styles.thuchien}>
+              <Text style={styles.txtThucHien}>Cách thực hiện</Text>
+            </View>
+            <View style={styles.step}>
+              <Text style={styles.txtStep}>
+                Bước 1: Nhập số tài khoản phía trên
+              </Text>
+              <Text style={styles.txtStep}>
+                Bước 2: Nhập nội dung chuyển khoản là SĐT đăng ký
+              </Text>
+              <Text style={styles.txtStep}>
+                Bước 3: Chuyển khoản và chờ kết quả
+              </Text>
+            </View>
           </View>
         </View>
-        <View>
-          <Text style={styles.cachthuchien}>Cách thực hiện</Text>
-          <Text style={styles.step}>
-            Bước 1: Chuyển tiền vào số tài khoản trên
-          </Text>
-          <Text style={styles.step}>
-            Bước 2: Nhập nội dung chuyển tiền: SĐT đăng ký
-          </Text>
-        </View>
-      </View>
+      </ScrollView>
     );
   }
 }
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     flexDirection: 'column',
   },
-  TboCanhan: {
-    height: height / 3.5,
-    width: width,
-    alignSelf: 'center',
-    borderBottomColor: '#545454',
-    borderBottomWidth: 1,
+  header: {
+    flex: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  imgCanhan: {
-    width: 130,
-    height: 130,
-    alignSelf: 'center',
+  main: {
+    flex: 6,
+  },
+  imgCaNhan: {
+    width: width / 4,
+    height: height / 5,
   },
   txtName: {
-    textAlign: 'center',
-    fontSize: 15,
+    fontSize: 20,
+    color: '#545454',
     fontWeight: 'bold',
-    color: '#545454',
+    margin: '1%',
   },
-  txtSdt: {
-    textAlign: 'center',
-    fontSize: 15,
+  txtInfor: {
+    fontSize: 18,
     color: '#545454',
+    margin: '1%',
   },
-  txtMail: {
-    textAlign: 'center',
-    fontSize: 15,
-    color: '#545454',
-  },
-  thanks: {
-    borderBottomColor: '#545454',
-    borderBottomWidth: 1,
-    height: height / 20,
-    justifyContent: 'center',
+  thank: {
+    height: height / 15,
+    borderTopWidth: 2,
+    borderBottomWidth: 2,
+    borderColor: '#545454',
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  txtThanks: {
-    color: '#AE1F17',
+  txtThank: {
+    color: '#AE1E17',
     fontWeight: 'bold',
-    fontSize: 15,
+    fontSize: 20,
   },
-  info: {
+  cardInfor: {
     flexDirection: 'row',
-    alignItems: 'center',
+    marginTop: '1%',
+    marginBottom: '2%',
+    marginLeft: '15%',
+  },
+  colName: {
+    flex: 4,
     justifyContent: 'center',
-    margin: 5,
   },
-  col1: {
-    flex: 3,
-    marginLeft: '25%',
+  colValue: {
+    flex: 6,
+    justifyContent: 'center',
+  },
+  txtColName: {
+    color: '#545454',
     fontWeight: 'bold',
-    color: '#545454',
+    fontSize: 17,
   },
-  col2: {
-    flex: 10,
-    color: '#545454',
+  txtColValue: {
+    color: '#AE1E17',
+    fontSize: 17,
+  },
+  card: {
+    borderBottomWidth: 2,
+    borderColor: '#545454',
   },
   thuchien: {
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  cachthuchien: {
+  txtThucHien: {
     fontSize: 30,
     color: '#545454',
-    alignSelf: 'center',
   },
   step: {
-    textAlign: 'justify',
-    marginLeft: '10%',
+    marginLeft: '2%',
+  },
+  txtStep: {
     color: '#545454',
-    fontSize: 15,
+    fontSize: 18,
+    fontWeight: 'bold',
+    margin: '1%',
   },
 });

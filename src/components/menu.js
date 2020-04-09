@@ -13,11 +13,11 @@ var {width, height} = Dimensions.get('window');
 import Anh from '../../images/canhan.png';
 import Entypo from 'react-native-vector-icons/Entypo';
 import getUserByToken from '../api/getUserByToken';
-
+import getUserByID from '../api/getUserByID';
 export default class menu extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {token: '', name: ''};
+    this.state = {token: '', name: '', id: ''};
   }
 
   logout = async () => {
@@ -26,107 +26,135 @@ export default class menu extends React.Component {
     this.props.navigation.navigate('Intro');
   };
 
-  componentDidMount() {
-    this.getData();
-  }
-
-  getData = async () => {
+  componentDidMount = async () => {
     var tokenAsync = await AsyncStorage.getItem('tokenLogin');
     getUserByToken(tokenAsync)
-      .then(resName => resName['TenNguoiDung'])
-      .then(resJSONName => {
-        this.setState({name: resJSONName});
+      .then(resID => resID['idNguoiDung'])
+      .then(resJSON => {
+        this.setState({id: resJSON});
       })
       .catch(error => console.log(error));
   };
 
+  componentDidUpdate(preProps, preState, a) {
+    const {id} = this.state;
+    if (preState.id !== id) {
+      this.getdata();
+    }
+  }
+
+  getdata() {
+    const {id} = this.state;
+    getUserByID(id)
+      .then(resName => resName[0]['TenNguoiDung'])
+      .then(resJSON => {
+        this.setState({name: resJSON});
+      })
+      .catch(error => console.log(error));
+  }
+
+  home() {
+    this.getdata();
+    this.props.navigation.closeDrawer();
+  }
   render() {
     return (
       <View style={styles.container}>
-        <View>
-          <View style={styles.TboCanhan}>
-            <Image source={Anh} style={styles.imgCanhan} />
-            <Text
-              eclipSizeMode={'tail'}
-              numberOfLines={1}
-              allowFontScaling={false}
-              style={styles.txtCanhan}>
-              {this.state.name}
-            </Text>
+        <View style={styles.header}>
+          <Image source={Anh} style={styles.imgCanhan} />
+          <Text
+            eclipSizeMode={'tail'}
+            numberOfLines={1}
+            allowFontScaling={false}
+            style={styles.txtCanhan}>
+            {this.state.name}
+          </Text>
+        </View>
+        <View style={styles.main}>
+          <View style={styles.btn}>
+            <TouchableOpacity
+              onPress={this.home.bind(this)}
+              style={styles.btnAll}>
+              <Entypo name={'home'} size={30} style={styles.imgBtn} />
+              <Text style={styles.txtBtn}>Trang chủ</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.btn}>
+            <TouchableOpacity
+              onPress={() => {
+                this.props.navigation.navigate('Contact');
+              }}
+              style={styles.btnAll}>
+              <Entypo name={'phone'} size={30} style={styles.imgBtn} />
+              <Text style={styles.txtBtn}>Liên hệ và góp ý</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.btn}>
+            <TouchableOpacity
+              onPress={() => {
+                this.props.navigation.navigate('Guide');
+              }}
+              style={styles.btnAll}>
+              <Entypo name={'text-document'} size={30} style={styles.imgBtn} />
+              <Text style={styles.txtBtn}>Hướng dẫn nạp tiền</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.btn}>
+            <TouchableOpacity
+              onPress={() => {
+                this.logout();
+              }}
+              style={styles.btnAll}>
+              <Entypo name={'log-out'} size={30} style={styles.imgBtn} />
+              <Text style={styles.txtBtn}>Đăng xuất</Text>
+            </TouchableOpacity>
           </View>
         </View>
-
-        <View style={styles.menu}>
-          <TouchableOpacity
-            onPress={() => {
-              this.props.navigation.closeDrawer();
-            }}
-            style={styles.tboMenu}>
-            <Entypo name={'home'} size={30} style={styles.imgLogo} />
-            <Text style={styles.txtMenu}>Trang chủ</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              this.props.navigation.navigate('Contact');
-            }}
-            style={styles.tboMenu}>
-            <Entypo name={'phone'} size={30} style={styles.imgLogo} />
-            <Text style={styles.txtMenu}>Liên hệ và góp ý</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              this.props.navigation.navigate('Guide');
-            }}
-            style={styles.tboMenu}>
-            <Entypo name={'text-document'} size={30} style={styles.imgLogo} />
-            <Text style={styles.txtMenu}>Hướng dẫn nạp tiền</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              this.logout();
-            }}
-            style={styles.tboMenu}>
-            <Entypo name={'log-out'} size={30} style={styles.imgLogo} />
-            <Text style={styles.txtMenu}>Đăng xuất</Text>
-          </TouchableOpacity>
-        </View>
+        <View style={styles.footer} />
       </View>
     );
   }
 }
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     flexDirection: 'column',
   },
-  TboCanhan: {
-    borderColor: '#545454',
-    borderWidth: 1,
-    height: 200,
+  header: {
+    flex: 3,
+    borderBottomColor: '#545454',
+    borderBottomWidth: 2,
+    alignItems: 'center',
     justifyContent: 'center',
   },
+  main: {
+    flex: 5,
+  },
+  footer: {
+    flex: 2,
+  },
   imgCanhan: {
-    width: 150,
-    height: 150,
-    alignSelf: 'center',
+    width: width / 4,
+    height: height / 5,
   },
   txtCanhan: {
-    textAlign: 'center',
     fontSize: 25,
   },
-  menu: {
-    marginTop: '5%',
-  },
-  tboMenu: {
+  btnAll: {
     flexDirection: 'row',
-    height: height / 15,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  imgLogo: {
+  btn: {
+    marginTop: '10%',
+  },
+  imgBtn: {
     flex: 1,
-    marginLeft: 30,
+    marginLeft: '10%',
   },
-  txtMenu: {
-    flex: 4,
-    alignSelf: 'center',
-    fontSize: 18,
+  txtBtn: {
+    flex: 9,
+    marginLeft: '2%',
+    fontSize: 20,
   },
 });

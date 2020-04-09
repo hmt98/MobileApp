@@ -15,14 +15,15 @@ import {
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import coin from '../../images/coin.png';
-const {width: Width, height} = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {round} from 'react-native-reanimated';
 export default class changepass extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      xValue: new Animated.Value(450),
+      xValue: new Animated.Value(width),
     };
   }
   static navigationOptions = ({navigation}) => {
@@ -41,13 +42,13 @@ export default class changepass extends Component {
   };
   _goAnimation = () => {
     Animated.timing(this.state.xValue, {
-      toValue: 5,
+      toValue: width - width,
       duration: 0,
     }).start();
   };
   _backAnimation = () => {
     Animated.timing(this.state.xValue, {
-      toValue: 450,
+      toValue: width,
       duration: 0,
     }).start();
   };
@@ -56,46 +57,67 @@ export default class changepass extends Component {
     const item = this.props.navigation.state.params.item;
     return (
       <SafeAreaView style={styles.container}>
-        <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={10}>
-          <View style={styles.down}>
-            <Image style={styles.imgNguoigia} source={{uri: item.Anh}} />
+        <View style={styles.header}>
+          <Image style={styles.imgSuKien} source={{uri: item.Anh}} />
+        </View>
+        <KeyboardAvoidingView
+          behavior="position"
+          keyboardVerticalOffset={20}
+          style={styles.main}>
+          <View style={styles.tenHoatDong}>
             <Text
               eclipSizeMode={'tail'}
               numberOfLines={1}
               allowFontScaling={false}
-              style={styles.titleNews}>
+              style={styles.txtTenHoatDong}>
               {item.TenHoatDong}
             </Text>
-            <ImageBackground style={styles.News}>
-              <ScrollView style={{height: 200}}>
-                <Text style={styles.News}>{item.NoiDung}</Text>
-              </ScrollView>
-            </ImageBackground>
           </View>
-          <TouchableOpacity
-            onPress={this._goAnimation}
-            style={styles.btnQuyengop}>
-            <Text style={styles.ttQuyengop}>Quyên góp</Text>
-          </TouchableOpacity>
-          <Animatable.View style={styles.Animate} left={this.state.xValue}>
-            <View style={styles.Tien}>
-              <TouchableOpacity onPress={this._backAnimation}>
-                <AntDesign style={styles.exit} name="close" size={20} />
-              </TouchableOpacity>
-              <Image style={styles.imgCoin} source={coin} />
-              <Text style={styles.txtSotien}>Số tiền hiện tại bạn có là:</Text>
-              <Text style={styles.txtTien}>2.000.000 VNĐ</Text>
-              <TextInput
-                style={styles.ipTien}
-                placeholder="Nhập số tiền..."
-                placeholderTextColor="#707070"
-                keyboardType="default"
-              />
-              <TouchableOpacity style={styles.btnQuyengop2}>
-                <Text style={styles.ttQuyengop}>Quyên góp</Text>
+          <View style={styles.noidungHoatDong}>
+            <ScrollView style={styles.scroll}>
+              <Text style={styles.txtNoiDungHoatDong}>{item.NoiDung}</Text>
+            </ScrollView>
+            <View style={styles.btnQuyenGopView}>
+              <TouchableOpacity
+                onPress={this._goAnimation}
+                style={styles.btnQuyenGopOut}>
+                <Text style={styles.txtBtnQuyenGopOut}>Quyên góp</Text>
               </TouchableOpacity>
             </View>
-          </Animatable.View>
+            <Animatable.View
+              style={styles.animateView}
+              left={this.state.xValue}>
+              <View style={styles.exit}>
+                <View style={styles.exitLeft} />
+                <View style={styles.exitRight}>
+                  <TouchableOpacity onPress={this._backAnimation}>
+                    <AntDesign color={'#AE1F17'} name="close" size={20} />
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View style={styles.coin}>
+                <Image source={coin} style={styles.imgCoin} />
+              </View>
+              <View style={styles.tien}>
+                <Text style={styles.txtSotienhientai}>
+                  Số tiền hiện tại bạn có là:
+                </Text>
+                <Text style={styles.txtSotien}>20.000.000 VNĐ</Text>
+                <TextInput
+                  ref={view => (this.textInput_money = view)}
+                  style={styles.ipTien}
+                  placeholder="Nhập số tiền..."
+                  placeholderTextColor="#707070"
+                  keyboardType="default"
+                />
+                <View style={styles.btnQuyenGopView}>
+                  <TouchableOpacity style={styles.btnQuyenGopOut}>
+                    <Text style={styles.txtBtnQuyenGopOut}>Quyên góp</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Animatable.View>
+          </View>
         </KeyboardAvoidingView>
       </SafeAreaView>
     );
@@ -105,127 +127,102 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
+  },
+  header: {
+    flex: 4,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'white',
   },
-  up: {
-    flex: 1.25,
-    flexDirection: 'column',
+  main: {
+    flex: 5,
+  },
+  imgSuKien: {
+    width: '98%',
+    height: height / 2.8,
+    borderRadius: 10,
+    marginTop: '2%',
+  },
+  tenHoatDong: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '2%',
+  },
+  txtTenHoatDong: {
+    fontSize: 20,
+    color: '#AE1F17',
+    fontWeight: 'bold',
+  },
+  noidungHoatDong: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  txtNoiDungHoatDong: {
+    fontSize: 18,
+    textAlign: 'justify',
+  },
+  scroll: {
+    height: height / 3.5,
+    width: '95%',
+  },
+  btnQuyenGopOut: {
+    height: height / 17,
+    width: width / 3,
     backgroundColor: '#AE1F17',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  down: {
-    flex: 8.75,
-    flexDirection: 'column',
-    alignItems: 'center',
-    borderColor: '#AE1F17',
-    margin: 5,
-  },
-  upText: {
-    fontSize: 25,
-    color: 'white',
-    paddingTop: 20,
-  },
-  imgNguoigia: {
-    height: 250,
-    width: 410,
-    borderRadius: 15,
-  },
-  button: {
-    flex: 1,
-    flexDirection: 'row',
-    alignSelf: 'center',
-  },
-  btnQuyengop: {
-    borderWidth: 2,
     borderRadius: 10,
-    borderColor: '#CD0606',
-    backgroundColor: '#CD0606',
-    textAlign: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 20,
-    width: Width / 3,
-    bottom: 10,
-    padding: 5,
-    alignSelf: 'center',
   },
-  ttQuyengop: {
-    fontSize: 20,
+  txtBtnQuyenGopOut: {
     color: 'white',
-    fontWeight: 'bold',
-  },
-  titleNews: {
     fontSize: 20,
-    color: '#CD0606',
-    fontWeight: 'bold',
-    padding: 5,
   },
-  News: {
-    fontSize: 20,
-    textAlign: 'justify',
-    width: 350,
-  },
-  Animate: {
+  animateView: {
     height: height / 2,
-    width: Width,
+    width: width,
     backgroundColor: 'white',
     position: 'absolute',
-    marginTop: height - 430,
+  },
+  coin: {
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  Tien: {
-    alignItems: 'center',
-    paddingBottom: 30,
   },
   imgCoin: {
-    height: 70,
-    width: 70,
-  },
-  last1: {
-    flex: 2,
-    flexDirection: 'row',
-    paddingTop: 10,
-    height: 30,
-  },
-  txtSotien: {
-    fontSize: 18,
-    textAlign: 'center',
-  },
-  txtTien: {
-    fontSize: 18,
-    color: '#AA040D',
-    textAlign: 'center',
-  },
-  ipTien: {
-    borderRadius: 5,
-    borderColor: '#AA040D',
-    borderWidth: 2,
-    height: height / 18,
-    marginTop: 15,
-    width: Width / 3,
-    padding: 10,
-    fontSize: 15,
+    height: height / 8,
+    width: width / 5,
+    marginTop: '1%',
   },
   exit: {
-    marginLeft: 300,
-    color: '#AE1F17',
+    flexDirection: 'row',
+    marginTop: '2%',
   },
-  btnQuyengop2: {
-    borderWidth: 2,
-    borderRadius: 10,
-    borderColor: '#CD0606',
-    backgroundColor: '#CD0606',
-    textAlign: 'center',
+  exitLeft: {
+    flex: 9,
+  },
+  exitRight: {
+    flex: 1,
+  },
+  tien: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 40,
-    width: Width / 3,
-    bottom: 10,
-    padding: 5,
-    alignSelf: 'center',
+  },
+  txtSotienhientai: {
+    fontSize: 22,
+  },
+  txtSotien: {
+    color: '#AE1F17',
+    fontSize: 25,
+  },
+  ipTien: {
+    height: height / 16,
+    width: width / 2,
+    borderColor: '#AE1F17',
+    borderWidth: 2,
+    borderRadius: 10,
+    fontSize: 18,
+    paddingLeft: '3%',
+    // marginBottom: '5%',
+  },
+  btnQuyenGopView: {
+    marginTop: '5%',
   },
 });

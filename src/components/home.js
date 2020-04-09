@@ -8,6 +8,7 @@ import {
   ImageBackground,
   FlatList,
   RefreshControl,
+  Alert,
 } from 'react-native';
 import heart from '../../images/heart.png';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -46,7 +47,9 @@ class home extends Component {
   onRefresh = () => {
     this.refreshDataFromServer();
   };
-
+  khaosat() {
+    Alert.alert('Notice!', 'Tính năng này hiện đang phát triển!');
+  }
   render() {
     return (
       <SafeAreaView style={styles.container}>
@@ -66,7 +69,7 @@ class home extends Component {
         <View style={styles.between}>
           <View style={styles.betweenLeft}>
             <TouchableOpacity
-              onPress={() => this.test()}
+              onPress={() => this.khaosat()}
               style={styles.betweenLeftTO}>
               <AntDesign style={styles.imgKS} name={'profile'} size={35} />
               <Text style={styles.txtKS}> Làm phiếu khảo sát </Text>

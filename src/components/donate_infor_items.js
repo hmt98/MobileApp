@@ -8,24 +8,24 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Dimensions,
-  Platform,
   Animated,
   Easing,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Carousel, {ParallaxImage} from 'react-native-snap-carousel';
 import * as Progress from 'react-native-progress';
-const {width: screenWidth, height} = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
+import coin from '../../images/coin.png';
 export default class Donate_infor_items extends Component {
   constructor(props) {
     super(props);
     this.state = {
       follow: false,
       follower: this.props.item.SoNguoi,
+      xValue: new Animated.Value(height),
     };
   }
 
@@ -39,12 +39,27 @@ export default class Donate_infor_items extends Component {
     this.bell.shake(2000);
   };
 
+  _goAnimation = () => {
+    Animated.timing(this.state.xValue, {
+      toValue: height / 50,
+      duration: 0,
+      easing: Easing.linear,
+    }).start();
+  };
+
+  _backAnimation = () => {
+    // alert('Bấm');
+    Animated.timing(this.state.xValue, {
+      toValue: height,
+      duration: 0,
+      easing: Easing.linear,
+    }).start();
+  };
   render() {
-    const {item, index, parallaxProps, textInput, goAni} = this.props;
+    const {item, index, parallaxProps} = this.props;
     return (
-      <View style={styles.item}>
+      <View style={styles.container}>
         <ParallaxImage
-          source={{uri: item.thumbnail}}
           containerStyle={styles.imageContainer}
           style={styles.image}
           parallaxFactor={0.4}
@@ -54,30 +69,33 @@ export default class Donate_infor_items extends Component {
         <View style={styles.absolute}>
           <View style={styles.box}>
             <View style={styles.up}>
-              <TouchableOpacity
-                onPress={() =>
-                  this.props.navigation.navigate('New_details', {
-                    item: item,
-                  })
-                }
-                style={styles.buttonContainerR}>
-                <Text style={styles.textButtonR}>Xem chi tiết</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={this.follow}>
-                <Animatable.View ref={a => (this.bell = a)}>
-                  <FontAwesome
-                    style={styles.imgRing}
-                    name={'bell'}
-                    size={25}
-                    color={this.state.follow ? '#AE1F17' : '#545454'}
-                  />
-                </Animatable.View>
-              </TouchableOpacity>
+              <View style={styles.XemChiTiet}>
+                <TouchableOpacity
+                  onPress={() =>
+                    this.props.navigation.navigate('New_details', {
+                      item: item,
+                    })
+                  }
+                  style={styles.btnXemChiTiet}>
+                  <Text style={styles.txtBtnXemChiTiet}>Xem chi tiết</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.chuong}>
+                <TouchableOpacity onPress={this.follow}>
+                  <Animatable.View ref={a => (this.bell = a)}>
+                    <FontAwesome
+                      name={'bell'}
+                      size={25}
+                      color={this.state.follow ? '#AE1F17' : '#545454'}
+                    />
+                  </Animatable.View>
+                </TouchableOpacity>
+              </View>
             </View>
-            <Image style={[styles.imgNguoigia]} source={{uri: item.Anh}} />
+            <Image style={[styles.imgHoatDong]} source={{uri: item.Anh}} />
             <View>
               <Text
-                style={styles.txtNguoigia}
+                style={styles.txtTenChuongTrinh}
                 eclipSizeMode={'tail'}
                 numberOfLines={1}
                 allowFontScaling={false}>
@@ -86,10 +104,10 @@ export default class Donate_infor_items extends Component {
             </View>
             <Progress.Bar
               progress={item.SoDuTK / item.ChiDK}
-              width={300}
-              height={15}
+              width={width / 1.2}
+              height={height / 30}
               color={'#AE1F17'}
-              marginTop={10}
+              marginTop={5}
               borderRadius={10}
             />
             <View style={styles.money}>
@@ -100,17 +118,16 @@ export default class Donate_infor_items extends Component {
                 <Text style={styles.txtMoneyEnd}>{item.ChiDK}</Text>
               </View>
             </View>
-            <Animatable.View>
+            <View style={styles.quyengop}>
               <TouchableOpacity
                 onPress={() => {
-                  textInput.focus();
-                  goAni();
+                  this._goAnimation();
+                  //this.textInput_money.focus();
                 }}
                 style={styles.btnQuyengop}>
                 <Text style={styles.ttQuyengop}>Quyên góp</Text>
               </TouchableOpacity>
-            </Animatable.View>
-
+            </View>
             <View style={styles.follow}>
               <View style={styles.followIcon}>
                 <FontAwesome5
@@ -137,32 +154,58 @@ export default class Donate_infor_items extends Component {
             </View>
           </View>
         </View>
+        <Animatable.View
+          animation="fadeInUpBig"
+          duration={1000}
+          style={[styles.containerDN, {bottom: this.state.xValue}]}>
+          <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={100}>
+            <View style={styles.animateView}>
+              <Image source={coin} style={styles.imgCoin} />
+              <Text style={styles.txtSotienhientai}>
+                Số tiền hiện tại bạn có là:
+              </Text>
+              <Text style={styles.txtSoTien}>20.000.000 VNĐ</Text>
+              <TextInput
+                ref={view => (this.textInput_money = view)}
+                style={styles.ipTien}
+                placeholder="Nhập số tiền..."
+                placeholderTextColor="#707070"
+                keyboardType="default"
+              />
+              <TouchableOpacity style={styles.btnQuyenGopDN}>
+                <Text style={styles.txtBtnQuyenGop}>Quyên Góp</Text>
+              </TouchableOpacity>
+              <View style={styles.btnBoquaHotro}>
+                <TouchableOpacity
+                  onPress={this._backAnimation}
+                  style={styles.btnBoqua}>
+                  <Text style={styles.txtBtnBoquaHotro}>Bỏ qua</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => this.props.navigation.navigate('Guide')}
+                  style={styles.btnHotro}>
+                  <Text style={styles.txtBtnBoquaHotro}>Nạp tiền</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </KeyboardAvoidingView>
+        </Animatable.View>
       </View>
     );
   }
 }
 const styles = StyleSheet.create({
-  down: {
-    flex: 8.75,
-    flexDirection: 'column',
-    alignItems: 'center',
-    marginHorizontal: 20,
-    borderRadius: 30,
-    margin: 10,
-  },
-  item: {
-    width: 350,
-    height: 580,
+  container: {
+    width: '100%',
+    height: '96%',
     marginTop: 20,
     borderRadius: 30,
     borderWidth: 1.5,
     borderColor: '#AE1F17',
+    backgroundColor: 'white',
   },
   imageContainer: {
     flex: 1,
-    marginBottom: Platform.select({ios: 0, android: 1}), // Prevent a random Android rendering issue
-    backgroundColor: 'white',
-    borderRadius: 30,
   },
   image: {
     ...StyleSheet.absoluteFillObject,
@@ -180,59 +223,57 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     position: 'absolute',
   },
-  upText: {
-    fontSize: 25,
-    color: 'white',
-    paddingTop: 20,
-  },
-  imgNguoigia: {
-    height: 290,
-    width: 330,
+  imgHoatDong: {
+    height: height / 2.2,
+    width: width / 1.2,
     borderRadius: 15,
-    marginTop: 5,
   },
   up: {
     flex: 1,
     flexDirection: 'row',
-  },
-  buttonContainerR: {
-    borderRadius: 15,
-    width: 110,
-    height: 25,
     alignItems: 'center',
+    justifyContent: 'center',
+    width: width / 1.2,
+    margin: 5,
+  },
+  XemChiTiet: {
+    flex: 9,
+  },
+  chuong: {
+    flex: 2,
+  },
+  btnXemChiTiet: {
+    borderRadius: 15,
+    width: width / 2,
+    height: height / 26,
+    alignItems: 'center',
+    justifyContent: 'center',
     borderWidth: 2,
     borderColor: '#CD0606',
-    marginTop: 10,
   },
-  textButtonR: {
+  txtBtnXemChiTiet: {
     fontSize: 15,
     color: '#CD0606',
     fontWeight: 'bold',
   },
-  imgRing: {
-    height: 30,
-    width: 30,
-    marginLeft: 150,
-    marginTop: 10,
-  },
-  txtNguoigia: {
+  txtTenChuongTrinh: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#CD0606',
-    padding: 10,
+    padding: '2%',
   },
   money: {
-    flex: 1,
     flexDirection: 'row',
-    marginLeft: 30,
   },
   moneyStart: {
     flex: 5,
-    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   moneyEnd: {
     flex: 5,
-    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   txtMoneyStart: {
     fontSize: 20,
@@ -243,22 +284,24 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#CD0606',
     fontWeight: 'bold',
-    marginLeft: 40,
+  },
+  quyengop: {
+    marginTop: '1%',
   },
   btnQuyengop: {
-    height: 40,
+    height: height / 18,
     borderWidth: 2,
-    width: 110,
+    width: width / 3,
     borderRadius: 10,
     borderColor: '#CD0606',
     backgroundColor: 'white',
-    marginTop: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   ttQuyengop: {
-    textAlign: 'center',
     fontSize: 18,
-    padding: 5,
     color: '#CD0606',
+    alignSelf: 'center',
   },
   follow: {
     flexDirection: 'row',
@@ -284,93 +327,78 @@ const styles = StyleSheet.create({
   },
   containerDN: {
     borderRadius: 30,
-    width: 345,
+    height: height / 2.2,
+    width: width / 1.2,
     alignSelf: 'center',
     backgroundColor: 'white',
-    marginTop: 250,
-    elevation: 2,
-    position: 'absolute',
   },
-  Tien: {
+  animateView: {
     alignItems: 'center',
-    paddingTop: 10,
-    paddingBottom: 10,
+    justifyContent: 'center',
   },
   imgCoin: {
-    height: 80,
-    width: 80,
+    height: height / 8,
+    width: width / 5,
+    marginTop: '1%',
   },
-  last1: {
-    flex: 2,
-    flexDirection: 'row',
-    paddingTop: 10,
-    height: 30,
+  txtSotienhientai: {
+    fontSize: 22,
   },
-  txtSotien: {
-    fontSize: 20,
-  },
-  txtTien: {
-    fontSize: 20,
-    color: '#AA040D',
-    textAlign: 'center',
-  },
-  btnQuyengopDN: {
-    height: 40,
-    borderWidth: 1,
-    width: 110,
-    borderRadius: 10,
-    borderColor: 'white',
-    backgroundColor: '#CD0606',
-    marginTop: 60,
-    marginLeft: 5,
-  },
-  btnBoqua: {
-    height: 40,
-    borderWidth: 1,
-    width: 110,
-    borderRadius: 10,
-    borderColor: '#DE1F28',
-    backgroundColor: '#F8F3F3',
-    marginTop: 25,
-    marginLeft: 5,
-  },
-  btnNaptien: {
-    height: 40,
-    borderWidth: 1,
-    width: 110,
-    borderRadius: 10,
-    borderColor: '#DE1F28',
-    backgroundColor: '#F8F3F3',
-    marginTop: -40,
-    marginLeft: 200,
-  },
-  ttBoqua: {
-    textAlign: 'center',
-    fontSize: 18,
-    padding: 5,
-    color: '#B00C14',
-  },
-  ttNaptien: {
-    textAlign: 'center',
-    fontSize: 18,
-    padding: 5,
-    color: '#B00C14',
-  },
-  ttQuyengopDN: {
-    textAlign: 'center',
-    fontSize: 18,
-    padding: 5,
-    color: '#F8F3F3',
+  txtSoTien: {
+    color: '#AE1F17',
+    fontSize: 25,
   },
   ipTien: {
-    borderColor: '#DE1F28',
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 3,
-    marginBottom: -50,
-    marginVertical: 10,
-    width: 190,
-    paddingLeft: 8,
+    alignSelf: 'center',
+    height: height / 16,
+    width: width / 2,
+    backgroundColor: 'white',
+    borderColor: '#AE1F17',
+    borderWidth: 2,
+    borderRadius: 10,
+    fontSize: 18,
+    paddingLeft: '3%',
+  },
+  btnQuyenGopDN: {
+    height: height / 16,
+    width: width / 2.5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#AE1F17',
+    borderRadius: 15,
+    margin: '3%',
+  },
+  txtBtnQuyenGop: {
+    color: 'white',
+    fontSize: 18,
+  },
+  btnBoquaHotro: {
+    flexDirection: 'row',
+  },
+  btnBoqua: {
+    height: height / 16,
+    width: width / 3.5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white',
+    borderRadius: 15,
+    marginRight: '10%',
+    borderWidth: 2,
+    borderColor: '#AE1F17',
+  },
+  btnHotro: {
+    height: height / 16,
+    width: width / 3.5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white',
+    borderRadius: 15,
+    marginLeft: '10%',
+    borderWidth: 2,
+    borderColor: '#AE1F17',
+  },
+  txtBtnBoquaHotro: {
+    color: '#AE1F17',
     fontSize: 18,
   },
 });

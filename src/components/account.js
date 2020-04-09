@@ -9,6 +9,9 @@ import {
   ImageBackground,
   Dimensions,
   AsyncStorage,
+  ScrollView,
+  SafeAreaView,
+  RefreshControl,
 } from 'react-native';
 var {width, height} = Dimensions.get('window');
 import heart from '../../images/heart.png';
@@ -24,6 +27,7 @@ export default class account extends Component {
       id: '',
       name: '',
       sodu: '',
+      refreshing: false,
     };
   }
 
@@ -40,11 +44,12 @@ export default class account extends Component {
   componentDidUpdate(preProps, preState, a) {
     const {id} = this.state;
     if (preState.id !== id) {
-      this.getdata();
+      this.getData();
     }
   }
 
-  getdata() {
+  getData = () => {
+    this.setState({refreshing: true});
     const {id} = this.state;
     getUserByID(id)
       .then(resName => resName[0]['TenNguoiDung'])
@@ -59,11 +64,22 @@ export default class account extends Component {
         this.setState({sodu: resJSON});
       })
       .catch(error => console.log(error));
-  }
+    this.setState({refreshing: false});
+  };
 
+  onRefresh = () => {
+    this.getData();
+  };
   render() {
     return (
-      <View style={styles.container}>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this.onRefresh}
+          />
+        }
+        style={styles.container}>
         <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={20}>
           <ImageBackground style={styles.imgNguoigia} source={heart}>
             <View style={styles.profile}>
@@ -138,7 +154,7 @@ export default class account extends Component {
             </View>
           </TouchableOpacity>
         </KeyboardAvoidingView>
-      </View>
+      </ScrollView>
     );
   }
 }

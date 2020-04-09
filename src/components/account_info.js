@@ -15,7 +15,6 @@ import {
 } from 'react-native';
 var {width, height} = Dimensions.get('window');
 import heart from '../../images/heart.png';
-import canhan from '../../images/canhan.png';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
 import getUserByToken from '../api/getUserByToken';
@@ -147,246 +146,218 @@ export default class account_info extends Component {
     const {navigate} = this.props.navigation;
     return (
       <View style={styles.container}>
-        <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={20}>
-          <ImageBackground style={styles.imgNguoigia} source={heart}>
-            <View style={styles.profile}>
-              <Image style={styles.avata} source={canhan} />
-              <ImageBackground style={styles.name}>
-                <TextInput
-                  ref={view => (this.textInput_name = view)}
-                  style={styles.nameIn}
-                  onChangeText={text => this.setState({name: text})}
-                  value={this.state.name}
-                />
-                <TouchableOpacity onPress={() => this.textInput_name.focus()}>
-                  <Icon
-                    name="pencil-square-o"
-                    color="#ffffff"
-                    style={{marginHorizontal: 30}}
-                    size={20}
+        <View style={styles.header}>
+          <ImageBackground source={heart} style={styles.imgHeart}>
+            <View style={[{flex: 8}]} />
+            <View style={[{flex: 2}]}>
+              <View style={styles.profile}>
+                <View style={styles.profileName}>
+                  <TextInput
+                    style={styles.profileNameInput}
+                    ref={view => (this.textInput_name = view)}
+                    onChangeText={text => this.setState({name: text})}
+                    value={this.state.name}
                   />
-                </TouchableOpacity>
-              </ImageBackground>
+                </View>
+                <View style={styles.btnEditProfile}>
+                  <TouchableOpacity
+                    onPress={() => this.textInput_name.focus()}
+                    style={styles.img}>
+                    <Icon name="pencil-square-o" size={20} color={'white'} />
+                  </TouchableOpacity>
+                </View>
+              </View>
             </View>
           </ImageBackground>
-          <View style={styles.nguoidung}>
-            <View style={styles.tennguoidung}>
-              <Text>Số điện thoại</Text>
+        </View>
+
+        <KeyboardAvoidingView
+          behavior="position"
+          keyboardVerticalOffset={20}
+          style={styles.main}>
+          <View style={styles.mainRow}>
+            <View style={styles.name}>
+              <Text style={styles.txtNameCol}>SĐT</Text>
             </View>
-            <View style={styles.ten}>
+            <View style={styles.nameInput}>
               <Text>{this.state.sdt}</Text>
             </View>
-            <View style={styles.img}></View>
+            <View style={styles.btnEdit} />
           </View>
-          <View style={styles.nguoidung}>
-            <View style={styles.tennguoidung}>
-              <Text>Email</Text>
+          <View style={styles.mainRow}>
+            <View style={styles.name}>
+              <Text style={styles.txtNameCol}>Email</Text>
             </View>
-            <View style={styles.ten}>
+            <View style={styles.nameInput}>
               <Text>{this.state.email}</Text>
             </View>
-            <View style={styles.img}></View>
+            <View style={styles.btnEdit} />
           </View>
-          <View style={styles.nguoidung}>
-            <View style={styles.tennguoidung}>
-              <Text>Mật khẩu</Text>
+          <View style={styles.mainRow}>
+            <View style={styles.name}>
+              <Text style={styles.txtNameCol}>Mật khẩu</Text>
             </View>
-            <View style={styles.ten}>
+            <View style={styles.nameInput}>
               <TextInput
+                style={[{flex: 8}]}
                 ref={view => (this.textInput_pass = view)}
                 onChangeText={text => this.setState({pass: text})}
                 value={this.state.pass}
                 secureTextEntry={this.state.hindPass}
               />
-            </View>
-            <View style={[styles.img, {flexDirection: 'row'}]}>
-              <TouchableOpacity onPress={this.showPass.bind(this)}>
+              <TouchableOpacity
+                style={[{flex: 2}]}
+                onPress={this.showPass.bind(this)}>
                 <Feather
                   name={this.state.hindPass ? 'eye' : 'eye-off'}
                   size={20}
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => this.textInput_pass.focus()}>
-                <Icon
-                  name="pencil-square-o"
-                  style={{marginHorizontal: 30}}
-                  size={20}
-                />
+            </View>
+            <View style={styles.btnEdit}>
+              <TouchableOpacity
+                onPress={() => this.textInput_pass.focus()}
+                style={styles.img}>
+                <Icon name="pencil-square-o" size={20} />
               </TouchableOpacity>
             </View>
           </View>
-          <View style={styles.nguoidung}>
-            <View style={styles.tennguoidung}>
-              <Text>Ngày sinh</Text>
+          <View style={styles.mainRow}>
+            <View style={styles.name}>
+              <Text style={styles.txtNameCol}>Ngày sinh</Text>
             </View>
-            <View style={styles.ten}>
+            <View style={styles.nameInput}>
               <TextInput
                 ref={view => (this.textInput_date = view)}
                 onChangeText={text => this.setState({ngaysinh: text})}
                 value={this.state.ngaysinh}
               />
             </View>
-            <TouchableOpacity
-              onPress={() => this.textInput_date.focus()}
-              style={styles.img}>
-              <Icon
-                name="pencil-square-o"
-                style={{marginHorizontal: 30}}
-                size={20}
-              />
-            </TouchableOpacity>
-          </View>
-          <RefreshControl refreshing={true} />
-          <View style={styles.nguoidung}>
-            <View style={styles.tennguoidung}>
-              <Text>Số tài khoản</Text>
+            <View style={styles.btnEdit}>
+              <TouchableOpacity onPress={() => this.textInput_date.focus()}>
+                <Icon name="pencil-square-o" size={20} />
+              </TouchableOpacity>
             </View>
-            <View style={styles.ten}>
+          </View>
+          <View style={styles.mainRow}>
+            <View style={styles.name}>
+              <Text style={styles.txtNameCol}>STK</Text>
+            </View>
+            <View style={styles.nameInput}>
               <TextInput
                 ref={view => (this.textInput_stk = view)}
                 onChangeText={text => this.setState({stk: text})}
                 value={this.state.stk}
               />
             </View>
-            <TouchableOpacity
-              onPress={() => this.textInput_stk.focus()}
-              style={styles.img}>
-              <Icon
-                name="pencil-square-o"
-                style={{marginHorizontal: 30}}
-                size={20}
-              />
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.btnThem}>
-            <TouchableOpacity
-              onPress={() => this.boqua()}
-              style={styles.btnquaylai}>
-              <Text style={styles.ttquaylai}>Bỏ qua</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={this.update.bind(this)}
-              style={styles.btnhotro}>
-              <Text style={styles.tthotro}>Cập nhật</Text>
-            </TouchableOpacity>
+            <View style={styles.btnEdit}>
+              <TouchableOpacity onPress={() => this.textInput_stk.focus()}>
+                <Icon name="pencil-square-o" size={20} />
+              </TouchableOpacity>
+            </View>
           </View>
         </KeyboardAvoidingView>
+
+        <View style={styles.footer}>
+          <TouchableOpacity
+            onPress={() => this.boqua()}
+            style={styles.btnBoqua}>
+            <Text style={styles.txtBtn}>Bỏ qua</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={this.update.bind(this)}
+            style={styles.btnCapnhat}>
+            <Text style={styles.txtBtn}>Cập nhật</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
-  _edit = () => {};
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: 'white',
   },
-  imgNguoigia: {
-    height: height - 400,
-    width: width,
+  header: {
+    flex: 4,
   },
-  profile: {
+  main: {
+    flex: 3,
+  },
+  footer: {
+    flex: 1,
     flexDirection: 'row',
-    alignSelf: 'center',
-  },
-  avata: {
-    height: 70,
-    width: 70,
-    marginTop: height - 465,
-  },
-  name: {
-    flexDirection: 'row',
-    backgroundColor: '#AE1E17',
-    height: height / 15,
-    width: width - 100,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 10,
-    marginTop: height - 450,
   },
-  nameIn: {
-    fontSize: 20,
-    color: 'white',
+  imgHeart: {
+    width: width,
+    height: '100%',
   },
-  imgEditName: {
-    height: 20,
-    width: 20,
-  },
-  taikhoan: {
+  mainRow: {
     flexDirection: 'row',
-    height: 60,
-    borderBottomWidth: 2,
-    alignItems: 'center',
-  },
-  tongchi: {
-    flex: 5,
-    alignItems: 'center',
-  },
-  sodu: {
-    flex: 5,
-    alignItems: 'center',
-  },
-  txtTaikhoan: {
-    fontWeight: 'bold',
-    color: '#545454',
-    fontSize: 15,
-  },
-  nguoidung: {
-    flexDirection: 'row',
-    height: 40,
+    height: height / 15,
     borderBottomWidth: 1,
     alignItems: 'center',
   },
-  tennguoidung: {
+  name: {
     flex: 3,
-    paddingLeft: 10,
+    marginLeft: '1%',
   },
-  ten: {
-    flex: 4,
-  },
-  img: {
-    flex: 3,
+  nameInput: {
+    flex: 7,
+    flexDirection: 'row',
     alignItems: 'center',
   },
-  imgEdit: {
-    height: 20,
-    width: 20,
+  btnEdit: {
+    flex: 1,
   },
-  btnThem: {
+  profile: {
     flexDirection: 'row',
-  },
-  btnquaylai: {
-    height: 40,
-    borderWidth: 1,
-    width: 110,
-    borderRadius: 5,
-    marginLeft: 37,
-    marginTop: 30,
-    borderColor: '#DE1F28',
     backgroundColor: '#AE1E17',
+    height: height / 15,
+    width: '70%',
+    alignSelf: 'center',
+    borderRadius: 10,
   },
-  ttquaylai: {
-    textAlign: 'center',
-    fontSize: 18,
-    padding: 5,
+  profileName: {
+    flex: 7,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  btnEditProfile: {
+    flex: 3,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  profileNameInput: {
     color: 'white',
+    fontSize: 20,
   },
-  btnhotro: {
-    height: 40,
-    borderWidth: 1,
-    width: 110,
-    borderRadius: 5,
-    marginLeft: 120,
-    marginTop: 30,
-    borderColor: '#DE1F28',
+  btnBoqua: {
+    height: height / 15,
+    width: width / 4,
     backgroundColor: '#AE1E17',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    marginRight: '10%',
   },
-  tthotro: {
-    textAlign: 'center',
-    fontSize: 18,
-    padding: 5,
+  btnCapnhat: {
+    height: height / 15,
+    width: width / 4,
+    backgroundColor: '#AE1E17',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    marginLeft: '10%',
+  },
+  txtBtn: {
     color: 'white',
+    fontSize: 18,
+  },
+  txtNameCol: {
+    fontWeight: 'bold',
   },
 });

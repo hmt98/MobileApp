@@ -24,38 +24,44 @@ export default class Item_blog extends Component {
   render() {
     const item = this.props.item;
     return (
-      <View style={styles.txtxuat}>
-        <View>
-          <View style={styles.list}>
-            <Image style={styles.avatar} source={avatar} />
-            <View>
-              <Text
-                style={styles.tieude}
-                eclipSizeMode={'tail'}
-                numberOfLines={1}
-                allowFontScaling={false}>
-                {item.TenTin}
-              </Text>
-              <Text style={styles.ngaygio}> {item.ThoiGian}</Text>
-            </View>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <View style={styles.avatar}>
+            <Image source={avatar} style={styles.imgAvatar} />
           </View>
-          <Text
-            style={styles.noidung}
-            eclipSizeMode={'tail'}
-            numberOfLines={this.state.readfull ? null : 2}
-            allowFontScaling={false}>
-            {item.NoiDung}
-          </Text>
-          <TouchableOpacity onPress={this.readfull}>
+          <View style={styles.tieude}>
             <Text
-              style={[
-                styles.noidung,
-                {fontWeight: 'bold'},
-                {color: '#426ec7'},
-              ]}>
-              {this.state.readfull ? 'Rút gọn' : 'Xem thêm'}
+              style={styles.tentin}
+              eclipSizeMode={'tail'}
+              numberOfLines={1}
+              allowFontScaling={false}>
+              {item.TenTin}
             </Text>
-          </TouchableOpacity>
+            <Text style={styles.ngaygio}> {item.ThoiGian}</Text>
+          </View>
+        </View>
+        <View style={styles.main}>
+          <View style={styles.mainWidth}>
+            <Text
+              style={styles.noidung}
+              eclipSizeMode={'tail'}
+              numberOfLines={this.state.readfull ? null : 2}
+              allowFontScaling={false}>
+              {item.NoiDung}
+            </Text>
+            <TouchableOpacity onPress={this.readfull}>
+              <Text
+                style={[
+                  styles.noidung,
+                  {fontWeight: 'bold'},
+                  {color: '#426ec7'},
+                ]}>
+                {this.state.readfull ? 'Rút gọn' : 'Xem thêm'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={styles.footer}>
           <Image source={{uri: item.Anh}} style={styles.anh} />
         </View>
       </View>
@@ -65,67 +71,52 @@ export default class Item_blog extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  ViThongbao: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '7%',
-    backgroundColor: '#B91313',
-    fontSize: 20,
-    color: '#FCF7F7',
-  },
-  txtThongbao: {
-    fontSize: 18,
-    color: '#FCFCFC',
-  },
-  txtxuat: {
     borderBottomWidth: 1,
     borderBottomColor: '#545454',
-    paddingLeft: '3%',
   },
-  txtNoidung1: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  txtNoidung: {
-    paddingLeft: '2%',
-  },
-  tbAnh: {
+  header: {
+    flex: 2,
     flexDirection: 'row',
-    marginTop: '2%',
   },
-  imgTim: {
-    width: '10%',
-    height: '95%',
+  main: {
+    flex: 3,
+  },
+  footer: {
+    flex: 3,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderEndWidth: 2,
+    borderEndColor: '#545454',
+  },
+  avatar: {
+    flex: 1.5,
   },
   tieude: {
+    flex: 8.5,
+  },
+  imgAvatar: {
+    height: height * 0.1,
+    width: width / 8,
+    margin: '5%',
+  },
+  tentin: {
     fontWeight: 'bold',
-    marginTop: 15,
+    marginTop: '5%',
     color: '#545454',
     textTransform: 'uppercase',
   },
+  mainWidth: {
+    width: width - 10,
+    paddingLeft: '3%',
+  },
   noidung: {
-    fontSize: 10,
-    color: '#545454',
+    textAlign: 'justify',
   },
   anh: {
-    height: 150,
-    width: width - 150,
+    height: height / 4,
+    width: width / 1.5,
     alignSelf: 'center',
     marginTop: 5,
     marginBottom: 5,
-  },
-  list: {
-    flex: 1,
-    flexDirection: 'row',
-  },
-  avatar: {
-    height: 50,
-    width: width - 360,
-  },
-  ngaygio: {
-    fontSize: 10,
-    paddingLeft: 5,
-    color: '#545454',
   },
 });

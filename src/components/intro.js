@@ -6,10 +6,11 @@ import {
   Image,
   TouchableOpacity,
   AsyncStorage,
-  Alert,
+  Dimensions,
 } from 'react-native';
 import logo from '../../images/logo.png';
 import {connect} from 'react-redux';
+var {width, height} = Dimensions.get('window');
 class intro extends Component {
   checkToken = async () => {
     var tokenAsync = await AsyncStorage.getItem('tokenLogin');
@@ -24,26 +25,29 @@ class intro extends Component {
     const {navigate} = this.props.navigation;
     return (
       <View style={styles.container}>
-        <View style={styles.logo}>
+        <View style={styles.header}>
           <Image source={logo} />
         </View>
-        <View>
-          <Text style={styles.title}>Small Giving</Text>
-          <Text style={styles.titleMini}>small giving - big meaning</Text>
-          <Text style={styles.titleMini1}>Việc làm nhỏ - Ý nghĩa lớn</Text>
-          <Text style={styles.titleMini2}>
-            Cùng chung tay giúp những hoàn cảnh khó khăn
-          </Text>
+        <View style={styles.main}>
+          <Text style={styles.txtLogo}>Small Giving</Text>
+          <Text style={styles.txtSlogan}>small giving - big meaning</Text>
         </View>
-        <View>
-          <TouchableOpacity
-            // onPress={() => this.props.navigation.navigate('Main')}
-            onPress={() => {
-              this.checkToken();
-            }}
-            style={styles.buttonContainer}>
-            <Text style={styles.textButton}>Tiếp tục</Text>
-          </TouchableOpacity>
+        <View style={styles.footer}>
+          <View style={styles.sloganVn}>
+            <Text style={styles.txtSloganVn}>Việc làm nhỏ - Ý nghĩa lớn</Text>
+            <Text style={styles.txtSloganVn}>
+              Cùng chung tay giúp những hoàn cảnh khó khăn
+            </Text>
+          </View>
+          <View style={styles.sloganVn}>
+            <TouchableOpacity
+              onPress={() => {
+                this.checkToken();
+              }}
+              style={styles.btnTieptuc}>
+              <Text style={styles.txtBtn}>Tiếp tục</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     );
@@ -57,45 +61,44 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     backgroundColor: '#AE1F17',
   },
-  logo: {
-    width: 190,
-    height: 209,
-    padding: 110,
-    paddingTop: 70,
+  header: {
+    flex: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  title: {
+  main: {
+    flex: 2,
+    alignItems: 'center',
+  },
+  footer: {
+    flex: 3,
+    flexDirection: 'column',
+  },
+  txtLogo: {
+    color: 'white',
     fontSize: 50,
-    color: 'white',
-    textAlign: 'center',
-    paddingTop: 80,
   },
-  titleMini: {
+  txtSlogan: {
+    color: 'white',
     fontSize: 25,
-    color: 'white',
-    textAlign: 'center',
-    paddingTop: 5,
   },
-  titleMini1: {
+  txtSloganVn: {
     fontSize: 15,
     color: 'white',
-    textAlign: 'center',
-    paddingTop: 40,
   },
-  titleMini2: {
-    fontSize: 15,
-    color: 'white',
-    textAlign: 'center',
-    paddingTop: 5,
-    paddingBottom: 40,
+  sloganVn: {
+    alignItems: 'center',
+    flex: 5,
   },
-  buttonContainer: {
+  btnTieptuc: {
     backgroundColor: 'white',
     alignItems: 'center',
-    paddingVertical: 5,
-    marginHorizontal: 100,
+    justifyContent: 'center',
     borderRadius: 20,
+    width: width / 2,
+    height: height / 15,
   },
-  textButton: {
+  txtBtn: {
     fontSize: 30,
   },
 });
