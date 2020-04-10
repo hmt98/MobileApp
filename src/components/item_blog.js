@@ -50,12 +50,7 @@ export default class Item_blog extends Component {
               {item.NoiDung}
             </Text>
             <TouchableOpacity onPress={this.readfull}>
-              <Text
-                style={[
-                  styles.noidung,
-                  {fontWeight: 'bold'},
-                  {color: '#426ec7'},
-                ]}>
+              <Text style={styles.xemthem}>
                 {this.state.readfull ? 'Rút gọn' : 'Xem thêm'}
               </Text>
             </TouchableOpacity>
@@ -71,7 +66,7 @@ export default class Item_blog extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    borderBottomWidth: 1,
+    borderBottomWidth: 2,
     borderBottomColor: '#545454',
   },
   header: {
@@ -85,19 +80,19 @@ const styles = StyleSheet.create({
     flex: 3,
     alignItems: 'center',
     justifyContent: 'center',
-    borderEndWidth: 2,
-    borderEndColor: '#545454',
   },
   avatar: {
-    flex: 1.5,
+    flex: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   tieude: {
-    flex: 8.5,
+    flex: 8,
+    justifyContent: 'center',
   },
   imgAvatar: {
     height: height * 0.1,
-    width: width / 8,
-    margin: '5%',
+    width: width / 5,
   },
   tentin: {
     fontWeight: 'bold',
@@ -114,9 +109,12 @@ const styles = StyleSheet.create({
   },
   anh: {
     height: height / 4,
-    width: width / 1.5,
+    width: '90%',
     alignSelf: 'center',
-    marginTop: 5,
-    marginBottom: 5,
+    margin: '2%',
+  },
+  xemthem: {
+    fontWeight: 'bold',
+    color: '#426ec7',
   },
 });

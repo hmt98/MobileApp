@@ -116,7 +116,6 @@ const styles = StyleSheet.create({
   },
   header: {
     flex: 4,
-    backgroundColor: 'red',
   },
   between: {
     flex: 0.8,

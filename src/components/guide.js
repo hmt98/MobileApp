@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     flex: 6,
   },
   imgCaNhan: {
-    width: width / 4,
+    width: width / 3,
     height: height / 5,
   },
   txtName: {
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
     color: '#545454',
   },
   step: {
-    marginLeft: '2%',
+    marginLeft: '3%',
   },
   txtStep: {
     color: '#545454',

@@ -198,7 +198,8 @@ const styles = StyleSheet.create({
     flex: 4,
   },
   txtColValue: {
-    fontSize: 18,
+    fontSize: 20,
+    fontWeight: 'bold',
   },
   colValue: {
     flex: 6,

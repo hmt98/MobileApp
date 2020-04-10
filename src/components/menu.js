@@ -134,8 +134,9 @@ const styles = StyleSheet.create({
     flex: 2,
   },
   imgCanhan: {
-    width: width / 4,
-    height: height / 5,
+    width: '50%',
+    height: '50%',
+    margin: '5%',
   },
   txtCanhan: {
     fontSize: 25,

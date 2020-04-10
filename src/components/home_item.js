@@ -3,6 +3,7 @@ import {StyleSheet, Text, View, Image, Dimensions} from 'react-native';
 import huyhieuVang from '../../images/huyhieuVang.png';
 import huyhieuBac from '../../images/huyhieuBac.png';
 import huyhieuDong from '../../images/huyhieuDong.png';
+const {width, height} = Dimensions.get('window');
 export default class Home_item extends Component {
   constructor(props) {
     super(props);
@@ -22,30 +23,41 @@ export default class Home_item extends Component {
     }
 
     return (
-      <View style={styles.colName}>
-        <View style={styles.colNameLeft}>
-          <Image style={styles.imgHuyHieu} source={this.state.huyhieu} />
-        </View>
-        <View style={styles.colNameBetween}>
-          <Text
-            eclipSizeMode={'tail'}
-            numberOfLines={1}
-            allowFontScaling={false}
-            style={styles.txtColName}>
-            {item.TenNguoiDung}
-          </Text>
-        </View>
-        <View style={styles.colNameRight}>
-          <Text style={styles.txtColName}>{item.SoTien}</Text>
+      <View style={styles.container}>
+        <View style={styles.colName}>
+          <View style={styles.colNameLeft}>
+            <Image style={styles.imgHuyHieu} source={this.state.huyhieu} />
+          </View>
+          <View style={styles.colNameBetween}>
+            <Text
+              eclipSizeMode={'tail'}
+              numberOfLines={1}
+              allowFontScaling={false}
+              style={styles.txtColName}>
+              {item.TenNguoiDung}
+            </Text>
+          </View>
+          <View style={styles.colNameRight}>
+            <Text style={styles.txtColName}>{item.SoTien}</Text>
+          </View>
         </View>
       </View>
     );
   }
 }
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    marginBottom: '3%',
+    borderColor: '#545454',
+    borderBottomWidth: 2,
+  },
   colName: {
     flexDirection: 'row',
-    height: 30,
+    height: height / 20,
+    borderColor: '#545454',
+    borderTopWidth: 2,
   },
   colNameLeft: {
     flex: 3,
@@ -66,7 +78,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   imgHuyHieu: {
-    height: 20,
-    width: 20,
+    height: '62%',
+    width: '22%',
   },
 });

@@ -10,6 +10,9 @@ import {
   Dimensions,
   Animated,
   Easing,
+  AsyncStorage,
+  Button,
+  Alert,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Carousel, {ParallaxImage} from 'react-native-snap-carousel';
@@ -19,6 +22,8 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import coin from '../../images/coin.png';
+import getUserByToken from '../api/getUserByToken';
+import getUserByID from '../api/getUserByID';
 export default class Donate_infor_items extends Component {
   constructor(props) {
     super(props);
@@ -26,6 +31,9 @@ export default class Donate_infor_items extends Component {
       follow: false,
       follower: this.props.item.SoNguoi,
       xValue: new Animated.Value(height),
+      id: '',
+      sodu: '',
+      disabled: false,
     };
   }
 
@@ -55,8 +63,45 @@ export default class Donate_infor_items extends Component {
       easing: Easing.linear,
     }).start();
   };
+
+  componentDidMount = async () => {
+    var tokenAsync = await AsyncStorage.getItem('tokenLogin');
+    getUserByToken(tokenAsync)
+      .then(resID => resID['idNguoiDung'])
+      .then(resJSON => {
+        this.setState({id: resJSON});
+      })
+      .catch(error => console.log(error));
+  };
+
+  componentDidUpdate(preProps, preState, a) {
+    const {id} = this.state;
+    if (preState.id !== id) {
+      this.getdata();
+    }
+  }
+
+  getdata() {
+    const {id} = this.state;
+    getUserByID(id)
+      .then(resSodu => resSodu[0]['SoDuTK'])
+      .then(resJSON => {
+        this.setState({sodu: resJSON});
+      })
+      .catch(error => console.log(error));
+  }
+
+  quyengopAnimate() {
+    if (this.props.item.ThoiGian < 0) {
+      Alert.alert('Notice!', 'Thời gian quyên góp hiện đã hết!');
+      return;
+    }
+    this.getdata();
+    this._goAnimation();
+  }
+
   render() {
-    const {item, index, parallaxProps} = this.props;
+    const {item, index, parallaxProps, sodu} = this.props;
     return (
       <View style={styles.container}>
         <ParallaxImage
@@ -74,6 +119,7 @@ export default class Donate_infor_items extends Component {
                   onPress={() =>
                     this.props.navigation.navigate('New_details', {
                       item: item,
+                      sodu: sodu,
                     })
                   }
                   style={styles.btnXemChiTiet}>
@@ -92,7 +138,7 @@ export default class Donate_infor_items extends Component {
                 </TouchableOpacity>
               </View>
             </View>
-            <Image style={[styles.imgHoatDong]} source={{uri: item.Anh}} />
+            <Image style={styles.imgHoatDong} source={{uri: item.Anh}} />
             <View>
               <Text
                 style={styles.txtTenChuongTrinh}
@@ -120,9 +166,10 @@ export default class Donate_infor_items extends Component {
             </View>
             <View style={styles.quyengop}>
               <TouchableOpacity
+                disabled={this.state.disabled}
                 onPress={() => {
-                  this._goAnimation();
-                  //this.textInput_money.focus();
+                  this.quyengopAnimate();
+                  this.textInput_money.focus();
                 }}
                 style={styles.btnQuyengop}>
                 <Text style={styles.ttQuyengop}>Quyên góp</Text>
@@ -138,7 +185,7 @@ export default class Donate_infor_items extends Component {
               </View>
               <View style={styles.followCount}>
                 <Text style={styles.txtCount}>
-                  {this.state.follower} người đã quyên góp
+                  {this.state.follower} lượt quyên góp
                 </Text>
               </View>
             </View>
@@ -164,12 +211,11 @@ export default class Donate_infor_items extends Component {
               <Text style={styles.txtSotienhientai}>
                 Số tiền hiện tại bạn có là:
               </Text>
-              <Text style={styles.txtSoTien}>20.000.000 VNĐ</Text>
+              <Text style={styles.txtSoTien}>{this.state.sodu} VNĐ</Text>
               <TextInput
                 ref={view => (this.textInput_money = view)}
                 style={styles.ipTien}
                 placeholder="Nhập số tiền..."
-                placeholderTextColor="#707070"
                 keyboardType="default"
               />
               <TouchableOpacity style={styles.btnQuyenGopDN}>
@@ -337,8 +383,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   imgCoin: {
-    height: height / 8,
-    width: width / 5,
+    height: '30%',
+    width: '30%',
     marginTop: '1%',
   },
   txtSotienhientai: {

@@ -7,7 +7,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Dimensions,
-  ImageBackground,
+  AsyncStorage,
   Animated,
   ScrollView,
   TextInput,
@@ -18,12 +18,14 @@ import coin from '../../images/coin.png';
 const {width, height} = Dimensions.get('window');
 import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {round} from 'react-native-reanimated';
+import getUserByToken from '../api/getUserByToken';
+import getUserByID from '../api/getUserByID';
 export default class changepass extends Component {
   constructor(props) {
     super(props);
     this.state = {
       xValue: new Animated.Value(width),
+      sodu: '',
     };
   }
   static navigationOptions = ({navigation}) => {
@@ -52,6 +54,37 @@ export default class changepass extends Component {
       duration: 0,
     }).start();
   };
+  componentDidMount = async () => {
+    var tokenAsync = await AsyncStorage.getItem('tokenLogin');
+    getUserByToken(tokenAsync)
+      .then(resID => resID['idNguoiDung'])
+      .then(resJSON => {
+        this.setState({id: resJSON});
+      })
+      .catch(error => console.log(error));
+  };
+
+  componentDidUpdate(preProps, preState, a) {
+    const {id} = this.state;
+    if (preState.id !== id) {
+      this.getdata();
+    }
+  }
+
+  getdata() {
+    const {id} = this.state;
+    getUserByID(id)
+      .then(resSodu => resSodu[0]['SoDuTK'])
+      .then(resJSON => {
+        this.setState({sodu: resJSON});
+      })
+      .catch(error => console.log(error));
+  }
+
+  quyengopAnimate() {
+    this.getdata();
+    this._goAnimation();
+  }
   render() {
     const {navigate} = this.props.navigation;
     const item = this.props.navigation.state.params.item;
@@ -79,7 +112,10 @@ export default class changepass extends Component {
             </ScrollView>
             <View style={styles.btnQuyenGopView}>
               <TouchableOpacity
-                onPress={this._goAnimation}
+                onPress={() => {
+                  this.quyengopAnimate();
+                  this.textInput_money.focus();
+                }}
                 style={styles.btnQuyenGopOut}>
                 <Text style={styles.txtBtnQuyenGopOut}>Quyên góp</Text>
               </TouchableOpacity>
@@ -102,7 +138,7 @@ export default class changepass extends Component {
                 <Text style={styles.txtSotienhientai}>
                   Số tiền hiện tại bạn có là:
                 </Text>
-                <Text style={styles.txtSotien}>20.000.000 VNĐ</Text>
+                <Text style={styles.txtSotien}>{this.state.sodu} VNĐ</Text>
                 <TextInput
                   ref={view => (this.textInput_money = view)}
                   style={styles.ipTien}
@@ -188,7 +224,7 @@ const styles = StyleSheet.create({
   },
   imgCoin: {
     height: height / 8,
-    width: width / 5,
+    width: width / 4,
     marginTop: '1%',
   },
   exit: {
