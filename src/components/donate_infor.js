@@ -1,17 +1,5 @@
 import React, {Component} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TextInput,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  Dimensions,
-  Platform,
-  Animated,
-  Easing,
-} from 'react-native';
+import {View, Dimensions, RefreshControl} from 'react-native';
 import Carousel, {ParallaxImage} from 'react-native-snap-carousel';
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 import {getHoatDongFromServer} from '../../networking/Server';
@@ -21,6 +9,7 @@ export default class donate_infor extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      refreshing: false,
       hoatdongFromServer: [],
       follow: false,
       shake: true,
@@ -71,6 +60,12 @@ export default class donate_infor extends Component {
             />
           )}
           hasParallaxImages={true}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this.onRefresh}
+            />
+          }
         />
       </View>
     );

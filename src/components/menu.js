@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   },
   imgCanhan: {
     width: '50%',
-    height: '50%',
+    height: '55%',
     margin: '5%',
   },
   txtCanhan: {

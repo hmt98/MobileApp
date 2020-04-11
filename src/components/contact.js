@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     flex: 4,
   },
   txtColValue: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
   },
   colValue: {
@@ -206,10 +206,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   txtColName: {
-    fontSize: 18,
+    fontSize: 20,
   },
   txtColNameGui: {
-    fontSize: 18,
+    fontSize: 20,
   },
   noiGuiGopY: {
     flexDirection: 'column',
@@ -236,6 +236,6 @@ const styles = StyleSheet.create({
   },
   txtBtn: {
     color: 'white',
-    fontSize: 18,
+    fontSize: 20,
   },
 });

@@ -11,7 +11,6 @@ import {
   Animated,
   Easing,
   AsyncStorage,
-  Button,
   Alert,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
@@ -24,25 +23,29 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import coin from '../../images/coin.png';
 import getUserByToken from '../api/getUserByToken';
 import getUserByID from '../api/getUserByID';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import updateSoduHoatdong from '../api/updateSoduHoatdong';
+import updateSoduNguoidung from '../api/updateSoduNguoidung';
+import insertQuyengop from '../api/insertQuyengop';
 export default class Donate_infor_items extends Component {
   constructor(props) {
     super(props);
     this.state = {
       follow: false,
-      follower: this.props.item.SoNguoi,
       xValue: new Animated.Value(height),
       id: '',
       sodu: '',
+      sotien: null,
       disabled: false,
     };
   }
 
   follow = () => {
     this.setState({follow: !this.state.follow});
-    if (this.state.follow) {
-      this.setState({follower: this.state.follower - 1});
+    if (!this.state.follow) {
+      Alert.alert('Notice!', 'Cảm ơn bạn đã quan tâm đến chương trình!');
     } else {
-      this.setState({follower: this.state.follower * 1 + 1});
+      Alert.alert('Notice!', 'Đã bỏ theo dõi!');
     }
     this.bell.shake(2000);
   };
@@ -100,10 +103,72 @@ export default class Donate_infor_items extends Component {
     this._goAnimation();
   }
 
+  quyengop() {
+    const {id, sodu, sotien} = this.state;
+    if (sotien === null) {
+      Alert.alert('Error!', 'Vui lòng nhập số tiền!');
+      return;
+    } else if ((sotien - sodu) * 1 <= 0) {
+      this.donate();
+      return;
+    } else if (sotien < 10000) {
+      Alert.alert('Error!', 'Số tiền tối thiểu là 10000 VNĐ!');
+      return;
+    } else {
+      Alert.alert('Error!', 'Số tiền không hợp lệ!');
+      return;
+    }
+  }
+
+  onSuccessupdateSoduNguoidung() {
+    const {item} = this.props;
+    const {id, sotien} = this.state;
+    updateSoduHoatdong(item.idHoatDong, sotien)
+      .then(res => res['message'])
+      .then(result => {
+        if (result === 'success') return this.onSuccessupdateSoduHoatdong();
+        else this.onFail();
+      })
+      .catch(error => console.log(error));
+  }
+
+  onSuccessupdateSoduHoatdong() {
+    const {item} = this.props;
+    const {id, sotien} = this.state;
+    insertQuyengop(id, item.idHoatDong, sotien)
+      .then(res => res['message'])
+      .then(result => {
+        if (result === 'success') return this.onSuccessinsertQuyengop();
+        else this.onFail();
+      })
+      .catch(error => console.log(error));
+  }
+
+  onSuccessinsertQuyengop() {
+    Alert.alert('Quyên góp thành công!', 'Cảm ơn lòng hảo tâm của bạn!');
+    this.getdata();
+  }
+
+  onFail() {
+    Alert.alert('Error!', 'Có lỗi xảy ra! Vui lòng thử lại!');
+  }
+
+  donate() {
+    const {id, sotien} = this.state;
+
+    updateSoduNguoidung(id, sotien)
+      .then(res => res['message'])
+      .then(result => {
+        if (result === 'success') return this.onSuccessupdateSoduNguoidung();
+        else this.onFail();
+      })
+      .catch(error => console.log(error));
+  }
+
   render() {
-    const {item, index, parallaxProps, sodu} = this.props;
+    const {item, index, parallaxProps} = this.props;
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <ParallaxImage
           containerStyle={styles.imageContainer}
           style={styles.image}
@@ -119,7 +184,6 @@ export default class Donate_infor_items extends Component {
                   onPress={() =>
                     this.props.navigation.navigate('New_details', {
                       item: item,
-                      sodu: sodu,
                     })
                   }
                   style={styles.btnXemChiTiet}>
@@ -185,7 +249,7 @@ export default class Donate_infor_items extends Component {
               </View>
               <View style={styles.followCount}>
                 <Text style={styles.txtCount}>
-                  {this.state.follower} lượt quyên góp
+                  {item.SoNguoi} lượt quyên góp
                 </Text>
               </View>
             </View>
@@ -215,10 +279,13 @@ export default class Donate_infor_items extends Component {
               <TextInput
                 ref={view => (this.textInput_money = view)}
                 style={styles.ipTien}
+                onChangeText={text => this.setState({sotien: text})}
+                value={this.state.sotien}
                 placeholder="Nhập số tiền..."
-                keyboardType="default"
               />
-              <TouchableOpacity style={styles.btnQuyenGopDN}>
+              <TouchableOpacity
+                onPress={this.quyengop.bind(this)}
+                style={styles.btnQuyenGopDN}>
                 <Text style={styles.txtBtnQuyenGop}>Quyên Góp</Text>
               </TouchableOpacity>
               <View style={styles.btnBoquaHotro}>
@@ -236,7 +303,7 @@ export default class Donate_infor_items extends Component {
             </View>
           </KeyboardAvoidingView>
         </Animatable.View>
-      </View>
+      </SafeAreaView>
     );
   }
 }
@@ -383,16 +450,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   imgCoin: {
-    height: '30%',
-    width: '30%',
+    height: height / 10,
+    width: width / 5,
     marginTop: '1%',
   },
   txtSotienhientai: {
-    fontSize: 22,
+    fontSize: 20,
   },
   txtSoTien: {
     color: '#AE1F17',
-    fontSize: 25,
+    fontSize: 20,
   },
   ipTien: {
     alignSelf: 'center',

@@ -51,13 +51,13 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     marginBottom: '3%',
     borderColor: '#545454',
-    borderBottomWidth: 2,
+    borderBottomWidth: 1,
   },
   colName: {
     flexDirection: 'row',
     height: height / 20,
     borderColor: '#545454',
-    borderTopWidth: 2,
+    borderTopWidth: 1,
   },
   colNameLeft: {
     flex: 3,
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   imgHuyHieu: {
-    height: '62%',
-    width: '22%',
+    height: 25,
+    width: 25,
   },
 });
