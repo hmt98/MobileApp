@@ -72,8 +72,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   imgLogo: {
-    height: hp('33%'),
-    width: wp('50%'),
+    width: f(30),
+    height: f(33),
   },
   main: {
     flex: 2,
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 20,
     height: hp('7%'),
-    width: wp('50%'),
+    width: '70%',
   },
   txtBtn: {
     fontSize: f(3.5),

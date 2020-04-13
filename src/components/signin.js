@@ -40,7 +40,7 @@ export default class sigin extends Component {
           <Entypo
             name="chevron-left"
             color="#ffffff"
-            size={wp('6%')}
+            size={f(3)}
             style={{paddingLeft: 10}}
           />
         </TouchableOpacity>
@@ -207,11 +207,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   logo: {
-    margin: 10,
+    margin: '1%',
   },
   imgLogo: {
-    height: hp('27%'),
-    width: wp('40%'),
+    width: wp('50%'),
   },
   txtHeader: {
     fontSize: f(4.0),

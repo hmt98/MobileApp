@@ -300,14 +300,14 @@ export default connect()(createAppContainer(Switch));
 
 const styles = StyleSheet.create({
   tabIconActive: {
-    width: wp('6%'),
-    height: hp('4%'),
+    width: f(2.7),
+    height: f(2.7),
     tintColor: '#AE1F17',
   },
   tabIconInActive: {
-    width: wp('5%'),
-    height: hp('3%'),
-    marginTop: '10%',
+    width: f(2.2),
+    height: f(2.2),
+    marginTop: 10,
     tintColor: '#545454',
   },
 });

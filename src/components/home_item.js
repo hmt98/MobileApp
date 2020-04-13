@@ -18,11 +18,6 @@ export default class Home_item extends Component {
   }
   render() {
     const item = this.props.item;
-
-    if (item.message === 'No post found') {
-      this.setState({bxhError: true});
-    }
-
     if (item.SoTien >= 1000000) {
       this.state.huyhieu = huyhieuVang;
     } else if (item.SoTien >= 500000) {
@@ -87,7 +82,7 @@ const styles = StyleSheet.create({
     fontSize: f(1.8),
   },
   imgHuyHieu: {
-    height: hp('4%'),
-    width: wp('6.5%'),
+    height: f(3.5),
+    width: f(3.5),
   },
 });

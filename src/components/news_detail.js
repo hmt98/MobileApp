@@ -46,7 +46,7 @@ export default class changepass extends Component {
           <Entypo
             name="chevron-left"
             color="#ffffff"
-            size={wp('6%')}
+            size={f(3)}
             style={{paddingLeft: 10}}
           />
         </TouchableOpacity>
@@ -299,8 +299,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   imgCoin: {
-    height: hp('10%'),
-    width: wp('17%'),
+    width: f(10),
+    height: f(10),
   },
   exit: {
     flexDirection: 'row',

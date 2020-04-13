@@ -35,7 +35,7 @@ export default class Contact extends Component {
           <Entypo
             name="chevron-left"
             color="#ffffff"
-            size={25}
+            size={f(3)}
             style={{paddingLeft: 10}}
           />
         </TouchableOpacity>

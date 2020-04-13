@@ -461,8 +461,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   imgCoin: {
-    height: hp('10%'),
-    width: wp('17%'),
+    width: f(10),
+    height: f(10),
     marginTop: '1%',
   },
   txtSotienhientai: {

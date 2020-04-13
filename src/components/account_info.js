@@ -33,7 +33,7 @@ export default class account_info extends Component {
           <Entypo
             name="chevron-left"
             color="#ffffff"
-            size={wp('6%')}
+            size={f(3)}
             style={{paddingLeft: 10}}
           />
         </TouchableOpacity>
