@@ -4,16 +4,10 @@ import {
   Text,
   View,
   Image,
-  TouchableWithoutFeedback,
-  StatusBar,
   TextInput,
   SafeAreaView,
-  Keybroad,
-  keyboardType,
   TouchableOpacity,
   KeyboardAvoidingView,
-  Button,
-  ToastAndroid,
   Alert,
 } from 'react-native';
 import logo from '../../images/logo.png';

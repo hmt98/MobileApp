@@ -17,6 +17,12 @@ import * as Animatable from 'react-native-animatable';
 import Carousel, {ParallaxImage} from 'react-native-snap-carousel';
 import * as Progress from 'react-native-progress';
 const {width, height} = Dimensions.get('window');
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+import {responsiveFontSize as f} from 'react-native-responsive-dimensions';
+
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -36,7 +42,6 @@ export default class Donate_infor_items extends Component {
       id: '',
       sodu: '',
       sotien: null,
-      disabled: false,
     };
   }
 
@@ -98,6 +103,12 @@ export default class Donate_infor_items extends Component {
     if (this.props.item.ThoiGian < 0) {
       Alert.alert('Notice!', 'Thời gian quyên góp hiện đã hết!');
       return;
+    } else if (this.props.item.ChiDK === this.props.item.ThoiGian.SoDuTK) {
+      Alert.alert(
+        'Notice!',
+        'Đã đạt số tiền dự kiến! Vui lòng sang hoạt động khác!',
+      );
+      return;
     }
     this.getdata();
     this._goAnimation();
@@ -108,11 +119,11 @@ export default class Donate_infor_items extends Component {
     if (sotien === null) {
       Alert.alert('Error!', 'Vui lòng nhập số tiền!');
       return;
+    } else if (sotien * 1 < 5000) {
+      Alert.alert('Error!', 'Số tiền tối thiểu là 5000 VNĐ!');
+      return;
     } else if ((sotien - sodu) * 1 <= 0) {
       this.donate();
-      return;
-    } else if (sotien < 10000) {
-      Alert.alert('Error!', 'Số tiền tối thiểu là 10000 VNĐ!');
       return;
     } else {
       Alert.alert('Error!', 'Số tiền không hợp lệ!');
@@ -195,7 +206,7 @@ export default class Donate_infor_items extends Component {
                   <Animatable.View ref={a => (this.bell = a)}>
                     <FontAwesome
                       name={'bell'}
-                      size={25}
+                      size={wp('6%')}
                       color={this.state.follow ? '#AE1F17' : '#545454'}
                     />
                   </Animatable.View>
@@ -214,10 +225,10 @@ export default class Donate_infor_items extends Component {
             </View>
             <Progress.Bar
               progress={item.SoDuTK / item.ChiDK}
-              width={width / 1.2}
-              height={height / 30}
+              width={wp('85%')}
+              height={hp('4%')}
               color={'#AE1F17'}
-              marginTop={5}
+              marginTop={hp('1%')}
               borderRadius={10}
             />
             <View style={styles.money}>
@@ -243,7 +254,7 @@ export default class Donate_infor_items extends Component {
               <View style={styles.followIcon}>
                 <FontAwesome5
                   name={'user-friends'}
-                  size={30}
+                  size={wp('8%')}
                   color={'#545454'}
                 />
               </View>
@@ -255,7 +266,7 @@ export default class Donate_infor_items extends Component {
             </View>
             <View style={styles.follow}>
               <View style={styles.followIcon}>
-                <Ionicons name={'ios-time'} size={30} color={'#545454'} />
+                <Ionicons name={'ios-time'} size={wp('8%')} color={'#545454'} />
               </View>
               <View style={styles.followCount}>
                 <Text style={styles.txtCount}>
@@ -292,7 +303,7 @@ export default class Donate_infor_items extends Component {
                 <TouchableOpacity
                   onPress={this._backAnimation}
                   style={styles.btnBoqua}>
-                  <Text style={styles.txtBtnBoquaHotro}>Bỏ qua</Text>
+                  <Text style={styles.txtBtnBoquaHotro}>Quay lại</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => this.props.navigation.navigate('Guide')}
@@ -311,7 +322,7 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: '96%',
-    marginTop: 20,
+    marginTop: '5%',
     borderRadius: 30,
     borderWidth: 1.5,
     borderColor: '#AE1F17',
@@ -337,8 +348,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   imgHoatDong: {
-    height: height / 2.2,
-    width: width / 1.2,
+    height: hp('45%'),
+    width: wp('85%'),
     borderRadius: 15,
   },
   up: {
@@ -346,7 +357,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    width: width / 1.2,
+    width: wp('85%'),
     margin: 5,
   },
   XemChiTiet: {
@@ -357,20 +368,20 @@ const styles = StyleSheet.create({
   },
   btnXemChiTiet: {
     borderRadius: 15,
-    width: width / 2,
-    height: height / 26,
+    height: hp('4%'),
+    width: wp('50%'),
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
     borderColor: '#CD0606',
   },
   txtBtnXemChiTiet: {
-    fontSize: 15,
+    fontSize: f(1.8),
     color: '#CD0606',
     fontWeight: 'bold',
   },
   txtTenChuongTrinh: {
-    fontSize: 18,
+    fontSize: f(2.1),
     fontWeight: 'bold',
     color: '#CD0606',
     padding: '2%',
@@ -389,12 +400,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   txtMoneyStart: {
-    fontSize: 20,
+    fontSize: f(2.5),
     color: '#CD0606',
     fontWeight: 'bold',
   },
   txtMoneyEnd: {
-    fontSize: 20,
+    fontSize: f(2.5),
     color: '#CD0606',
     fontWeight: 'bold',
   },
@@ -402,9 +413,9 @@ const styles = StyleSheet.create({
     marginTop: '1%',
   },
   btnQuyengop: {
-    height: height / 18,
+    height: hp('6%'),
     borderWidth: 2,
-    width: width / 3,
+    width: wp('35%'),
     borderRadius: 10,
     borderColor: '#CD0606',
     backgroundColor: 'white',
@@ -412,15 +423,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   ttQuyengop: {
-    fontSize: 18,
+    fontSize: f(2.2),
     color: '#CD0606',
     alignSelf: 'center',
   },
   follow: {
     flexDirection: 'row',
     alignSelf: 'center',
-    marginTop: 10,
-    marginLeft: 20,
+    marginTop: hp('1.5%'),
+    marginLeft: wp('5%'),
   },
   followIcon: {
     flex: 2,
@@ -433,15 +444,15 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   txtCount: {
-    fontSize: 18,
+    fontSize: f(2.2),
     fontWeight: 'bold',
     alignSelf: 'center',
     color: '#545454',
   },
   containerDN: {
     borderRadius: 30,
-    height: height / 2.2,
-    width: width / 1.2,
+    height: hp('47%'),
+    width: wp('85%'),
     alignSelf: 'center',
     backgroundColor: 'white',
   },
@@ -450,31 +461,30 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   imgCoin: {
-    height: height / 10,
-    width: width / 5,
+    height: hp('10%'),
+    width: wp('17%'),
     marginTop: '1%',
   },
   txtSotienhientai: {
-    fontSize: 20,
+    fontSize: f(2.5),
   },
   txtSoTien: {
     color: '#AE1F17',
-    fontSize: 20,
+    fontSize: f(2.5),
   },
   ipTien: {
-    alignSelf: 'center',
-    height: height / 16,
-    width: width / 2,
+    height: hp('7%'),
+    width: wp('45%'),
     backgroundColor: 'white',
     borderColor: '#AE1F17',
     borderWidth: 2,
     borderRadius: 10,
-    fontSize: 18,
+    fontSize: f(2.2),
     paddingLeft: '3%',
   },
   btnQuyenGopDN: {
-    height: height / 16,
-    width: width / 2.5,
+    height: hp('6%'),
+    width: wp('40%'),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#AE1F17',
@@ -483,14 +493,14 @@ const styles = StyleSheet.create({
   },
   txtBtnQuyenGop: {
     color: 'white',
-    fontSize: 18,
+    fontSize: f(2.2),
   },
   btnBoquaHotro: {
     flexDirection: 'row',
   },
   btnBoqua: {
-    height: height / 16,
-    width: width / 3.5,
+    height: hp('6%'),
+    width: wp('27%'),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white',
@@ -500,8 +510,8 @@ const styles = StyleSheet.create({
     borderColor: '#AE1F17',
   },
   btnHotro: {
-    height: height / 16,
-    width: width / 3.5,
+    height: hp('6%'),
+    width: wp('27%'),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white',
@@ -512,6 +522,6 @@ const styles = StyleSheet.create({
   },
   txtBtnBoquaHotro: {
     color: '#AE1F17',
-    fontSize: 18,
+    fontSize: f(2.2),
   },
 });

@@ -3,16 +3,25 @@ import {StyleSheet, Text, View, Image, Dimensions} from 'react-native';
 import huyhieuVang from '../../images/huyhieuVang.png';
 import huyhieuBac from '../../images/huyhieuBac.png';
 import huyhieuDong from '../../images/huyhieuDong.png';
-const {width, height} = Dimensions.get('window');
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+import {responsiveFontSize as f} from 'react-native-responsive-dimensions';
 export default class Home_item extends Component {
   constructor(props) {
     super(props);
     this.state = {
       huyhieu: null,
+      bxhError: false,
     };
   }
   render() {
     const item = this.props.item;
+
+    if (item.message === 'No post found') {
+      this.setState({bxhError: true});
+    }
 
     if (item.SoTien >= 1000000) {
       this.state.huyhieu = huyhieuVang;
@@ -55,7 +64,7 @@ const styles = StyleSheet.create({
   },
   colName: {
     flexDirection: 'row',
-    height: height / 20,
+    height: hp('5%'),
     borderColor: '#545454',
     borderTopWidth: 1,
   },
@@ -75,10 +84,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   txtColName: {
-    fontSize: 15,
+    fontSize: f(1.8),
   },
   imgHuyHieu: {
-    height: 25,
-    width: 25,
+    height: hp('4%'),
+    width: wp('6.5%'),
   },
 });

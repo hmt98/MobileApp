@@ -1,18 +1,12 @@
 import React, {Component} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  RefreshControl,
-  FlatList,
-  Dimensions,
-  ScrollView,
-} from 'react-native';
-var {width, height} = Dimensions.get('window');
+import {StyleSheet, Text, View, RefreshControl, FlatList} from 'react-native';
 import {getBlogFromServer} from '../../networking/Server';
-import Item_blog from './item_blog';
+import Item_blog from './blog_item';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+import {responsiveFontSize as f} from 'react-native-responsive-dimensions';
 
 export default class thongbao extends Component {
   constructor(props) {
@@ -70,13 +64,11 @@ const styles = StyleSheet.create({
   ViThongbao: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: '7%',
-    backgroundColor: '#B91313',
-    fontSize: 20,
-    color: '#FCF7F7',
+    height: hp('8%'),
+    backgroundColor: '#AE1F17',
   },
   txtThongbao: {
-    fontSize: 18,
-    color: '#FCFCFC',
+    fontSize: f(2.5),
+    color: 'white',
   },
 });

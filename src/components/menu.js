@@ -9,7 +9,11 @@ import {
   AsyncStorage,
   Alert,
 } from 'react-native';
-var {width, height} = Dimensions.get('window');
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+import {responsiveFontSize as f} from 'react-native-responsive-dimensions';
 import Anh from '../../images/canhan.png';
 import Entypo from 'react-native-vector-icons/Entypo';
 import getUserByToken from '../api/getUserByToken';
@@ -75,7 +79,7 @@ export default class menu extends React.Component {
             <TouchableOpacity
               onPress={this.home.bind(this)}
               style={styles.btnAll}>
-              <Entypo name={'home'} size={30} style={styles.imgBtn} />
+              <Entypo name={'home'} size={wp('8%')} style={styles.imgBtn} />
               <Text style={styles.txtBtn}>Trang chủ</Text>
             </TouchableOpacity>
           </View>
@@ -85,7 +89,7 @@ export default class menu extends React.Component {
                 this.props.navigation.navigate('Contact');
               }}
               style={styles.btnAll}>
-              <Entypo name={'phone'} size={30} style={styles.imgBtn} />
+              <Entypo name={'phone'} size={wp('8%')} style={styles.imgBtn} />
               <Text style={styles.txtBtn}>Liên hệ và góp ý</Text>
             </TouchableOpacity>
           </View>
@@ -95,7 +99,11 @@ export default class menu extends React.Component {
                 this.props.navigation.navigate('Guide');
               }}
               style={styles.btnAll}>
-              <Entypo name={'text-document'} size={30} style={styles.imgBtn} />
+              <Entypo
+                name={'text-document'}
+                size={wp('8%')}
+                style={styles.imgBtn}
+              />
               <Text style={styles.txtBtn}>Hướng dẫn nạp tiền</Text>
             </TouchableOpacity>
           </View>
@@ -105,7 +113,7 @@ export default class menu extends React.Component {
                 this.logout();
               }}
               style={styles.btnAll}>
-              <Entypo name={'log-out'} size={30} style={styles.imgBtn} />
+              <Entypo name={'log-out'} size={wp('8%')} style={styles.imgBtn} />
               <Text style={styles.txtBtn}>Đăng xuất</Text>
             </TouchableOpacity>
           </View>
@@ -134,12 +142,11 @@ const styles = StyleSheet.create({
     flex: 2,
   },
   imgCanhan: {
-    width: '50%',
-    height: '55%',
-    margin: '5%',
+    height: hp('20%'),
+    width: wp('30%'),
   },
   txtCanhan: {
-    fontSize: 25,
+    fontSize: f(2.8),
   },
   btnAll: {
     flexDirection: 'row',
@@ -147,7 +154,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   btn: {
-    marginTop: '10%',
+    marginTop: hp('3%'),
   },
   imgBtn: {
     flex: 1,
@@ -155,7 +162,7 @@ const styles = StyleSheet.create({
   },
   txtBtn: {
     flex: 9,
-    marginLeft: '2%',
-    fontSize: 20,
+    marginLeft: wp('2%'),
+    fontSize: f(2.5),
   },
 });

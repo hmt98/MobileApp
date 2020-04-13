@@ -7,6 +7,11 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+import {responsiveFontSize as f} from 'react-native-responsive-dimensions';
 var {width, height} = Dimensions.get('window');
 import avatar from '../../images/canhan.png';
 export default class Item_blog extends Component {
@@ -91,30 +96,36 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   imgAvatar: {
-    height: height * 0.1,
-    width: width / 5,
+    height: hp('10%'),
+    width: wp('20%'),
   },
   tentin: {
     fontWeight: 'bold',
-    marginTop: '5%',
+    marginTop: '2%',
     color: '#545454',
     textTransform: 'uppercase',
+    fontSize: f(2),
+  },
+  ngaygio: {
+    fontSize: f(1.8),
   },
   mainWidth: {
-    width: width - 10,
-    paddingLeft: '3%',
+    width: wp('96%'),
+    alignSelf: 'center',
   },
   noidung: {
     textAlign: 'justify',
+    fontSize: f(1.8),
   },
   anh: {
-    height: height / 4,
-    width: '90%',
+    height: hp('30%'),
+    width: wp('95%'),
     alignSelf: 'center',
     margin: '2%',
   },
   xemthem: {
     fontWeight: 'bold',
     color: '#426ec7',
+    fontSize: f(1.8),
   },
 });

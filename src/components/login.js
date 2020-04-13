@@ -20,6 +20,11 @@ import {startGetToken, loginSuccess, loginError} from '../redux/actionCreaters';
 import getTokenEmail from '../api/getTokenEmail';
 import getTokenSDT from '../api/getTokenSDT';
 var {width, height} = Dimensions.get('window');
+import {responsiveFontSize as f} from 'react-native-responsive-dimensions';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 class login extends Component {
   static navigationOptions = ({navigation}) => {
     return {
@@ -28,7 +33,7 @@ class login extends Component {
           <Entypo
             name="chevron-left"
             color="#ffffff"
-            size={25}
+            size={wp('6%')}
             style={{paddingLeft: 10}}
           />
         </TouchableOpacity>
@@ -66,7 +71,6 @@ class login extends Component {
 
   login = async () => {
     const {username, password} = this.state;
-    const {myError, myPassWord, myToken, myUserName} = this.props;
     //kiểm tra xem điền thông tin đăng nhập chưa
     if (username === '' || password === '') {
       Alert.alert('Error!', 'Vui lòng điền thông tin đăng nhập!');
@@ -124,7 +128,7 @@ class login extends Component {
               onPress={this.showPass.bind(this)}>
               <Feather
                 name={this.state.hindPass ? 'eye' : 'eye-off'}
-                size={20}
+                size={wp('5%')}
               />
             </TouchableOpacity>
           </ImageBackground>
@@ -172,12 +176,12 @@ const styles = StyleSheet.create({
     flex: 4,
   },
   logo: {
-    height: height / 3,
-    width: width / 1.8,
+    height: hp('33%'),
+    width: wp('50%'),
   },
   textInput: {
-    height: height / 15,
-    width: width / 1.2,
+    height: hp('7%'),
+    width: wp('85%'),
     borderColor: '#545454',
     borderRadius: 10,
     borderWidth: 2,
@@ -188,8 +192,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   textInputPass: {
-    height: height / 15,
-    width: width / 1.2,
+    height: hp('7%'),
+    width: wp('85%'),
     borderColor: '#545454',
     borderRadius: 10,
     borderWidth: 2,
@@ -200,12 +204,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   textInputIn: {
-    fontSize: 20,
+    fontSize: f(2.5),
     justifyContent: 'center',
     padding: 5,
   },
   textInputInPass: {
-    fontSize: 20,
+    fontSize: f(2.5),
     padding: 5,
     flex: 9,
     justifyContent: 'center',
@@ -219,7 +223,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   txtForgotPass: {
-    fontSize: 18,
+    fontSize: f(2.5),
     color: '#545454',
   },
   button: {
@@ -229,8 +233,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonIn: {
-    height: height / 15,
-    width: width / 3,
+    height: hp('7%'),
+    width: wp('35%'),
     backgroundColor: '#AE1F17',
     margin: 30,
     alignItems: 'center',
@@ -239,7 +243,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    fontSize: 20,
+    fontSize: f(2.5),
   },
 });
 

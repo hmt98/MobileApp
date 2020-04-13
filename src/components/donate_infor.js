@@ -2,6 +2,11 @@ import React, {Component} from 'react';
 import {View, Dimensions, RefreshControl} from 'react-native';
 import Carousel, {ParallaxImage} from 'react-native-snap-carousel';
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+
 import {getHoatDongFromServer} from '../../networking/Server';
 import Donate_infor_items from './donate_infor_items';
 
@@ -48,9 +53,9 @@ export default class donate_infor extends Component {
     return (
       <View>
         <Carousel
-          sliderWidth={screenWidth}
-          sliderHeight={screenHeight}
-          itemWidth={screenWidth - 40}
+          sliderWidth={wp('100%')}
+          sliderHeight={hp('100%')}
+          itemWidth={wp('90%')}
           data={this.state.hoatdongFromServer}
           renderItem={item => (
             <Donate_infor_items

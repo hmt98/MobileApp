@@ -16,6 +16,12 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import getUserByToken from '../api/getUserByToken';
 import getUserByID from '../api/getUserByID';
 const {width, height} = Dimensions.get('window');
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+import {responsiveFontSize as f} from 'react-native-responsive-dimensions';
+
 import contact from '../api/contact';
 export default class Contact extends Component {
   constructor(props) {
@@ -174,19 +180,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   txtThank: {
-    fontSize: 18,
+    fontSize: f(2),
     fontWeight: 'bold',
     color: '#AE1E17',
   },
   txtThacMac: {
-    fontSize: 16,
+    fontSize: f(1.9),
     fontWeight: 'bold',
     color: '#AE1E17',
     marginTop: '2%',
   },
   txtGuiGopY: {
     alignSelf: 'center',
-    fontSize: 20,
+    fontSize: f(2.5),
     fontWeight: 'bold',
     margin: '5%',
   },
@@ -198,7 +204,7 @@ const styles = StyleSheet.create({
     flex: 4,
   },
   txtColValue: {
-    fontSize: 18,
+    fontSize: f(2.3),
     fontWeight: 'bold',
   },
   colValue: {
@@ -206,29 +212,30 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   txtColName: {
-    fontSize: 20,
+    fontSize: f(2.3),
   },
   txtColNameGui: {
-    fontSize: 20,
+    fontSize: f(2.3),
   },
   noiGuiGopY: {
     flexDirection: 'column',
     margin: '2%',
   },
   inputGopY: {
-    width: '100%',
-    height: height / 4,
+    alignSelf: 'center',
+    height: hp('30%'),
+    width: wp('95%'),
     borderColor: '#AE1E17',
     borderWidth: 2,
     borderRadius: 20,
-    fontSize: 18,
+    fontSize: f(2.3),
   },
   colValueGui: {
     marginTop: '3%',
   },
   btnGuiGopY: {
-    height: height / 15,
-    width: width / 3,
+    height: hp('7%'),
+    width: wp('45%'),
     backgroundColor: '#AE1E17',
     alignItems: 'center',
     justifyContent: 'center',
@@ -236,6 +243,6 @@ const styles = StyleSheet.create({
   },
   txtBtn: {
     color: 'white',
-    fontSize: 20,
+    fontSize: f(2.3),
   },
 });

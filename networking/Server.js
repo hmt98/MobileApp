@@ -1,6 +1,7 @@
 const apiBlog =
   'https://misappmobile.000webhostapp.com/Tinhoatdong/tinhoatdong.php';
-const apiNguoiDung =
+
+const apiBXH =
   'https://misappmobile.000webhostapp.com/Bangxephang/bangxephang.php';
 
 const apiHoatDong =
@@ -18,7 +19,7 @@ async function getBlogFromServer() {
 
 async function getBXHFromServer() {
   try {
-    let respond = await fetch(apiNguoiDung);
+    let respond = await fetch(apiBXH);
     let respondJson = await respond.json();
     return respondJson;
   } catch (error) {

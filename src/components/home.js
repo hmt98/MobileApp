@@ -16,6 +16,17 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {getBXHFromServer} from '../../networking/Server';
 import Home_item from './home_item';
 import {connect} from 'react-redux';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+import {responsiveFontSize as f} from 'react-native-responsive-dimensions';
+const DATA = [
+  {
+    id: '1',
+    Result: 'Chưa có dữ liệu',
+  },
+];
 class home extends Component {
   constructor(props) {
     super(props);
@@ -25,6 +36,7 @@ class home extends Component {
       readfull: false,
       networkError: false,
       userName: '',
+      bxhError: false,
     };
   }
 
@@ -35,14 +47,25 @@ class home extends Component {
   refreshDataFromServer = () => {
     this.setState({refreshing: true});
     getBXHFromServer()
-      .then(blog => {
-        this.setState({bxhFromServer: blog});
-        this.setState({refreshing: false});
+      .then(res => res['message'])
+      .then(result => {
+        if (result === 'No post found') {
+          this.setState({bxhError: true});
+          this.setState({refreshing: false});
+        } else {
+          this.setState({bxhError: false});
+          getBXHFromServer()
+            .then(bxh => {
+              this.setState({bxhFromServer: bxh});
+              this.setState({refreshing: false});
+            })
+            .catch(error => {
+              this.setState({bxhFromServer: []});
+              this.setState({refreshing: false});
+            });
+        }
       })
-      .catch(error => {
-        this.setState({bxhFromServer: []});
-        this.setState({refreshing: false});
-      });
+      .catch(error => console.log(error));
   };
   onRefresh = () => {
     this.refreshDataFromServer();
@@ -60,7 +83,7 @@ class home extends Component {
               <FontAwesome
                 style={styles.menuIcon}
                 name={'bars'}
-                size={40}
+                size={wp('10%')}
                 color={'#AE1F17'}
               />
             </TouchableOpacity>
@@ -71,7 +94,11 @@ class home extends Component {
             <TouchableOpacity
               onPress={() => this.khaosat()}
               style={styles.betweenLeftTO}>
-              <AntDesign style={styles.imgKS} name={'profile'} size={35} />
+              <AntDesign
+                style={styles.imgKS}
+                name={'profile'}
+                size={wp('10%')}
+              />
               <Text style={styles.txtKS}> Làm phiếu khảo sát </Text>
             </TouchableOpacity>
           </View>
@@ -94,17 +121,36 @@ class home extends Component {
               <Text style={styles.txtColName}>QUYÊN GÓP</Text>
             </View>
           </View>
-          <FlatList
-            data={this.state.bxhFromServer}
-            renderItem={({item, index}) => <Home_item item={item} />}
-            keyExtractor={(item, index) => item.id}
-            refreshControl={
-              <RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={this.onRefresh}
-              />
-            }
-          />
+
+          {this.state.bxhError ? (
+            <FlatList
+              data={DATA}
+              renderItem={({item}) => (
+                <View style={styles.bxhError}>
+                  <Text style={styles.txtBxhError}>{item.Result}</Text>
+                </View>
+              )}
+              keyExtractor={item => item.id}
+              refreshControl={
+                <RefreshControl
+                  refreshing={this.state.refreshing}
+                  onRefresh={this.onRefresh}
+                />
+              }
+            />
+          ) : (
+            <FlatList
+              data={this.state.bxhFromServer}
+              renderItem={({item, index}) => <Home_item item={item} />}
+              keyExtractor={(item, index) => item.id}
+              refreshControl={
+                <RefreshControl
+                  refreshing={this.state.refreshing}
+                  onRefresh={this.onRefresh}
+                />
+              }
+            />
+          )}
         </View>
       </SafeAreaView>
     );
@@ -125,8 +171,8 @@ const styles = StyleSheet.create({
     flex: 4,
   },
   headerImage: {
-    width: '100%',
-    height: '100%',
+    height: hp('40%'),
+    width: wp('100%'),
   },
   menuIcon: {
     margin: '5%',
@@ -152,31 +198,31 @@ const styles = StyleSheet.create({
   },
   txtKS: {
     flex: 8,
-    fontSize: 18,
+    fontSize: f(2.2),
     fontWeight: 'bold',
   },
   thank: {
     flex: 1,
     textAlign: 'center',
-    fontSize: 18,
+    fontSize: f(2.2),
     fontWeight: 'bold',
     color: '#AE1F17',
   },
   bxh: {
-    width: '100%',
-    height: '12%',
+    width: wp('100%'),
+    height: hp('5%'),
     backgroundColor: '#AE1F17',
     alignItems: 'center',
     justifyContent: 'center',
   },
   txtBXH: {
     color: 'white',
-    fontSize: 15,
+    fontSize: f(2),
     fontWeight: 'bold',
   },
   colName: {
     flexDirection: 'row',
-    height: '12%',
+    height: hp('5%'),
   },
   colNameLeft: {
     flex: 3,
@@ -196,7 +242,17 @@ const styles = StyleSheet.create({
   txtColName: {
     color: '#AE1F17',
     fontWeight: 'bold',
-    fontSize: 15,
+    fontSize: f(1.8),
+  },
+  bxhError: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+  },
+  txtBxhError: {
+    fontSize: f(2),
+    color: '#AE1F17',
+    fontWeight: 'bold',
   },
 });
 function mapStateToProps(state) {

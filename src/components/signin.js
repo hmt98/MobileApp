@@ -5,9 +5,7 @@ import {
   View,
   Image,
   TextInput,
-  SafeAreaView,
   TouchableOpacity,
-  KeyboardAvoidingView,
   ImageBackground,
   Alert,
   Dimensions,
@@ -15,8 +13,12 @@ import {
 import Entypo from 'react-native-vector-icons/Entypo';
 import logo from '../../images/logo.png';
 import register from '../api/register';
-import {round, block} from 'react-native-reanimated';
 import Feather from 'react-native-vector-icons/Feather';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+import {responsiveFontSize as f} from 'react-native-responsive-dimensions';
 var {width, height} = Dimensions.get('window');
 export default class sigin extends Component {
   constructor(props) {
@@ -38,7 +40,7 @@ export default class sigin extends Component {
           <Entypo
             name="chevron-left"
             color="#ffffff"
-            size={25}
+            size={wp('6%')}
             style={{paddingLeft: 10}}
           />
         </TouchableOpacity>
@@ -139,14 +141,14 @@ export default class sigin extends Component {
               onPress={this.showPass.bind(this)}>
               <Feather
                 name={this.state.hindPass ? 'eye' : 'eye-off'}
-                size={20}
+                size={wp('5%')}
               />
             </TouchableOpacity>
           </ImageBackground>
           <ImageBackground style={styles.textInputPass}>
             <TextInput
               style={styles.textInputInPass}
-              placeholder={'Nhập mật khẩu'}
+              placeholder={'Nhập lại mật khẩu'}
               onChangeText={text => this.setState({matkhau2: text})}
               value={this.state.matkhau2}
               secureTextEntry={this.state.hindPassRe}
@@ -156,7 +158,7 @@ export default class sigin extends Component {
               onPress={this.showPassRe.bind(this)}>
               <Feather
                 name={this.state.hindPassRe ? 'eye' : 'eye-off'}
-                size={20}
+                size={wp('5%')}
               />
             </TouchableOpacity>
           </ImageBackground>
@@ -189,7 +191,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   header: {
-    flex: 3,
+    flex: 4,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -208,17 +210,17 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   imgLogo: {
-    height: height / 4.5,
-    width: width / 2.8,
+    height: hp('27%'),
+    width: wp('40%'),
   },
   txtHeader: {
-    fontSize: 35,
+    fontSize: f(4.0),
     color: '#CD0606',
     fontWeight: 'bold',
   },
   textInput: {
-    height: height / 17,
-    width: width / 1.2,
+    height: hp('6%'),
+    width: wp('90%'),
     borderColor: '#545454',
     borderRadius: 10,
     borderWidth: 1,
@@ -229,12 +231,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   textInputIn: {
-    fontSize: 17,
+    fontSize: f(2),
     padding: 5,
   },
   textInputPass: {
-    height: height / 17,
-    width: width / 1.2,
+    height: hp('6%'),
+    width: wp('90%'),
     borderColor: '#545454',
     borderRadius: 10,
     borderWidth: 1,
@@ -245,7 +247,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   textInputInPass: {
-    fontSize: 17,
+    fontSize: f(2),
     padding: 5,
     flex: 9,
     justifyContent: 'center',
@@ -261,8 +263,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonIn: {
-    height: height / 15,
-    width: width / 3,
+    height: hp('7%'),
+    width: wp('35%'),
     backgroundColor: '#AE1F17',
     margin: 30,
     alignItems: 'center',
@@ -271,6 +273,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    fontSize: 20,
+    fontSize: f(2.5),
   },
 });

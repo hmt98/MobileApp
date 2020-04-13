@@ -1,10 +1,18 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {View, Image} from 'react-native';
+import {View, Image, StyleSheet} from 'react-native';
+
+import {responsiveFontSize as f} from 'react-native-responsive-dimensions';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
 import {createDrawerNavigator} from 'react-navigation-drawer';
+
 import quyengop from '../images/quyengop.png';
 import thongbao from '../images/account.png';
 import newIcon from '../images/news.png';
@@ -54,8 +62,8 @@ const DonatePage = createStackNavigator({
     navigationOptions: {
       headerTitle: 'Chi tiết',
       headerTitleAlign: 'center',
-      headerTitleStyle: {fontSize: 20, color: 'white'},
-      headerStyle: {backgroundColor: '#AE1F17'},
+      headerTitleStyle: {fontSize: f(2.5), color: 'white'},
+      headerStyle: {backgroundColor: '#AE1F17', height: hp('8%')},
     },
   },
 });
@@ -66,8 +74,6 @@ const HomePage = createStackNavigator(
       screen: intro,
       navigationOptions: {
         headerShown: false,
-        headerTitleAlign: 'center',
-        headerTitleStyle: {fontSize: 20},
       },
     },
     Login: {
@@ -75,8 +81,8 @@ const HomePage = createStackNavigator(
       navigationOptions: {
         headerTitle: 'Đăng Nhập',
         headerTitleAlign: 'center',
-        headerTitleStyle: {fontSize: 20, color: 'white'},
-        headerStyle: {backgroundColor: '#AE1F17'},
+        headerTitleStyle: {fontSize: f(2.5), color: 'white'},
+        headerStyle: {backgroundColor: '#AE1F17', height: hp('8%')},
       },
     },
     Signin: {
@@ -84,8 +90,8 @@ const HomePage = createStackNavigator(
       navigationOptions: {
         headerTitle: 'Đăng Ký',
         headerTitleAlign: 'center',
-        headerTitleStyle: {fontSize: 20, color: 'white'},
-        headerStyle: {backgroundColor: '#AE1F17'},
+        headerTitleStyle: {fontSize: f(2.5), color: 'white'},
+        headerStyle: {backgroundColor: '#AE1F17', height: hp('8%')},
       },
     },
     Forgot_pass: {
@@ -93,8 +99,7 @@ const HomePage = createStackNavigator(
       navigationOptions: {
         headerTitle: 'Quên Mật Khẩu',
         headerTitleAlign: 'center',
-        headerTitleStyle: {fontSize: 20, color: 'white'},
-        headerStyle: {backgroundColor: '#AE1F17'},
+        headerTitleStyle: {fontSize: f(2.5), color: 'white'},
       },
     },
     OTP: {
@@ -102,7 +107,7 @@ const HomePage = createStackNavigator(
       navigationOptions: {
         headerTitle: 'Nhập Mã Xác Nhận',
         headerTitleAlign: 'center',
-        headerTitleStyle: {fontSize: 20, color: 'white'},
+        headerTitleStyle: {fontSize: f(2.5), color: 'white'},
         headerStyle: {backgroundColor: '#AE1F17'},
       },
     },
@@ -111,7 +116,7 @@ const HomePage = createStackNavigator(
       navigationOptions: {
         headerTitle: 'Xác Nhận Mật Khẩu',
         headerTitleAlign: 'center',
-        headerTitleStyle: {fontSize: 20, color: 'white'},
+        headerTitleStyle: {fontSize: f(2.5), color: 'white'},
         headerStyle: {backgroundColor: '#AE1F17'},
       },
     },
@@ -130,22 +135,11 @@ const Tabbar = createBottomTabNavigator(
           if (focused) {
             return (
               <View>
-                <Image
-                  style={[{width: 25}, {height: 25}, {tintColor: '#AE1F17'}]}
-                  source={homeIcon}></Image>
+                <Image style={styles.tabIconActive} source={homeIcon} />
               </View>
             );
           } else {
-            return (
-              <Image
-                style={[
-                  {width: 20},
-                  {height: 20},
-                  {marginTop: 10},
-                  {tintColor: '#545454'},
-                ]}
-                source={homeIcon}></Image>
-            );
+            return <Image style={styles.tabIconInActive} source={homeIcon} />;
           }
         },
         // tabBarVisible: false,
@@ -158,22 +152,11 @@ const Tabbar = createBottomTabNavigator(
           if (focused) {
             return (
               <View>
-                <Image
-                  style={[{width: 25}, {height: 25}, {tintColor: '#AE1F17'}]}
-                  source={quyengop}></Image>
+                <Image style={styles.tabIconActive} source={quyengop} />
               </View>
             );
           } else {
-            return (
-              <Image
-                style={[
-                  {width: 20},
-                  {height: 20},
-                  {marginTop: 10},
-                  {tintColor: '#545454'},
-                ]}
-                source={quyengop}></Image>
-            );
+            return <Image style={styles.tabIconInActive} source={quyengop} />;
           }
         },
         // tabBarVisible: false,
@@ -184,22 +167,9 @@ const Tabbar = createBottomTabNavigator(
       navigationOptions: {
         tabBarIcon: ({focused}) => {
           if (focused) {
-            return (
-              <Image
-                style={[{width: 20}, {height: 20}, {tintColor: '#AE1F17'}]}
-                source={newIcon}></Image>
-            );
+            return <Image style={styles.tabIconActive} source={newIcon} />;
           } else {
-            return (
-              <Image
-                style={[
-                  {width: 15},
-                  {height: 15},
-                  {marginTop: 10},
-                  {tintColor: '#545454'},
-                ]}
-                source={newIcon}></Image>
-            );
+            return <Image style={styles.tabIconInActive} source={newIcon} />;
           }
         },
         // tabBarVisible: false,
@@ -210,22 +180,9 @@ const Tabbar = createBottomTabNavigator(
       navigationOptions: {
         tabBarIcon: ({focused}) => {
           if (focused) {
-            return (
-              <Image
-                style={[{width: 20}, {height: 20}, {tintColor: '#AE1F17'}]}
-                source={thongbao}></Image>
-            );
+            return <Image style={styles.tabIconActive} source={thongbao} />;
           } else {
-            return (
-              <Image
-                style={[
-                  {width: 15},
-                  {height: 15},
-                  {marginTop: 10},
-                  {tintColor: '#545454'},
-                ]}
-                source={thongbao}></Image>
-            );
+            return <Image style={styles.tabIconInActive} source={thongbao} />;
           }
         },
         // tabBarVisible: false,
@@ -238,10 +195,10 @@ const Tabbar = createBottomTabNavigator(
     tabBarOptions: {
       tabStyle: {
         borderTopWidth: 0.2,
-        borderTopColor: '#efefef',
+        borderTopColor: '#545454',
       },
       labelStyle: {
-        fontSize: 10,
+        fontSize: f(1.25),
       },
       inactiveTintColor: '#545454',
       activeTintColor: '#AE1F17',
@@ -258,7 +215,7 @@ const Account = createStackNavigator({
     navigationOptions: {
       headerTitle: 'Tài khoản',
       headerTitleAlign: 'center',
-      headerTitleStyle: {fontSize: 20, color: 'white'},
+      headerTitleStyle: {fontSize: f(2.5), color: 'white'},
       headerStyle: {backgroundColor: '#AE1F17'},
     },
   },
@@ -270,8 +227,8 @@ const Account_info = createStackNavigator({
     navigationOptions: {
       headerTitle: 'Thông tin cá nhân',
       headerTitleAlign: 'center',
-      headerTitleStyle: {fontSize: 20, color: 'white'},
-      headerStyle: {backgroundColor: '#AE1F17'},
+      headerTitleStyle: {fontSize: f(2.5), color: 'white'},
+      headerStyle: {backgroundColor: '#AE1F17', height: hp('8%')},
     },
   },
 });
@@ -282,8 +239,8 @@ const Contact = createStackNavigator({
     navigationOptions: {
       headerTitle: 'Liên hệ và góp ý',
       headerTitleAlign: 'center',
-      headerTitleStyle: {fontSize: 20, color: 'white'},
-      headerStyle: {backgroundColor: '#AE1F17'},
+      headerTitleStyle: {fontSize: f(2.5), color: 'white'},
+      headerStyle: {backgroundColor: '#AE1F17', height: hp('8%')},
     },
   },
   // initialRouteName: 'Account',
@@ -294,8 +251,8 @@ const Guide = createStackNavigator({
     navigationOptions: {
       headerTitle: 'Hướng dẫn nạp tiền',
       headerTitleAlign: 'center',
-      headerTitleStyle: {fontSize: 20, color: 'white'},
-      headerStyle: {backgroundColor: '#AE1F17'},
+      headerTitleStyle: {fontSize: f(2.5), color: 'white'},
+      headerStyle: {backgroundColor: '#AE1F17', height: hp('8%')},
     },
   },
   // initialRouteName: 'Account',
@@ -318,7 +275,7 @@ const Menutab = createDrawerNavigator(
   },
   {
     contentComponent: menu,
-    drawerWidth: '70%',
+    drawerWidth: wp('70%'),
   },
 );
 
@@ -340,3 +297,17 @@ const Switch = createSwitchNavigator(
 );
 
 export default connect()(createAppContainer(Switch));
+
+const styles = StyleSheet.create({
+  tabIconActive: {
+    width: wp('6%'),
+    height: hp('4%'),
+    tintColor: '#AE1F17',
+  },
+  tabIconInActive: {
+    width: wp('5%'),
+    height: hp('3%'),
+    marginTop: '10%',
+    tintColor: '#545454',
+  },
+});

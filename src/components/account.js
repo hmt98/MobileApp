@@ -10,9 +10,13 @@ import {
   Dimensions,
   AsyncStorage,
   ScrollView,
-  SafeAreaView,
   RefreshControl,
 } from 'react-native';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+import {responsiveFontSize as f} from 'react-native-responsive-dimensions';
 var {width, height} = Dimensions.get('window');
 import heart from '../../images/heart.png';
 import canhan from '../../images/canhan.png';
@@ -92,11 +96,11 @@ export default class account extends Component {
           <View style={styles.taikhoan}>
             <View style={styles.tongchi}>
               <Text style={styles.txtTaikhoan}>Tổng chi 5/2020</Text>
-              <Text>500000</Text>
+              <Text style={styles.txtTien}>500000</Text>
             </View>
             <View style={styles.sodu}>
               <Text style={styles.txtTaikhoan}>Số dư</Text>
-              <Text>{this.state.sodu}</Text>
+              <Text style={styles.txtTien}>{this.state.sodu}</Text>
             </View>
           </View>
           <TouchableOpacity
@@ -105,7 +109,7 @@ export default class account extends Component {
             <View style={styles.tennguoidung}>
               <Entypo
                 name={'v-card'}
-                size={30}
+                size={wp('8%')}
                 style={styles.imgLogo}
                 color={'#545454'}
               />
@@ -118,7 +122,7 @@ export default class account extends Component {
             <View style={styles.tennguoidung}>
               <FontAwesome5
                 name={'medal'}
-                size={30}
+                size={wp('8%')}
                 style={styles.imgLogo}
                 color={'#545454'}
               />
@@ -131,26 +135,13 @@ export default class account extends Component {
             <View style={styles.tennguoidung}>
               <Entypo
                 name={'back-in-time'}
-                size={30}
+                size={wp('8%')}
                 style={styles.imgLogo}
                 color={'#545454'}
               />
             </View>
             <View style={styles.ten}>
               <Text style={styles.giaodich}>Lịch sử giao dịch</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.nguoidung}>
-            <View style={styles.tennguoidung}>
-              <Entypo
-                name={'magnifying-glass'}
-                size={30}
-                style={styles.imgLogo}
-                color={'#545454'}
-              />
-            </View>
-            <View style={styles.ten}>
-              <Text style={styles.giaodich}>Tra soát giao dịch</Text>
             </View>
           </TouchableOpacity>
         </KeyboardAvoidingView>
@@ -165,42 +156,44 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   imgNguoigia: {
-    height: height - 400,
-    width: width,
+    height: hp('50%'),
+    width: wp('100%'),
   },
   profile: {
     flexDirection: 'row',
     alignSelf: 'center',
   },
   avata: {
-    height: 70,
-    width: 70,
-    marginTop: height - 465,
+    height: hp('10%'),
+    width: wp('20%'),
+    marginTop: hp('40%'),
   },
   name: {
-    flexDirection: 'row',
     backgroundColor: '#AE1E17',
-    height: 40,
-    width: width - 100,
+    height: hp('7%'),
+    width: wp('70%'),
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 10,
-    marginTop: height - 450,
+    marginTop: hp('42%'),
   },
   nameIn: {
-    fontSize: 20,
+    fontSize: f(2.5),
     color: 'white',
-    padding: 5,
   },
   taikhoan: {
     flexDirection: 'row',
-    height: 60,
+    height: hp('10%'),
     borderBottomWidth: 2,
     alignItems: 'center',
   },
   tongchi: {
     flex: 5,
     alignItems: 'center',
+  },
+  txtTien: {
+    fontSize: f(2.2),
+    color: '#AE1E17',
   },
   sodu: {
     flex: 5,
@@ -209,17 +202,17 @@ const styles = StyleSheet.create({
   txtTaikhoan: {
     fontWeight: 'bold',
     color: '#545454',
-    fontSize: 15,
+    fontSize: f(2.2),
   },
   nguoidung: {
     flexDirection: 'row',
-    height: 50,
+    height: hp('8%'),
     borderBottomWidth: 1,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   tennguoidung: {
-    flex: 3,
-    paddingLeft: 10,
+    flex: 4,
   },
   ten: {
     flex: 5,
@@ -232,7 +225,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   giaodich: {
-    fontSize: 16,
+    fontSize: f(2.2),
     fontWeight: 'bold',
     color: '#545454',
   },

@@ -12,6 +12,7 @@ import {
   ScrollView,
   TextInput,
   KeyboardAvoidingView,
+  Alert,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import coin from '../../images/coin.png';
@@ -20,12 +21,22 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import getUserByToken from '../api/getUserByToken';
 import getUserByID from '../api/getUserByID';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+import {responsiveFontSize as f} from 'react-native-responsive-dimensions';
+import updateSoduHoatdong from '../api/updateSoduHoatdong';
+import updateSoduNguoidung from '../api/updateSoduNguoidung';
+import insertQuyengop from '../api/insertQuyengop';
 export default class changepass extends Component {
   constructor(props) {
     super(props);
     this.state = {
       xValue: new Animated.Value(width),
+      id: '',
       sodu: '',
+      sotien: null,
     };
   }
   static navigationOptions = ({navigation}) => {
@@ -35,7 +46,7 @@ export default class changepass extends Component {
           <Entypo
             name="chevron-left"
             color="#ffffff"
-            size={25}
+            size={wp('6%')}
             style={{paddingLeft: 10}}
           />
         </TouchableOpacity>
@@ -85,6 +96,68 @@ export default class changepass extends Component {
     this.getdata();
     this._goAnimation();
   }
+
+  quyengop() {
+    const {id, sodu, sotien} = this.state;
+    if (sotien === null) {
+      Alert.alert('Error!', 'Vui lòng nhập số tiền!');
+      return;
+    } else if (sotien * 1 < 5000) {
+      Alert.alert('Error!', 'Số tiền tối thiểu là 5000 VNĐ!');
+      return;
+    } else if ((sotien - sodu) * 1 <= 0) {
+      this.donate();
+      return;
+    } else {
+      Alert.alert('Error!', 'Số tiền không hợp lệ!');
+      return;
+    }
+  }
+
+  onSuccessupdateSoduNguoidung() {
+    const item = this.props.navigation.state.params.item;
+    const {id, sotien} = this.state;
+    updateSoduHoatdong(item.idHoatDong, sotien)
+      .then(res => res['message'])
+      .then(result => {
+        if (result === 'success') return this.onSuccessupdateSoduHoatdong();
+        else this.onFail();
+      })
+      .catch(error => console.log(error));
+  }
+
+  onSuccessupdateSoduHoatdong() {
+    const item = this.props.navigation.state.params.item;
+    const {id, sotien} = this.state;
+    insertQuyengop(id, item.idHoatDong, sotien)
+      .then(res => res['message'])
+      .then(result => {
+        if (result === 'success') return this.onSuccessinsertQuyengop();
+        else this.onFail();
+      })
+      .catch(error => console.log(error));
+  }
+
+  onSuccessinsertQuyengop() {
+    Alert.alert('Quyên góp thành công!', 'Cảm ơn lòng hảo tâm của bạn!');
+    this.getdata();
+  }
+
+  onFail() {
+    Alert.alert('Error!', 'Có lỗi xảy ra! Vui lòng thử lại!');
+  }
+
+  donate() {
+    const {id, sotien} = this.state;
+
+    updateSoduNguoidung(id, sotien)
+      .then(res => res['message'])
+      .then(result => {
+        if (result === 'success') return this.onSuccessupdateSoduNguoidung();
+        else this.onFail();
+      })
+      .catch(error => console.log(error));
+  }
   render() {
     const {navigate} = this.props.navigation;
     const item = this.props.navigation.state.params.item;
@@ -127,7 +200,7 @@ export default class changepass extends Component {
                 <View style={styles.exitLeft} />
                 <View style={styles.exitRight}>
                   <TouchableOpacity onPress={this._backAnimation}>
-                    <AntDesign color={'#AE1F17'} name="close" size={20} />
+                    <AntDesign color={'#AE1F17'} name="close" size={wp('5%')} />
                   </TouchableOpacity>
                 </View>
               </View>
@@ -142,12 +215,15 @@ export default class changepass extends Component {
                 <TextInput
                   ref={view => (this.textInput_money = view)}
                   style={styles.ipTien}
+                  onChangeText={text => this.setState({sotien: text})}
+                  value={this.state.sotien}
                   placeholder="Nhập số tiền..."
-                  placeholderTextColor="#707070"
                   keyboardType="default"
                 />
                 <View style={styles.btnQuyenGopView}>
-                  <TouchableOpacity style={styles.btnQuyenGopOut}>
+                  <TouchableOpacity
+                    onPress={this.quyengop.bind(this)}
+                    style={styles.btnQuyenGopOut}>
                     <Text style={styles.txtBtnQuyenGopOut}>Quyên góp</Text>
                   </TouchableOpacity>
                 </View>
@@ -173,8 +249,8 @@ const styles = StyleSheet.create({
     flex: 5,
   },
   imgSuKien: {
-    width: '98%',
-    height: height / 2.8,
+    width: wp('95%'),
+    height: hp('36%'),
     borderRadius: 10,
     marginTop: '2%',
   },
@@ -184,7 +260,7 @@ const styles = StyleSheet.create({
     padding: '2%',
   },
   txtTenHoatDong: {
-    fontSize: 20,
+    fontSize: f(2.5),
     color: '#AE1F17',
     fontWeight: 'bold',
   },
@@ -193,16 +269,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   txtNoiDungHoatDong: {
-    fontSize: 18,
+    fontSize: f(2.2),
     textAlign: 'justify',
   },
   scroll: {
-    height: height / 3.5,
-    width: '95%',
+    height: hp('28%'),
+    width: wp('95%'),
   },
   btnQuyenGopOut: {
-    height: height / 17,
-    width: width / 3,
+    height: hp('7%'),
+    width: wp('40%'),
     backgroundColor: '#AE1F17',
     alignItems: 'center',
     justifyContent: 'center',
@@ -210,11 +286,11 @@ const styles = StyleSheet.create({
   },
   txtBtnQuyenGopOut: {
     color: 'white',
-    fontSize: 20,
+    fontSize: f(2.2),
   },
   animateView: {
-    height: height / 2,
-    width: width,
+    height: hp('50%'),
+    width: wp('100%'),
     backgroundColor: 'white',
     position: 'absolute',
   },
@@ -223,9 +299,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   imgCoin: {
-    height: height / 8,
-    width: width / 4,
-    marginTop: '1%',
+    height: hp('10%'),
+    width: wp('17%'),
   },
   exit: {
     flexDirection: 'row',
@@ -242,21 +317,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   txtSotienhientai: {
-    fontSize: 22,
+    fontSize: f(2.5),
   },
   txtSotien: {
     color: '#AE1F17',
-    fontSize: 25,
+    fontSize: f(2.5),
   },
   ipTien: {
-    height: height / 16,
-    width: width / 2,
+    height: hp('7%'),
+    width: wp('45%'),
     borderColor: '#AE1F17',
     borderWidth: 2,
     borderRadius: 10,
-    fontSize: 18,
+    fontSize: f(2.2),
     paddingLeft: '3%',
-    // marginBottom: '5%',
   },
   btnQuyenGopView: {
     marginTop: '5%',

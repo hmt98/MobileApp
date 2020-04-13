@@ -3,17 +3,21 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
   ImageBackground,
   Dimensions,
   AsyncStorage,
-  RefreshControl,
   Alert,
 } from 'react-native';
 var {width, height} = Dimensions.get('window');
+import {responsiveFontSize as f} from 'react-native-responsive-dimensions';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+
 import heart from '../../images/heart.png';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -29,7 +33,7 @@ export default class account_info extends Component {
           <Entypo
             name="chevron-left"
             color="#ffffff"
-            size={25}
+            size={wp('6%')}
             style={{paddingLeft: 10}}
           />
         </TouchableOpacity>
@@ -163,7 +167,11 @@ export default class account_info extends Component {
                   <TouchableOpacity
                     onPress={() => this.textInput_name.focus()}
                     style={styles.img}>
-                    <Icon name="pencil-square-o" size={20} color={'white'} />
+                    <Icon
+                      name="pencil-square-o"
+                      size={wp('5%')}
+                      color={'white'}
+                    />
                   </TouchableOpacity>
                 </View>
               </View>
@@ -180,7 +188,7 @@ export default class account_info extends Component {
               <Text style={styles.txtNameCol}>SĐT</Text>
             </View>
             <View style={styles.nameInput}>
-              <Text>{this.state.sdt}</Text>
+              <Text style={[{fontSize: f(1.8)}]}>{this.state.sdt}</Text>
             </View>
             <View style={styles.btnEdit} />
           </View>
@@ -189,7 +197,7 @@ export default class account_info extends Component {
               <Text style={styles.txtNameCol}>Email</Text>
             </View>
             <View style={styles.nameInput}>
-              <Text>{this.state.email}</Text>
+              <Text style={[{fontSize: f(1.8)}]}>{this.state.email}</Text>
             </View>
             <View style={styles.btnEdit} />
           </View>
@@ -199,7 +207,7 @@ export default class account_info extends Component {
             </View>
             <View style={styles.nameInput}>
               <TextInput
-                style={[{flex: 8}]}
+                style={[{flex: 8}, {fontSize: f(1.8)}]}
                 ref={view => (this.textInput_pass = view)}
                 onChangeText={text => this.setState({pass: text})}
                 value={this.state.pass}
@@ -210,7 +218,7 @@ export default class account_info extends Component {
                 onPress={this.showPass.bind(this)}>
                 <Feather
                   name={this.state.hindPass ? 'eye' : 'eye-off'}
-                  size={20}
+                  size={wp('5%')}
                 />
               </TouchableOpacity>
             </View>
@@ -218,7 +226,7 @@ export default class account_info extends Component {
               <TouchableOpacity
                 onPress={() => this.textInput_pass.focus()}
                 style={styles.img}>
-                <Icon name="pencil-square-o" size={20} />
+                <Icon name="pencil-square-o" size={wp('5%')} />
               </TouchableOpacity>
             </View>
           </View>
@@ -228,6 +236,7 @@ export default class account_info extends Component {
             </View>
             <View style={styles.nameInput}>
               <TextInput
+                style={[{fontSize: f(1.8)}]}
                 ref={view => (this.textInput_date = view)}
                 onChangeText={text => this.setState({ngaysinh: text})}
                 value={this.state.ngaysinh}
@@ -235,7 +244,7 @@ export default class account_info extends Component {
             </View>
             <View style={styles.btnEdit}>
               <TouchableOpacity onPress={() => this.textInput_date.focus()}>
-                <Icon name="pencil-square-o" size={20} />
+                <Icon name="pencil-square-o" size={wp('5%')} />
               </TouchableOpacity>
             </View>
           </View>
@@ -245,6 +254,7 @@ export default class account_info extends Component {
             </View>
             <View style={styles.nameInput}>
               <TextInput
+                style={[{fontSize: f(1.8)}]}
                 ref={view => (this.textInput_stk = view)}
                 onChangeText={text => this.setState({stk: text})}
                 value={this.state.stk}
@@ -252,7 +262,7 @@ export default class account_info extends Component {
             </View>
             <View style={styles.btnEdit}>
               <TouchableOpacity onPress={() => this.textInput_stk.focus()}>
-                <Icon name="pencil-square-o" size={20} />
+                <Icon name="pencil-square-o" size={wp('5%')} />
               </TouchableOpacity>
             </View>
           </View>
@@ -292,12 +302,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   imgHeart: {
-    width: width,
-    height: '100%',
+    width: wp('100%'),
+    height: hp('42%'),
   },
   mainRow: {
     flexDirection: 'row',
-    height: height / 15,
+    height: hp('6.8%'),
     borderBottomWidth: 1,
     alignItems: 'center',
   },
@@ -316,8 +326,8 @@ const styles = StyleSheet.create({
   profile: {
     flexDirection: 'row',
     backgroundColor: '#AE1E17',
-    height: height / 15,
-    width: '70%',
+    height: hp('7%'),
+    width: wp('70%'),
     alignSelf: 'center',
     borderRadius: 10,
   },
@@ -333,11 +343,11 @@ const styles = StyleSheet.create({
   },
   profileNameInput: {
     color: 'white',
-    fontSize: 20,
+    fontSize: f(2.5),
   },
   btnBoqua: {
-    height: height / 15,
-    width: width / 4,
+    height: hp('7%'),
+    width: wp('30%'),
     backgroundColor: '#AE1E17',
     alignItems: 'center',
     justifyContent: 'center',
@@ -345,8 +355,8 @@ const styles = StyleSheet.create({
     marginRight: '10%',
   },
   btnCapnhat: {
-    height: height / 15,
-    width: width / 4,
+    height: hp('7%'),
+    width: wp('30%'),
     backgroundColor: '#AE1E17',
     alignItems: 'center',
     justifyContent: 'center',
@@ -355,9 +365,10 @@ const styles = StyleSheet.create({
   },
   txtBtn: {
     color: 'white',
-    fontSize: 18,
+    fontSize: f(2.2),
   },
   txtNameCol: {
     fontWeight: 'bold',
+    fontSize: f(1.8),
   },
 });

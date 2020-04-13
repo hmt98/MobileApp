@@ -8,6 +8,11 @@ import {
   AsyncStorage,
   Dimensions,
 } from 'react-native';
+import {responsiveFontSize as f} from 'react-native-responsive-dimensions';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import logo from '../../images/logo.png';
 import {connect} from 'react-redux';
 var {width, height} = Dimensions.get('window');
@@ -26,7 +31,7 @@ class intro extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Image source={logo} />
+          <Image source={logo} style={styles.imgLogo} />
         </View>
         <View style={styles.main}>
           <Text style={styles.txtLogo}>Small Giving</Text>
@@ -66,6 +71,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  imgLogo: {
+    height: hp('33%'),
+    width: wp('50%'),
+  },
   main: {
     flex: 2,
     alignItems: 'center',
@@ -76,14 +85,14 @@ const styles = StyleSheet.create({
   },
   txtLogo: {
     color: 'white',
-    fontSize: 50,
+    fontSize: f(6),
   },
   txtSlogan: {
     color: 'white',
-    fontSize: 25,
+    fontSize: f(3),
   },
   txtSloganVn: {
-    fontSize: 15,
+    fontSize: f(2),
     color: 'white',
   },
   sloganVn: {
@@ -95,11 +104,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 20,
-    width: width / 2,
-    height: height / 15,
+    height: hp('7%'),
+    width: wp('50%'),
   },
   txtBtn: {
-    fontSize: 30,
+    fontSize: f(3.5),
   },
 });
 function mapStateToProps(state) {

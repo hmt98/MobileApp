@@ -11,6 +11,12 @@ import {
   RefreshControl,
 } from 'react-native';
 var {width, height} = Dimensions.get('window');
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+import {responsiveFontSize as f} from 'react-native-responsive-dimensions';
+
 import Anh from '../../images/canhan.png';
 import Entypo from 'react-native-vector-icons/Entypo';
 import getUserByToken from '../api/getUserByToken';
@@ -34,7 +40,7 @@ export default class Guide extends React.Component {
           <Entypo
             name="chevron-left"
             color="#ffffff"
-            size={25}
+            size={wp('6%')}
             style={{paddingLeft: 10}}
           />
         </TouchableOpacity>
@@ -186,22 +192,23 @@ const styles = StyleSheet.create({
     flex: 6,
   },
   imgCaNhan: {
-    width: width / 3,
-    height: height / 5,
+    height: hp('20%'),
+    width: wp('30%'),
   },
   txtName: {
-    fontSize: 20,
+    fontSize: f(2.3),
     color: '#545454',
     fontWeight: 'bold',
     margin: '1%',
   },
   txtInfor: {
-    fontSize: 18,
+    fontSize: f(2),
     color: '#545454',
     margin: '1%',
   },
   thank: {
-    height: height / 15,
+    height: hp('7%'),
+    width: wp('100%'),
     borderTopWidth: 2,
     borderBottomWidth: 2,
     borderColor: '#545454',
@@ -211,7 +218,7 @@ const styles = StyleSheet.create({
   txtThank: {
     color: '#AE1E17',
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: f(2.3),
   },
   cardInfor: {
     flexDirection: 'row',
@@ -230,11 +237,11 @@ const styles = StyleSheet.create({
   txtColName: {
     color: '#545454',
     fontWeight: 'bold',
-    fontSize: 17,
+    fontSize: f(2),
   },
   txtColValue: {
     color: '#AE1E17',
-    fontSize: 17,
+    fontSize: f(2),
   },
   card: {
     borderBottomWidth: 2,
@@ -245,7 +252,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   txtThucHien: {
-    fontSize: 30,
+    fontSize: f(3.5),
     color: '#545454',
   },
   step: {
@@ -253,7 +260,7 @@ const styles = StyleSheet.create({
   },
   txtStep: {
     color: '#545454',
-    fontSize: 18,
+    fontSize: f(2.2),
     fontWeight: 'bold',
     margin: '1%',
   },
