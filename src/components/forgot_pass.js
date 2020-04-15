@@ -7,61 +7,110 @@ import {
   TextInput,
   SafeAreaView,
   TouchableOpacity,
-  KeyboardAvoidingView,
+  ImageBackground,
   Alert,
 } from 'react-native';
+import checkpass from '../api/checkpass';
 import logo from '../../images/logo.png';
-import mail from '../../images/mail.png';
-
+import Entypo from 'react-native-vector-icons/Entypo';
+import {responsiveFontSize as f} from 'react-native-responsive-dimensions';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 export default class forgot_pass extends Component {
+  static navigationOptions = ({navigation}) => {
+    return {
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Entypo
+            name="chevron-left"
+            color="#ffffff"
+            size={f(3)}
+            style={{paddingLeft: 10}}
+          />
+        </TouchableOpacity>
+      ),
+    };
+  };
   constructor(props) {
     super(props);
-    this.state = {email: ''};
+    this.state = {email: '', sdt: ''};
+  }
+  confirm() {
+    const {email, sdt} = this.state;
+    if (sdt === '' || email === '') {
+      Alert.alert('Error!', 'Vui lòng điền đầy đủ thông tin!');
+      return;
+    }
+    checkpass(email, sdt)
+      .then(res => res['message'])
+      .then(result => {
+        if (result === 'Tai khoan khong ton tai') {
+          return this.onFail();
+        } else {
+          this.onSuccess(result);
+        }
+      });
+  }
+  onSuccess(pass) {
+    Alert.alert('Success!', 'Mật khẩu của bạn là: ' + pass);
+    this.props.navigation.navigate('Login');
+  }
+
+  onFail() {
+    Alert.alert('Error!', 'Email hoặc SĐT không đúng! Vui lòng kiểm tra lại!');
   }
   render() {
     const {navigate} = this.props.navigation;
     return (
-      <SafeAreaView style={styles.container}>
-        <KeyboardAvoidingView>
-          <View style={styles.logoapp}>
-            <Image style={styles.imgLogo} source={logo} />
-            <Text style={styles.txtSmall}>Small Giving</Text>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <View style={styles.logo}>
+            <Image source={logo} style={styles.imgLogo} />
           </View>
-          <View style={styles.txtTitle}>
-            <Text style={styles.txtXacnhan}>XÁC NHẬN QUÊN MẬT KHẨU</Text>
-            <Text style={styles.txtOtp}>Chúng tôi sẽ gửi mã xác nhận qua</Text>
-            <Text style={styles.txtSMS}>Email của bạn</Text>
+          <View style={styles.logo}>
+            <Text style={styles.txtHeader}>Small Giving</Text>
           </View>
-          <View style={styles.inputThongtin}>
+        </View>
+        <View style={styles.main}>
+          <View style={styles.xacnhan}>
+            <Text style={styles.txtXacnhan}>Xác nhận quên mật khẩu</Text>
+          </View>
+          <View style={styles.xacnhan}>
+            <Text style={styles.txtEmailSdt}>
+              Bạn cần nhập đúng Email và SĐT
+            </Text>
+            <Text style={styles.txtEmailSdt}>đã đăng ký</Text>
+          </View>
+          <View style={styles.textInput}>
             <TextInput
-              style={styles.txitThongtin}
-              placeholder="Nhập email"
-              placeholderTextColor="#BAA8A8"
-              onChangeText={email => this.setState({email})}
+              style={styles.textInputIn}
+              placeholder={'Nhập số điện thoại'}
+              onChangeText={text => this.setState({sdt: text})}
+              value={this.state.sdt}
+            />
+          </View>
+          <View style={styles.textInput}>
+            <TextInput
+              style={styles.textInputIn}
+              placeholder={'Nhập email'}
+              onChangeText={text => this.setState({email: text})}
               value={this.state.email}
               keyboardType="email-address"
             />
           </View>
-
-          <View>
+        </View>
+        <View style={styles.footer}>
+          <View style={styles.button}>
             <TouchableOpacity
-              onPress={this.ktra}
-              style={styles.buttonContainer}>
-              <Text style={styles.textButton}>Xác nhận</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                navigate('Login');
-              }}
-              style={styles.buttonContainerR}>
-              <Text style={styles.textButtonR}>Quay lại</Text>
+              onPress={this.confirm.bind(this)}
+              style={styles.buttonIn}>
+              <Text style={styles.buttonText}>Xác nhận</Text>
             </TouchableOpacity>
           </View>
-          <View>
-            <Image style={styles.imgMail} source={mail} />
-          </View>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
+        </View>
+      </View>
     );
   }
   ktra = async () => {
@@ -74,97 +123,84 @@ export default class forgot_pass extends Component {
 }
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
     flex: 1,
     flexDirection: 'column',
+    backgroundColor: 'white',
   },
-  logoapp: {
+  header: {
+    flex: 3,
     flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  main: {
+    flex: 4,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  footer: {
+    flex: 2,
+    flexDirection: 'row',
+  },
+  logo: {
+    margin: '1%',
   },
   imgLogo: {
-    width: 100,
-    height: 100,
-    marginLeft: 50,
-    marginTop: 10,
+    width: wp('40%'),
+    height: hp('25%'),
   },
-  imgMail: {
-    width: 145,
-    height: 140,
-    marginLeft: 140,
-    marginTop: 10,
-  },
-  txtSmall: {
+  txtHeader: {
+    fontSize: f(4.0),
     color: '#CD0606',
-    fontSize: 35,
-    marginTop: 35,
-    marginLeft: 20,
     fontWeight: 'bold',
   },
-  txtTitle: {
-    marginTop: 20,
+  textInput: {
+    height: hp('6%'),
+    width: wp('90%'),
+    borderColor: '#545454',
+    borderRadius: 10,
+    borderWidth: 1,
+    margin: 5,
+    paddingLeft: 10,
+    alignSelf: 'center',
+    backgroundColor: 'white',
+    justifyContent: 'center',
+  },
+  textInputIn: {
+    fontSize: f(2),
+    padding: 5,
+  },
+  button: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonIn: {
+    height: hp('7%'),
+    width: wp('35%'),
+    backgroundColor: '#AE1F17',
+    margin: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 15,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: f(2.5),
   },
   txtXacnhan: {
-    fontSize: 20,
-    textAlign: 'center',
+    fontSize: f(2.5),
     fontWeight: 'bold',
+    textTransform: 'uppercase',
   },
-  txtOtp: {
-    fontSize: 16,
-    textAlign: 'center',
-    color: '#545454',
-    marginTop: 20,
+  txtEmailSdt: {
+    fontSize: f(2.2),
   },
-  txtSMS: {
-    fontSize: 16,
-    textAlign: 'center',
-    color: '#545454',
-    marginTop: 1,
-  },
-  txitThongtin: {
-    width: 350,
-    height: 40,
-    borderWidth: 1,
-    borderColor: '#545454',
-    borderRadius: 6,
-    marginLeft: 30,
-    marginTop: 25,
-    padding: 7,
-    paddingLeft: 15,
-    fontSize: 18,
-  },
-  Xacminh: {
-    marginTop: 20,
-    flexDirection: 'row',
-  },
-  labXacminh: {
-    marginLeft: 30,
-    fontSize: 16,
-  },
-  rdXacminh: {
-    marginLeft: 15,
-  },
-  buttonContainer: {
-    backgroundColor: '#CD0606',
+  xacnhan: {
     alignItems: 'center',
-    paddingVertical: 5,
-    marginHorizontal: 140,
-    borderRadius: 15,
-    marginTop: 20,
-  },
-  textButton: {
-    fontSize: 22,
-    color: 'white',
-  },
-  buttonContainerR: {
-    backgroundColor: 'white',
-    alignItems: 'center',
-    paddingVertical: 5,
-    marginHorizontal: 140,
-    borderRadius: 15,
-    marginTop: 10,
-  },
-  textButtonR: {
-    fontSize: 22,
-    color: '#CD0606',
+    justifyContent: 'center',
+    margin: '1%',
   },
 });

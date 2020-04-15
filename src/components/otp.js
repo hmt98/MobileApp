@@ -4,70 +4,185 @@ import {
   Text,
   View,
   Image,
-  TouchableWithoutFeedback,
-  StatusBar,
   TextInput,
-  SafeAreaView,
-  Keybroad,
-  keyboardType,
   TouchableOpacity,
-  KeyboardAvoidingView,
   Alert,
+  ImageBackground,
+  AsyncStorage,
 } from 'react-native';
+import {responsiveFontSize as f} from 'react-native-responsive-dimensions';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import logo from '../../images/logo.png';
-import mail from '../../images/mail.png';
-import RadioForm, {
-  RadioButton,
-  RadioButtonInput,
-  RadioButtonLabel,
-} from 'react-native-simple-radio-button';
+import Feather from 'react-native-vector-icons/Feather';
+import Entypo from 'react-native-vector-icons/Entypo';
+import getUserByToken from '../api/getUserByToken';
+import changepass from '../api/changepass';
 export default class otp extends Component {
+  static navigationOptions = ({navigation}) => {
+    return {
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.goBack(null)}>
+          <Entypo
+            name="chevron-left"
+            color="#ffffff"
+            size={f(3)}
+            style={{paddingLeft: 10}}
+          />
+        </TouchableOpacity>
+      ),
+    };
+  };
   constructor(props) {
     super(props);
-    this.state = {ma: ''};
+    this.state = {
+      id: '',
+      matkhaucu: '',
+      matkhaumoi: '',
+      matkhaumoiRe: '',
+      hindPassOld: true,
+      hindPassNewRe: true,
+      hindPassNew: true,
+    };
+  }
+  componentDidMount = async () => {
+    var tokenAsync = await AsyncStorage.getItem('tokenLogin');
+    getUserByToken(tokenAsync)
+      .then(resID => resID['idNguoiDung'])
+      .then(resJSON => {
+        this.setState({id: resJSON});
+      })
+      .catch(error => console.log(error));
+  };
+  showPassOld() {
+    this.setState({hindPassOld: !this.state.hindPassOld});
+  }
+  showPassNew() {
+    this.setState({hindPassNew: !this.state.hindPassNew});
+  }
+  showPassNewRe() {
+    this.setState({hindPassNewRe: !this.state.hindPassNewRe});
+  }
+  change() {
+    const {id, matkhaucu, matkhaumoi, matkhaumoiRe} = this.state;
+    if (matkhaucu === '' || matkhaumoi === '' || matkhaumoiRe === '') {
+      Alert.alert('Error!', 'Vui lòng điền đầy đủ thông tin!');
+      return;
+    }
+
+    if (matkhaucu === matkhaumoi) {
+      Alert.alert('Error!', 'Mật khẩu không thay đổi!');
+      return;
+    }
+    if (matkhaumoi.length < 6) {
+      Alert.alert('Error!', 'Mật khẩu phải có độ dài từ 6 kí tự!');
+      return;
+    }
+    if (matkhaumoi !== matkhaumoiRe) {
+      Alert.alert('Error!', 'Mật khẩu không trùng khớp!');
+      return;
+    }
+    changepass(id, matkhaucu, matkhaumoi)
+      .then(res => res['message'])
+      .then(result => {
+        if (result === 'Success') return this.onSuccess();
+        else this.onFail();
+      });
+  }
+  onSuccess() {
+    Alert.alert('Thay đổi mật khẩu thành công!');
+    this.setState({matkhaucu: ''});
+    this.setState({matkhaumoi: ''});
+    this.setState({matkhaumoiRe: ''});
+  }
+
+  onFail() {
+    Alert.alert('Error!', 'Mật khẩu không chính xác!');
   }
   render() {
     const {navigate} = this.props.navigation;
     return (
-      <SafeAreaView style={styles.container}>
-        <KeyboardAvoidingView>
-          <View style={styles.logoapp}>
-            <Image style={styles.imgLogo} source={logo} />
-            <Text style={styles.txtSmall}>Small Giving</Text>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <View style={styles.logo}>
+            <Image source={logo} style={styles.imgLogo} />
           </View>
-          <View style={styles.txtTitle}>
-            <Text style={styles.txtXacnhan}>XÁC NHẬN QUÊN MẬT KHẨU</Text>
+          <View style={styles.logo}>
+            <Text style={styles.txtHeader}>Small Giving</Text>
           </View>
-          <View style={styles.inputOTP}>
+        </View>
+        <View style={styles.main}>
+          <View style={styles.xacnhan}>
+            <Text style={styles.txtXacnhan}>Xác nhận thay đổi mật khẩu</Text>
+          </View>
+          <View style={styles.xacnhan}>
+            <Text style={styles.txtEmailSdt}>Bạn cần nhập đúng mật khẩu</Text>
+            <Text style={styles.txtEmailSdt}>đã đăng ký</Text>
+          </View>
+          <ImageBackground style={styles.textInputPass}>
             <TextInput
-              style={styles.txitOtp}
-              placeholder={'Nhập mã xác nhận'}
-              onChangeText={ma => this.setState({ma})}
-              value={this.state.ma}
+              style={styles.textInputInPass}
+              placeholder={'Nhập mật khẩu cũ'}
+              onChangeText={text => this.setState({matkhaucu: text})}
+              value={this.state.matkhaucu}
+              secureTextEntry={this.state.hindPassOld}
             />
-          </View>
-          <TouchableOpacity style={styles.buttonContainerMa}>
-            <Text style={styles.textButtonMa}>Gửi lại mã!</Text>
-          </TouchableOpacity>
-          <View>
             <TouchableOpacity
-              onPress={this.ktra}
-              style={styles.buttonContainer}>
-              <Text style={styles.textButton}>Xác nhận</Text>
+              style={styles.showPass}
+              onPress={this.showPassOld.bind(this)}>
+              <Feather
+                name={this.state.hindPassOld ? 'eye' : 'eye-off'}
+                size={wp('5%')}
+              />
             </TouchableOpacity>
+          </ImageBackground>
+          <ImageBackground style={styles.textInputPass}>
+            <TextInput
+              style={styles.textInputInPass}
+              placeholder={'Nhập mật khẩu mới'}
+              onChangeText={text => this.setState({matkhaumoi: text})}
+              value={this.state.matkhaumoi}
+              secureTextEntry={this.state.hindPassNew}
+            />
             <TouchableOpacity
-              onPress={() => {
-                navigate('Forgot_pass');
-              }}
-              style={styles.buttonContainerR}>
-              <Text style={styles.textButtonR}>Quay lại</Text>
+              style={styles.showPass}
+              onPress={this.showPassNew.bind(this)}>
+              <Feather
+                name={this.state.hindPassNew ? 'eye' : 'eye-off'}
+                size={wp('5%')}
+              />
+            </TouchableOpacity>
+          </ImageBackground>
+          <ImageBackground style={styles.textInputPass}>
+            <TextInput
+              style={styles.textInputInPass}
+              placeholder={'Nhập lại mật khẩu mới'}
+              onChangeText={text => this.setState({matkhaumoiRe: text})}
+              value={this.state.matkhaumoiRe}
+              secureTextEntry={this.state.hindPassNewRe}
+            />
+            <TouchableOpacity
+              style={styles.showPass}
+              onPress={this.showPassNewRe.bind(this)}>
+              <Feather
+                name={this.state.hindPassNewRe ? 'eye' : 'eye-off'}
+                size={wp('5%')}
+              />
+            </TouchableOpacity>
+          </ImageBackground>
+        </View>
+        <View style={styles.footer}>
+          <View style={styles.button}>
+            <TouchableOpacity
+              onPress={this.change.bind(this)}
+              style={styles.buttonIn}>
+              <Text style={styles.buttonText}>Xác nhận</Text>
             </TouchableOpacity>
           </View>
-          <View>
-            <Image style={styles.imgMail} source={mail} />
-          </View>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
+        </View>
+      </View>
     );
   }
   ktra = async () => {
@@ -80,94 +195,90 @@ export default class otp extends Component {
 }
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
     flex: 1,
     flexDirection: 'column',
+    backgroundColor: 'white',
+  },
+  header: {
+    flex: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  main: {
+    flex: 4,
+    flexDirection: 'column',
+    justifyContent: 'center',
     alignItems: 'center',
   },
-  logoapp: {
-    marginTop: 20,
+  footer: {
+    flex: 2,
     flexDirection: 'row',
   },
-  txtSmall: {
-    color: '#CD0606',
-    fontSize: 35,
-    marginTop: 35,
-    marginLeft: 20,
-    fontWeight: 'bold',
+  logo: {
+    margin: '1%',
   },
   imgLogo: {
-    width: 100,
-    height: 100,
-    marginLeft: '5%',
-    marginTop: 10,
+    width: wp('40%'),
+    height: hp('25%'),
   },
-  imgMail: {
-    width: 135,
-    height: 130,
-    marginLeft: 110,
-    marginTop: 20,
-  },
-  txtTitle: {
-    marginTop: 20,
-  },
-  txtXacnhan: {
-    fontSize: 20,
-    textAlign: 'center',
+  txtHeader: {
+    fontSize: f(4.0),
+    color: '#CD0606',
     fontWeight: 'bold',
   },
-  txtOtp: {
-    fontSize: 16,
-    textAlign: 'center',
-    color: '#545454',
-    marginTop: 10,
-  },
-  inputOTP: {
+  button: {
+    flex: 1,
     flexDirection: 'row',
-    marginLeft: '15%',
-    marginTop: '2%',
-  },
-  txitOtp: {
-    width: '80%',
-    height: '80%',
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#545454',
+    justifyContent: 'center',
     alignItems: 'center',
-    fontSize: 15,
-    padding: 10,
   },
-  buttonContainer: {
-    backgroundColor: '#CD0606',
+  buttonIn: {
+    height: hp('7%'),
+    width: wp('35%'),
+    backgroundColor: '#AE1F17',
+    margin: 30,
     alignItems: 'center',
-    paddingVertical: 5,
-    marginHorizontal: '30%',
+    justifyContent: 'center',
     borderRadius: 15,
-    marginTop: 20,
   },
-  textButton: {
-    fontSize: 22,
+  buttonText: {
     color: 'white',
+    fontSize: f(2.5),
   },
-  buttonContainerR: {
-    backgroundColor: 'white',
+  txtXacnhan: {
+    fontSize: f(2.5),
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+  },
+  txtEmailSdt: {
+    fontSize: f(2.2),
+  },
+  xacnhan: {
     alignItems: 'center',
-    paddingVertical: 5,
-    borderRadius: 15,
-    marginTop: 20,
+    justifyContent: 'center',
+    margin: '1%',
   },
-  textButtonR: {
-    fontSize: 22,
-    color: '#CD0606',
-  },
-  buttonContainerMa: {
+  textInputPass: {
+    height: hp('6%'),
+    width: wp('90%'),
+    borderColor: '#545454',
+    borderRadius: 10,
+    borderWidth: 1,
+    alignSelf: 'center',
+    margin: 5,
+    paddingLeft: 10,
+    flexDirection: 'row',
     backgroundColor: 'white',
-    alignItems: 'center',
-    borderColor: 'black',
-    marginTop: '1%',
   },
-  textButtonMa: {
-    fontSize: 18,
-    color: '#CD0606',
+  textInputInPass: {
+    fontSize: f(2),
+    padding: 5,
+    flex: 9,
+    justifyContent: 'center',
+  },
+  showPass: {
+    flex: 1,
+    justifyContent: 'center',
   },
 });

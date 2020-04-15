@@ -60,7 +60,7 @@ const DonatePage = createStackNavigator({
   New_details: {
     screen: news_details,
     navigationOptions: {
-      headerTitle: 'Chi tiết',
+      headerTitle: 'Chi Tiết',
       headerTitleAlign: 'center',
       headerTitleStyle: {fontSize: f(2.5), color: 'white'},
       headerStyle: {backgroundColor: '#AE1F17', height: hp('8%')},
@@ -100,15 +100,7 @@ const HomePage = createStackNavigator(
         headerTitle: 'Quên Mật Khẩu',
         headerTitleAlign: 'center',
         headerTitleStyle: {fontSize: f(2.5), color: 'white'},
-      },
-    },
-    OTP: {
-      screen: otp,
-      navigationOptions: {
-        headerTitle: 'Nhập Mã Xác Nhận',
-        headerTitleAlign: 'center',
-        headerTitleStyle: {fontSize: f(2.5), color: 'white'},
-        headerStyle: {backgroundColor: '#AE1F17'},
+        headerStyle: {backgroundColor: '#AE1F17', height: hp('8%')},
       },
     },
     Reset_pass: {
@@ -117,7 +109,7 @@ const HomePage = createStackNavigator(
         headerTitle: 'Xác Nhận Mật Khẩu',
         headerTitleAlign: 'center',
         headerTitleStyle: {fontSize: f(2.5), color: 'white'},
-        headerStyle: {backgroundColor: '#AE1F17'},
+        headerStyle: {backgroundColor: '#AE1F17', height: hp('8%')},
       },
     },
   },
@@ -213,7 +205,7 @@ const Account = createStackNavigator({
   Account: {
     screen: account,
     navigationOptions: {
-      headerTitle: 'Tài khoản',
+      headerTitle: 'Tài Khoản',
       headerTitleAlign: 'center',
       headerTitleStyle: {fontSize: f(2.5), color: 'white'},
       headerStyle: {backgroundColor: '#AE1F17'},
@@ -225,7 +217,19 @@ const Account_info = createStackNavigator({
   Account_info: {
     screen: account_info,
     navigationOptions: {
-      headerTitle: 'Thông tin cá nhân',
+      headerTitle: 'Thông Tin Cá Nhân',
+      headerTitleAlign: 'center',
+      headerTitleStyle: {fontSize: f(2.5), color: 'white'},
+      headerStyle: {backgroundColor: '#AE1F17', height: hp('8%')},
+    },
+  },
+});
+
+const OTP = createStackNavigator({
+  OTP: {
+    screen: otp,
+    navigationOptions: {
+      headerTitle: 'Thay Đổi Mật Khẩu',
       headerTitleAlign: 'center',
       headerTitleStyle: {fontSize: f(2.5), color: 'white'},
       headerStyle: {backgroundColor: '#AE1F17', height: hp('8%')},
@@ -237,7 +241,7 @@ const Contact = createStackNavigator({
   Contact: {
     screen: contact,
     navigationOptions: {
-      headerTitle: 'Liên hệ và góp ý',
+      headerTitle: 'Liên Hệ Và Góp Ý',
       headerTitleAlign: 'center',
       headerTitleStyle: {fontSize: f(2.5), color: 'white'},
       headerStyle: {backgroundColor: '#AE1F17', height: hp('8%')},
@@ -249,7 +253,7 @@ const Guide = createStackNavigator({
   Guide: {
     screen: guide,
     navigationOptions: {
-      headerTitle: 'Hướng dẫn nạp tiền',
+      headerTitle: 'Hướng Dẫn Nạp Tiền',
       headerTitleAlign: 'center',
       headerTitleStyle: {fontSize: f(2.5), color: 'white'},
       headerStyle: {backgroundColor: '#AE1F17', height: hp('8%')},
@@ -271,6 +275,9 @@ const Menutab = createDrawerNavigator(
     },
     Guide: {
       screen: Guide,
+    },
+    OTP: {
+      screen: OTP,
     },
   },
   {
@@ -300,13 +307,13 @@ export default connect()(createAppContainer(Switch));
 
 const styles = StyleSheet.create({
   tabIconActive: {
-    width: f(2.7),
-    height: f(2.7),
+    width: 25,
+    height: 25,
     tintColor: '#AE1F17',
   },
   tabIconInActive: {
-    width: f(2.2),
-    height: f(2.2),
+    width: 20,
+    height: 20,
     marginTop: 10,
     tintColor: '#545454',
   },

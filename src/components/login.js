@@ -93,10 +93,7 @@ class login extends Component {
   }
 
   forgotPass() {
-    Alert.alert(
-      'Notice!',
-      'Bạn vui lòng truy cập website http://smallgiving.com để được hỗ trợ! Trân trọng!',
-    );
+    this.props.navigation.navigate('Forgot_pass');
   }
   render(item) {
     const {navigate} = this.props.navigation;
@@ -177,6 +174,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: wp('50%'),
+    height: hp('30%'),
   },
   textInput: {
     height: hp('7%'),

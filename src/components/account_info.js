@@ -51,7 +51,6 @@ export default class account_info extends Component {
       sdt: '',
       email: '',
       stk: '',
-      hindPass: true,
     };
   }
 
@@ -117,10 +116,6 @@ export default class account_info extends Component {
       .catch(error => console.log(error));
   }
 
-  showPass() {
-    this.setState({hindPass: !this.state.hindPass});
-  }
-
   boqua() {
     this.getdata();
   }
@@ -134,7 +129,7 @@ export default class account_info extends Component {
     Alert.alert('Error!', 'Thông tin bạn điền không hợp lệ!');
   }
 
-  update = async () => {
+  update() {
     const {id, name, pass, ngaysinh, stk} = this.state;
     updateInfor(id, name, pass, ngaysinh, stk)
       .then(res => res['message'])
@@ -144,7 +139,7 @@ export default class account_info extends Component {
         else this.onFail();
       })
       .catch(error => console.log(error));
-  };
+  }
 
   render() {
     const {navigate} = this.props.navigation;
@@ -200,35 +195,6 @@ export default class account_info extends Component {
               <Text style={[{fontSize: f(1.8)}]}>{this.state.email}</Text>
             </View>
             <View style={styles.btnEdit} />
-          </View>
-          <View style={styles.mainRow}>
-            <View style={styles.name}>
-              <Text style={styles.txtNameCol}>Mật khẩu</Text>
-            </View>
-            <View style={styles.nameInput}>
-              <TextInput
-                style={[{flex: 8}, {fontSize: f(1.8)}]}
-                ref={view => (this.textInput_pass = view)}
-                onChangeText={text => this.setState({pass: text})}
-                value={this.state.pass}
-                secureTextEntry={this.state.hindPass}
-              />
-              <TouchableOpacity
-                style={[{flex: 2}]}
-                onPress={this.showPass.bind(this)}>
-                <Feather
-                  name={this.state.hindPass ? 'eye' : 'eye-off'}
-                  size={wp('5%')}
-                />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.btnEdit}>
-              <TouchableOpacity
-                onPress={() => this.textInput_pass.focus()}
-                style={styles.img}>
-                <Icon name="pencil-square-o" size={wp('5%')} />
-              </TouchableOpacity>
-            </View>
           </View>
           <View style={styles.mainRow}>
             <View style={styles.name}>

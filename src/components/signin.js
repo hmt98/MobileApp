@@ -71,6 +71,10 @@ export default class sigin extends Component {
       Alert.alert('Error!', 'Vui lòng điền đầy đủ thông tin!');
       return;
     }
+    if (matkhau.length < 6) {
+      Alert.alert('Error!', 'Mật khẩu phải có độ dài từ 6 kí tự!');
+      return;
+    }
     if (matkhau !== matkhau2) {
       Alert.alert('Error!', 'Mật khẩu không trùng khớp!');
       return;
@@ -210,7 +214,8 @@ const styles = StyleSheet.create({
     margin: '1%',
   },
   imgLogo: {
-    width: wp('50%'),
+    width: wp('40%'),
+    height: hp('25%'),
   },
   txtHeader: {
     fontSize: f(4.0),

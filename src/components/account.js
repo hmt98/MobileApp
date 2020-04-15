@@ -22,6 +22,7 @@ import heart from '../../images/heart.png';
 import canhan from '../../images/canhan.png';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import getUserByToken from '../api/getUserByToken';
 import getUserByID from '../api/getUserByID';
 export default class account extends Component {
@@ -144,6 +145,21 @@ export default class account extends Component {
               <Text style={styles.giaodich}>Lịch sử giao dịch</Text>
             </View>
           </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('OTP')}
+            style={styles.nguoidung}>
+            <View style={styles.tennguoidung}>
+              <MaterialIcons
+                name={'security'}
+                size={wp('8%')}
+                style={styles.imgLogo}
+                color={'#545454'}
+              />
+            </View>
+            <View style={styles.ten}>
+              <Text style={styles.giaodich}>Thay đổi mật khẩu</Text>
+            </View>
+          </TouchableOpacity>
         </KeyboardAvoidingView>
       </ScrollView>
     );
@@ -206,7 +222,7 @@ const styles = StyleSheet.create({
   },
   nguoidung: {
     flexDirection: 'row',
-    height: hp('8%'),
+    height: hp('7%'),
     borderBottomWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
