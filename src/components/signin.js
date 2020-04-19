@@ -19,6 +19,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {responsiveFontSize as f} from 'react-native-responsive-dimensions';
+import Loading from '../loading/myIsLoading';
 var {width, height} = Dimensions.get('window');
 export default class sigin extends Component {
   constructor(props) {
@@ -31,6 +32,7 @@ export default class sigin extends Component {
       matkhau2: '',
       hindPass: true,
       hindPassRe: true,
+      isLoading: false,
     };
   }
   static navigationOptions = ({navigation}) => {
@@ -51,14 +53,19 @@ export default class sigin extends Component {
   onSuccess() {
     Alert.alert('Đăng ký thành công!');
     this.props.navigation.navigate('Login');
+    this.setState({isLoading: false});
   }
 
   onFail() {
     Alert.alert('Error!', 'Email hoặc SĐT đã tồn tại!');
     this.setState({email: ''});
     this.setState({sdt: ''});
+    this.setState({isLoading: false});
   }
-
+  onFailNetWork(error) {
+    Alert.alert('Có lỗi xảy ra! Vui lòng thử lại', 'LỖI: ' + error);
+    this.setState({isLoading: false});
+  }
   registerUser() {
     const {name, sdt, email, matkhau, matkhau2} = this.state;
     if (
@@ -79,11 +86,15 @@ export default class sigin extends Component {
       Alert.alert('Error!', 'Mật khẩu không trùng khớp!');
       return;
     }
+    this.setState({isLoading: true});
     register(name, sdt, email, matkhau)
       .then(res => res['message'])
       .then(result => {
         if (result === 'Dang ki thanh cong') return this.onSuccess();
         else this.onFail();
+      })
+      .catch(error => {
+        this.onFailNetWork(error);
       });
   }
 
@@ -166,6 +177,7 @@ export default class sigin extends Component {
               />
             </TouchableOpacity>
           </ImageBackground>
+          <Loading show={this.state.isLoading} />
         </View>
         <View style={styles.footer}>
           <View style={styles.button}>

@@ -16,6 +16,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import getUserByToken from '../api/getUserByToken';
 import getUserByID from '../api/getUserByID';
 const {width, height} = Dimensions.get('window');
+import Loading from '../loading/myIsLoading';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -26,7 +27,13 @@ import contact from '../api/contact';
 export default class Contact extends Component {
   constructor(props) {
     super(props);
-    this.state = {noidung: '', name: '', id: '', refreshing: false};
+    this.state = {
+      noidung: '',
+      name: '',
+      id: '',
+      refreshing: false,
+      isLoading: false,
+    };
   }
   static navigationOptions = ({navigation}) => {
     return {
@@ -49,7 +56,9 @@ export default class Contact extends Component {
       .then(resJSON => {
         this.setState({id: resJSON});
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        this.onFailNetWork(error);
+      });
   };
 
   componentDidUpdate(preProps, preState, a) {
@@ -61,40 +70,53 @@ export default class Contact extends Component {
 
   getdata() {
     this.setState({refreshing: true});
+    this.setState({isLoading: false});
     const {id} = this.state;
     getUserByID(id)
       .then(resName => resName[0]['TenNguoiDung'])
       .then(resJSON => {
         this.setState({name: resJSON});
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        this.onFailNetWork(error);
+      });
     this.setState({refreshing: false});
+    this.setState({isLoading: false});
   }
 
   onSuccess() {
+    this.setState({isLoading: false});
     Alert.alert('Cảm ơn bạn đã góp ý!');
     this.setState({noidung: ''});
   }
 
   onFail() {
+    this.setState({isLoading: false});
     Alert.alert('Error!', 'Có lỗi xảy ra, vui lòng thử lại!');
   }
 
   onRefresh = () => {
     this.getdata();
   };
-
+  onFailNetWork(error) {
+    Alert.alert('Có lỗi xảy ra! Vui lòng thử lại', 'LỖI: ' + error);
+    this.setState({isLoading: false});
+  }
   gopy() {
     const {id, noidung} = this.state;
     if (noidung === '') {
       Alert.alert('Error!', 'Vui lòng nhập góp ý của bạn!');
       return;
     } else {
+      this.setState({isLoading: true});
       contact(id, noidung)
         .then(res => res['message'])
         .then(result => {
           if (result === 'Success') return this.onSuccess();
           else this.onFail();
+        })
+        .catch(error => {
+          this.onFailNetWork(error);
         });
     }
   }
@@ -145,6 +167,7 @@ export default class Contact extends Component {
               />
             </View>
           </View>
+          <Loading show={this.state.isLoading} />
         </KeyboardAvoidingView>
         <View style={styles.footer}>
           <TouchableOpacity

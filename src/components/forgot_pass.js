@@ -18,6 +18,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import Loading from '../loading/myIsLoading';
 export default class forgot_pass extends Component {
   static navigationOptions = ({navigation}) => {
     return {
@@ -35,7 +36,7 @@ export default class forgot_pass extends Component {
   };
   constructor(props) {
     super(props);
-    this.state = {email: '', sdt: ''};
+    this.state = {email: '', sdt: '', isLoading: false};
   }
   confirm() {
     const {email, sdt} = this.state;
@@ -43,6 +44,7 @@ export default class forgot_pass extends Component {
       Alert.alert('Error!', 'Vui lòng điền đầy đủ thông tin!');
       return;
     }
+    this.setState({isLoading: true});
     checkpass(email, sdt)
       .then(res => res['message'])
       .then(result => {
@@ -51,15 +53,24 @@ export default class forgot_pass extends Component {
         } else {
           this.onSuccess(result);
         }
+      })
+      .catch(error => {
+        this.onFailNetWork(error);
       });
   }
   onSuccess(pass) {
+    this.setState({isLoading: false});
     Alert.alert('Success!', 'Mật khẩu của bạn là: ' + pass);
     this.props.navigation.navigate('Login');
   }
 
   onFail() {
+    this.setState({isLoading: true});
     Alert.alert('Error!', 'Email hoặc SĐT không đúng! Vui lòng kiểm tra lại!');
+  }
+  onFailNetWork(error) {
+    Alert.alert('Có lỗi xảy ra! Vui lòng thử lại', 'LỖI: ' + error);
+    this.setState({isLoading: false});
   }
   render() {
     const {navigate} = this.props.navigation;
@@ -100,6 +111,7 @@ export default class forgot_pass extends Component {
               keyboardType="email-address"
             />
           </View>
+          <Loading show={this.state.isLoading} />
         </View>
         <View style={styles.footer}>
           <View style={styles.button}>
@@ -141,7 +153,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     flex: 2,
-    flexDirection: 'row',
+    flexDirection: 'column',
   },
   logo: {
     margin: '1%',

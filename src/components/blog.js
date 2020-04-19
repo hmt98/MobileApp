@@ -14,7 +14,6 @@ export default class thongbao extends Component {
     this.state = {
       refreshing: false,
       blogFromServer: [],
-      readfull: false,
     };
   }
   componentDidMount() {

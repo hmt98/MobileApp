@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Dimensions, RefreshControl} from 'react-native';
+import {View, Dimensions, RefreshControl, Alert} from 'react-native';
 import Carousel, {ParallaxImage} from 'react-native-snap-carousel';
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 import {
@@ -32,7 +32,6 @@ export default class donate_infor extends Component {
   componentDidMount() {
     this.refreshDataFromServer();
   }
-
   refreshDataFromServer = () => {
     this.setState({refreshing: true});
     getHoatDongFromServer()

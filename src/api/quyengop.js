@@ -1,4 +1,4 @@
-const insertQuyengop = (idNguoiDung, idHoatDong, SoTien) =>
+const quyengop = (idNguoiDung, idHoatDong, SoTien) =>
   fetch('https://misappmobile.000webhostapp.com/Quyengop/themquyengop.php', {
     method: 'POST',
     headers: {
@@ -8,4 +8,4 @@ const insertQuyengop = (idNguoiDung, idHoatDong, SoTien) =>
     body: JSON.stringify({idNguoiDung, idHoatDong, SoTien}),
   }).then(response => response.json());
 
-module.exports = insertQuyengop;
+module.exports = quyengop;

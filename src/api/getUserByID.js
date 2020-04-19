@@ -1,8 +1,13 @@
-const URL =
-  'https://misappmobile.000webhostapp.com/Thongtin/thongtin.php?idNguoiDung=';
+const URL = 'https://misappmobile.000webhostapp.com/Thongtin/thongtin.php';
 
-function getUserByID(id) {
-  return fetch(URL + id).then(res => res.json());
-}
+const getUserByID = idNguoiDung =>
+  fetch(URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify({idNguoiDung}),
+  }).then(response => response.json());
 
 module.exports = getUserByID;

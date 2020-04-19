@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-
 import {
   StyleSheet,
   Text,
@@ -25,6 +24,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import Loading from '../loading/myIsLoading';
 class login extends Component {
   static navigationOptions = ({navigation}) => {
     return {
@@ -42,24 +42,33 @@ class login extends Component {
   };
   constructor(props) {
     super(props);
-    this.state = {username: '', password: '', name: '', hindPass: true};
+    this.state = {
+      username: '',
+      password: '',
+      name: '',
+      hindPass: true,
+      isLoading: false,
+    };
   }
 
   componentWillReceiveProps = async nextProps => {
     //kiểm tra xem có kết nối mạng chưa
     if (nextProps.myError) {
       Alert.alert('Error!', 'Vui lòng kiểm tra kết nối mạng!');
+
       return;
     }
     //kiểm tra xem thông tin đăng nhập đúng chưa
     if (nextProps.myToken === 'ERROR') {
       Alert.alert('Error!', 'Thông tin đăng nhập không chính xác!');
+      this.setState({isLoading: false});
       return;
     }
     if (nextProps.myToken !== 'ERROR' && nextProps.myToken !== null) {
       await AsyncStorage.setItem('tokenLogin', nextProps.myToken);
       Alert.alert('Đăng nhập thành công!');
       this.props.navigation.navigate('Main');
+      this.setState({isLoading: false});
     }
   };
 
@@ -77,6 +86,7 @@ class login extends Component {
       return;
     }
     this.props.startGetToken();
+    this.setState({isLoading: true});
     if (username.includes('@')) {
       getTokenEmail(username, password)
         .then(res => this.props.loginSuccess(username, password, res['token']))
@@ -134,6 +144,7 @@ class login extends Component {
             style={styles.forgotPass}>
             <Text style={styles.txtForgotPass}>Quên mật khẩu?</Text>
           </TouchableOpacity>
+          <Loading show={this.state.isLoading} />
         </View>
         <View style={styles.footer}>
           <View style={styles.button}>
@@ -160,6 +171,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     backgroundColor: 'white',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   header: {
     flex: 4,

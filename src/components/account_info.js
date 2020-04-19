@@ -17,7 +17,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-
+import Loading from '../loading/myIsLoading';
 import heart from '../../images/heart.png';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -51,6 +51,7 @@ export default class account_info extends Component {
       sdt: '',
       email: '',
       stk: '',
+      isLoading: false,
     };
   }
 
@@ -61,7 +62,9 @@ export default class account_info extends Component {
       .then(resJSON => {
         this.setState({id: resJSON});
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        this.onFailNetWork(error);
+      });
   };
 
   componentDidUpdate(preProps, preState, a) {
@@ -78,7 +81,9 @@ export default class account_info extends Component {
       .then(resJSON => {
         this.setState({name: resJSON});
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        this.onFailNetWork(error);
+      });
 
     getUserByID(id)
       .then(resPass => resPass[0]['MatKhau'])
@@ -121,16 +126,24 @@ export default class account_info extends Component {
   }
 
   onSuccess() {
+    this.setState({isLoading: false});
     Alert.alert('Cập nhật thành công!');
     this.getdata();
   }
 
   onFail() {
+    this.setState({isLoading: false});
     Alert.alert('Error!', 'Thông tin bạn điền không hợp lệ!');
+  }
+
+  onFailNetWork(error) {
+    Alert.alert('Có lỗi xảy ra! Vui lòng thử lại', 'LỖI: ' + error);
+    this.setState({isLoading: false});
   }
 
   update() {
     const {id, name, pass, ngaysinh, stk} = this.state;
+    this.setState({isLoading: true});
     updateInfor(id, name, pass, ngaysinh, stk)
       .then(res => res['message'])
       .then(result => {
@@ -138,7 +151,9 @@ export default class account_info extends Component {
         if (result === 'Success') return this.onSuccess();
         else this.onFail();
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        this.onFailNetWork(error);
+      });
   }
 
   render() {
@@ -232,6 +247,7 @@ export default class account_info extends Component {
               </TouchableOpacity>
             </View>
           </View>
+          <Loading show={this.state.isLoading} />
         </KeyboardAvoidingView>
 
         <View style={styles.footer}>

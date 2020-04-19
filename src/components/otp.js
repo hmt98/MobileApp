@@ -20,6 +20,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import Entypo from 'react-native-vector-icons/Entypo';
 import getUserByToken from '../api/getUserByToken';
 import changepass from '../api/changepass';
+import Loading from '../loading/myIsLoading';
 export default class otp extends Component {
   static navigationOptions = ({navigation}) => {
     return {
@@ -45,6 +46,7 @@ export default class otp extends Component {
       hindPassOld: true,
       hindPassNewRe: true,
       hindPassNew: true,
+      isLoading: false,
     };
   }
   componentDidMount = async () => {
@@ -54,7 +56,9 @@ export default class otp extends Component {
       .then(resJSON => {
         this.setState({id: resJSON});
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        this.onFailNetWork(error);
+      });
   };
   showPassOld() {
     this.setState({hindPassOld: !this.state.hindPassOld});
@@ -65,6 +69,7 @@ export default class otp extends Component {
   showPassNewRe() {
     this.setState({hindPassNewRe: !this.state.hindPassNewRe});
   }
+
   change() {
     const {id, matkhaucu, matkhaumoi, matkhaumoiRe} = this.state;
     if (matkhaucu === '' || matkhaumoi === '' || matkhaumoiRe === '') {
@@ -84,14 +89,19 @@ export default class otp extends Component {
       Alert.alert('Error!', 'Mật khẩu không trùng khớp!');
       return;
     }
+    this.setState({isLoading: true});
     changepass(id, matkhaucu, matkhaumoi)
       .then(res => res['message'])
       .then(result => {
         if (result === 'Success') return this.onSuccess();
         else this.onFail();
+      })
+      .catch(error => {
+        this.onFailNetWork(error);
       });
   }
   onSuccess() {
+    this.setState({isLoading: false});
     Alert.alert('Thay đổi mật khẩu thành công!');
     this.setState({matkhaucu: ''});
     this.setState({matkhaumoi: ''});
@@ -100,6 +110,11 @@ export default class otp extends Component {
 
   onFail() {
     Alert.alert('Error!', 'Mật khẩu không chính xác!');
+    this.setState({isLoading: false});
+  }
+  onFailNetWork(error) {
+    Alert.alert('Có lỗi xảy ra! Vui lòng thử lại', 'LỖI: ' + error);
+    this.setState({isLoading: false});
   }
   render() {
     const {navigate} = this.props.navigation;
@@ -172,6 +187,7 @@ export default class otp extends Component {
               />
             </TouchableOpacity>
           </ImageBackground>
+          <Loading show={this.state.isLoading} />
         </View>
         <View style={styles.footer}>
           <View style={styles.button}>

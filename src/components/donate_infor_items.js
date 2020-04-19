@@ -22,7 +22,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {responsiveFontSize as f} from 'react-native-responsive-dimensions';
-
+import Loading from '../loading/myIsLoading';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -30,9 +30,7 @@ import coin from '../../images/coin.png';
 import getUserByToken from '../api/getUserByToken';
 import getUserByID from '../api/getUserByID';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import updateSoduHoatdong from '../api/updateSoduHoatdong';
-import updateSoduNguoidung from '../api/updateSoduNguoidung';
-import insertQuyengop from '../api/insertQuyengop';
+import quyengop from '../api/quyengop';
 export default class Donate_infor_items extends Component {
   constructor(props) {
     super(props);
@@ -42,6 +40,7 @@ export default class Donate_infor_items extends Component {
       id: '',
       sodu: '',
       sotien: null,
+      isLoading: false,
     };
   }
 
@@ -79,7 +78,9 @@ export default class Donate_infor_items extends Component {
       .then(resJSON => {
         this.setState({id: resJSON});
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        this.onFailNetWork(error);
+      });
   };
 
   componentDidUpdate(preProps, preState, a) {
@@ -96,11 +97,13 @@ export default class Donate_infor_items extends Component {
       .then(resJSON => {
         this.setState({sodu: resJSON});
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        this.onFailNetWork(error);
+      });
   }
 
   quyengopAnimate() {
-    if (this.props.item.ThoiGian < 0) {
+    if (this.props.item.ThoiGian <= 0) {
       Alert.alert('Notice!', 'Thời gian quyên góp hiện đã hết!');
       return;
     } else if (this.props.item.ChiDK === this.props.item.ThoiGian.SoDuTK) {
@@ -123,6 +126,7 @@ export default class Donate_infor_items extends Component {
       Alert.alert('Error!', 'Số tiền tối thiểu là 5000 VNĐ!');
       return;
     } else if ((sotien - sodu) * 1 <= 0) {
+      this.setState({isLoading: true});
       this.donate();
       return;
     } else {
@@ -130,50 +134,31 @@ export default class Donate_infor_items extends Component {
       return;
     }
   }
-
-  onSuccessupdateSoduNguoidung() {
-    const {item} = this.props;
-    const {id, sotien} = this.state;
-    updateSoduHoatdong(item.idHoatDong, sotien)
-      .then(res => res['message'])
-      .then(result => {
-        if (result === 'success') return this.onSuccessupdateSoduHoatdong();
-        else this.onFail();
-      })
-      .catch(error => console.log(error));
+  onSuccess() {
+    Alert.alert('Quyên góp thành công!', 'Cảm ơn tấm lòng hảo tâm của bạn!');
+    this.setState({isLoading: false});
+    this.setState({sotien: null});
   }
-
-  onSuccessupdateSoduHoatdong() {
-    const {item} = this.props;
-    const {id, sotien} = this.state;
-    insertQuyengop(id, item.idHoatDong, sotien)
-      .then(res => res['message'])
-      .then(result => {
-        if (result === 'success') return this.onSuccessinsertQuyengop();
-        else this.onFail();
-      })
-      .catch(error => console.log(error));
-  }
-
-  onSuccessinsertQuyengop() {
-    Alert.alert('Quyên góp thành công!', 'Cảm ơn lòng hảo tâm của bạn!');
-    this.getdata();
-  }
-
   onFail() {
+    this.setState({isLoading: false});
     Alert.alert('Error!', 'Có lỗi xảy ra! Vui lòng thử lại!');
   }
-
+  onFailNetWork(error) {
+    Alert.alert('Có lỗi xảy ra! Vui lòng thử lại', 'LỖI: ' + error);
+    this.setState({isLoading: false});
+  }
   donate() {
     const {id, sotien} = this.state;
-
-    updateSoduNguoidung(id, sotien)
+    const {item} = this.props;
+    quyengop(id, item.idHoatDong, sotien)
       .then(res => res['message'])
       .then(result => {
-        if (result === 'success') return this.onSuccessupdateSoduNguoidung();
+        if (result === 'success') return this.onSuccess();
         else this.onFail();
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        this.onFailNetWork(error);
+      });
   }
 
   render() {
@@ -297,7 +282,7 @@ export default class Donate_infor_items extends Component {
               <TouchableOpacity
                 onPress={this.quyengop.bind(this)}
                 style={styles.btnQuyenGopDN}>
-                <Text style={styles.txtBtnQuyenGop}>Quyên Góp</Text>
+                <Text style={styles.txtBtnQuyenGop}>Quyên góp</Text>
               </TouchableOpacity>
               <View style={styles.btnBoquaHotro}>
                 <TouchableOpacity
@@ -311,6 +296,7 @@ export default class Donate_infor_items extends Component {
                   <Text style={styles.txtBtnBoquaHotro}>Nạp tiền</Text>
                 </TouchableOpacity>
               </View>
+              <Loading show={this.state.isLoading} />
             </View>
           </KeyboardAvoidingView>
         </Animatable.View>

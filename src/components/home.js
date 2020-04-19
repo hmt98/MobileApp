@@ -71,7 +71,10 @@ class home extends Component {
     this.refreshDataFromServer();
   };
   khaosat() {
-    Alert.alert('Notice!', 'Tính năng này hiện đang phát triển!');
+    Alert.alert('Notice!', 'Khảo sát!');
+  }
+  diemdanh() {
+    Alert.alert('Notice!', 'Điểm danh!');
   }
   render() {
     return (
@@ -94,17 +97,33 @@ class home extends Component {
             <TouchableOpacity
               onPress={() => this.khaosat()}
               style={styles.betweenLeftTO}>
-              <AntDesign
-                style={styles.imgKS}
-                name={'profile'}
-                size={wp('10%')}
-              />
-              <Text style={styles.txtKS}> Làm phiếu khảo sát </Text>
+              <View style={styles.imgKS}>
+                <AntDesign name={'profile'} size={wp('8%')} />
+              </View>
+              <View style={styles.thank}>
+                <Text style={styles.txtKS}>Làm phiếu khảo sát</Text>
+              </View>
             </TouchableOpacity>
           </View>
           <View style={styles.betweenRight}>
-            <Text style={styles.thank}>SMALL GIVING</Text>
+            <TouchableOpacity
+              onPress={() => this.diemdanh()}
+              style={styles.betweenLeftTO}>
+              <View style={styles.imgKS}>
+                <AntDesign
+                  name={'carryout'}
+                  size={wp('8%')}
+                  color={'#AE1F17'}
+                />
+              </View>
+              <View style={styles.thank}>
+                <Text style={styles.txtThank}>Thực hiện điểm danh</Text>
+              </View>
+            </TouchableOpacity>
           </View>
+          {/* <TouchableOpacity style={styles.betweenRight}>
+            <Text style={styles.thank}>Điểm danh</Text>
+          </TouchableOpacity> */}
         </View>
         <View style={styles.footer}>
           <View style={styles.bxh}>
@@ -178,33 +197,38 @@ const styles = StyleSheet.create({
     margin: '5%',
   },
   betweenLeft: {
-    flex: 6,
+    flex: 5,
     borderRightWidth: 2,
     borderRightColor: '#AE1F17',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   betweenRight: {
-    flex: 4,
-    flexDirection: 'row',
+    flex: 5,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   betweenLeftTO: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: '5%',
+    justifyContent: 'center',
   },
   imgKS: {
     flex: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   txtKS: {
-    flex: 8,
-    fontSize: f(2.2),
+    fontSize: f(2),
     fontWeight: 'bold',
   },
   thank: {
-    flex: 1,
-    textAlign: 'center',
-    fontSize: f(2.2),
+    flex: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  txtThank: {
+    fontSize: f(2),
     fontWeight: 'bold',
     color: '#AE1F17',
   },
