@@ -34,6 +34,7 @@ import account from './components/account';
 import account_info from './components/account_info';
 import contact from './components/contact';
 import guide from './components/guide';
+import history from './components/history';
 
 const BlogPage = createStackNavigator({
   Blog: {
@@ -225,6 +226,18 @@ const Account_info = createStackNavigator({
   },
 });
 
+const History = createStackNavigator({
+  History: {
+    screen: history,
+    navigationOptions: {
+      headerTitle: 'Lịch Sử Giao Dịch',
+      headerTitleAlign: 'center',
+      headerTitleStyle: {fontSize: f(2.5), color: 'white'},
+      headerStyle: {backgroundColor: '#AE1F17', height: hp('8%')},
+    },
+  },
+});
+
 const OTP = createStackNavigator({
   OTP: {
     screen: otp,
@@ -278,6 +291,9 @@ const Menutab = createDrawerNavigator(
     },
     OTP: {
       screen: OTP,
+    },
+    History: {
+      screen: History,
     },
   },
   {

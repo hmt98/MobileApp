@@ -24,7 +24,6 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import getUserByToken from '../api/getUserByToken';
 import getUserByID from '../api/getUserByID';
 import updateInfor from '../api/updateInfor';
-import Feather from 'react-native-vector-icons/Feather';
 export default class account_info extends Component {
   static navigationOptions = ({navigation}) => {
     return {

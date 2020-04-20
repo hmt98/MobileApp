@@ -8,7 +8,7 @@ import {
 } from 'react-native-responsive-screen';
 import {responsiveFontSize as f} from 'react-native-responsive-dimensions';
 
-export default class thongbao extends Component {
+export default class blog extends Component {
   constructor(props) {
     super(props);
     this.state = {

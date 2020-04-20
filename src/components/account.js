@@ -132,7 +132,9 @@ export default class account extends Component {
               <Text style={styles.giaodich}>Xem huy hiệu</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.nguoidung}>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('History')}
+            style={styles.nguoidung}>
             <View style={styles.tennguoidung}>
               <Entypo
                 name={'back-in-time'}

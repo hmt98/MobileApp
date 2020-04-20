@@ -97,6 +97,17 @@ export default class changepass extends Component {
   }
 
   quyengopAnimate() {
+    const item = this.props.navigation.state.params.item;
+    if (item.ThoiGian * 1 <= 0) {
+      Alert.alert('Notice!', 'Thời gian quyên góp hiện đã hết!');
+      return;
+    } else if ((item.ChiDK - item.SoDuTK) * 1 <= 0) {
+      Alert.alert(
+        'Notice!',
+        'Đã đạt số tiền dự kiến! Vui lòng sang hoạt động khác!',
+      );
+      return;
+    }
     this.getdata();
     this._goAnimation();
   }

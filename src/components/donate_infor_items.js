@@ -103,10 +103,10 @@ export default class Donate_infor_items extends Component {
   }
 
   quyengopAnimate() {
-    if (this.props.item.ThoiGian <= 0) {
+    if (this.props.item.ThoiGian * 1 <= 0) {
       Alert.alert('Notice!', 'Thời gian quyên góp hiện đã hết!');
       return;
-    } else if (this.props.item.ChiDK === this.props.item.ThoiGian.SoDuTK) {
+    } else if ((this.props.item.ChiDK - this.props.item.SoDuTK) * 1 <= 0) {
       Alert.alert(
         'Notice!',
         'Đã đạt số tiền dự kiến! Vui lòng sang hoạt động khác!',
