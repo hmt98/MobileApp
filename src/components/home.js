@@ -93,41 +93,34 @@ class home extends Component {
           </ImageBackground>
         </View>
         <View style={styles.between}>
-          <View style={styles.betweenLeft}>
-            <TouchableOpacity
-              onPress={() => this.khaosat()}
-              style={styles.betweenLeftTO}>
-              <View style={styles.imgKS}>
-                <AntDesign name={'profile'} size={wp('8%')} />
-              </View>
-              <View style={styles.thank}>
-                <Text style={styles.txtKS}>Làm phiếu khảo sát</Text>
-              </View>
+          <View style={styles.diemdanh}>
+            <TouchableOpacity>
+              <AntDesign name={'profile'} />
+              <Text>Khảo sát</Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.betweenRight}>
-            <TouchableOpacity
-              onPress={() => this.diemdanh()}
-              style={styles.betweenLeftTO}>
-              <View style={styles.imgKS}>
-                <AntDesign
-                  name={'carryout'}
-                  size={wp('8%')}
-                  color={'#AE1F17'}
-                />
-              </View>
-              <View style={styles.thank}>
-                <Text style={styles.txtThank}>Thực hiện điểm danh</Text>
-              </View>
+          <View style={styles.khaosat}>
+            <TouchableOpacity>
+              <AntDesign name={'profile'} />
+              <Text>Điểm danh</Text>
             </TouchableOpacity>
           </View>
-          {/* <TouchableOpacity style={styles.betweenRight}>
-            <Text style={styles.thank}>Điểm danh</Text>
-          </TouchableOpacity> */}
+          <View style={styles.sodu}>
+            <TouchableOpacity>
+              <AntDesign name={'profile'} />
+              <Text>Số dư</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.thongbao}>
+            <TouchableOpacity>
+              <AntDesign name={'profile'} />
+              <Text>Thông báo</Text>
+            </TouchableOpacity>
+          </View>
         </View>
         <View style={styles.footer}>
           <View style={styles.bxh}>
-            <Text style={styles.txtBXH}>BẢNG XẾP HẠNG</Text>
+            <Text style={styles.txtBXH}>BẢNG XẾP HẠNG (Tháng)</Text>
           </View>
           <View style={styles.colName}>
             <View style={styles.colNameLeft}>
@@ -183,8 +176,36 @@ const styles = StyleSheet.create({
     flex: 4,
   },
   between: {
-    flex: 0.8,
+    flex: 1,
     flexDirection: 'row',
+  },
+  diemdanh: {
+    flex: 2.5,
+    backgroundColor: 'red',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  khaosat: {
+    flex: 2.5,
+    backgroundColor: 'green',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  sodu: {
+    flex: 2.5,
+    backgroundColor: 'blue',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  thongbao: {
+    flex: 2.5,
+    backgroundColor: 'white',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   footer: {
     flex: 4,
@@ -195,42 +216,6 @@ const styles = StyleSheet.create({
   },
   menuIcon: {
     margin: '5%',
-  },
-  betweenLeft: {
-    flex: 5,
-    borderRightWidth: 2,
-    borderRightColor: '#AE1F17',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  betweenRight: {
-    flex: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  betweenLeftTO: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  imgKS: {
-    flex: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  txtKS: {
-    fontSize: f(2),
-    fontWeight: 'bold',
-  },
-  thank: {
-    flex: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  txtThank: {
-    fontSize: f(2),
-    fontWeight: 'bold',
-    color: '#AE1F17',
   },
   bxh: {
     width: wp('100%'),

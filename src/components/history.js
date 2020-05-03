@@ -102,13 +102,9 @@ export default class history extends Component {
   }
   moneyOut() {
     this.setState({historyIn: false});
-    this.getdataIn();
-    this.getdataOut();
   }
   moneyIn() {
     this.setState({historyIn: true});
-    this.getdataIn();
-    this.getdataOut();
   }
   render() {
     return (
@@ -122,7 +118,7 @@ export default class history extends Component {
                   styles.buttonIn,
                   {
                     backgroundColor: this.state.historyIn
-                      ? '#545454'
+                      ? '#AE1F17'
                       : '#B5B5B5',
                   },
                 ]}>
@@ -137,7 +133,7 @@ export default class history extends Component {
                   {
                     backgroundColor: this.state.historyIn
                       ? '#B5B5B5'
-                      : '#545454',
+                      : '#AE1F17',
                   },
                 ]}>
                 <Text style={styles.txtButton}>Tiền ra</Text>
