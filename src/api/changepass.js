@@ -1,5 +1,5 @@
 const changepass = (idNguoiDung, MatKhau, NewPass) =>
-  fetch('https://misappmobile.000webhostapp.com/Doimatkhau/doipass.php', {
+  fetch('http://smallgiving.cf/mobileapp/Doimatkhau/doipass.php', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

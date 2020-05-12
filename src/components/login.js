@@ -59,12 +59,12 @@ class login extends Component {
       return;
     }
     //kiểm tra xem thông tin đăng nhập đúng chưa
-    if (nextProps.myToken === 'ERROR') {
+    if (nextProps.myToken === 'error') {
       Alert.alert('Error!', 'Thông tin đăng nhập không chính xác!');
       this.setState({isLoading: false});
       return;
     }
-    if (nextProps.myToken !== 'ERROR' && nextProps.myToken !== null) {
+    if (nextProps.myToken !== 'error' && nextProps.myToken !== null) {
       await AsyncStorage.setItem('tokenLogin', nextProps.myToken);
       Alert.alert('Đăng nhập thành công!');
       this.props.navigation.navigate('Main');

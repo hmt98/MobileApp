@@ -28,8 +28,6 @@ export default class Guide extends React.Component {
       token: '',
       name: '',
       id: '',
-      sdt: '',
-      email: '',
       refreshing: false,
     };
   }
@@ -109,20 +107,6 @@ export default class Guide extends React.Component {
             allowFontScaling={false}
             style={styles.txtName}>
             {this.state.name}
-          </Text>
-          <Text
-            eclipSizeMode={'tail'}
-            numberOfLines={1}
-            allowFontScaling={false}
-            style={styles.txtInfor}>
-            {this.state.sdt}
-          </Text>
-          <Text
-            eclipSizeMode={'tail'}
-            numberOfLines={1}
-            allowFontScaling={false}
-            style={styles.txtInfor}>
-            {this.state.email}
           </Text>
         </View>
         <View style={styles.main}>

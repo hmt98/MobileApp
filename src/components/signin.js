@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   ImageBackground,
   Alert,
-  Dimensions,
 } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import logo from '../../images/logo.png';
@@ -20,7 +19,6 @@ import {
 } from 'react-native-responsive-screen';
 import {responsiveFontSize as f} from 'react-native-responsive-dimensions';
 import Loading from '../loading/myIsLoading';
-var {width, height} = Dimensions.get('window');
 export default class sigin extends Component {
   constructor(props) {
     super(props);

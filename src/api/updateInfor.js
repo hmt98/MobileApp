@@ -1,5 +1,5 @@
 const updateInfor = (idNguoiDung, TenNguoiDung, MatKhau, NgaySinh, STK) =>
-  fetch('https://misappmobile.000webhostapp.com/Doithongtin/update.php', {
+  fetch('http://smallgiving.cf/mobileapp/Doithongtin/update.php', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -116,6 +116,7 @@ const styles = StyleSheet.create({
   noidung: {
     marginLeft: '2%',
     marginTop: '1%',
+    marginBottom: '1%',
   },
   txtNoidung: {
     fontSize: f(2),

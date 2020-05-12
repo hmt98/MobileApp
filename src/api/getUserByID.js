@@ -1,4 +1,4 @@
-const URL = 'https://misappmobile.000webhostapp.com/Thongtin/thongtin.php';
+const URL = 'http://smallgiving.cf/mobileapp/Thongtin/thongtin.php';
 
 const getUserByID = idNguoiDung =>
   fetch(URL, {

@@ -9,10 +9,13 @@ import {
   FlatList,
   RefreshControl,
   Alert,
+  AsyncStorage,
+  ScrollView,
 } from 'react-native';
 import heart from '../../images/heart.png';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {getBXHFromServer} from '../../networking/Server';
 import Home_item from './home_item';
 import {connect} from 'react-redux';
@@ -21,6 +24,9 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {responsiveFontSize as f} from 'react-native-responsive-dimensions';
+import getUserByToken from '../api/getUserByToken';
+import getUserByID from '../api/getUserByID';
+import diemdanh from '../api/diemdanh';
 const DATA = [
   {
     id: '1',
@@ -37,13 +43,38 @@ class home extends Component {
       networkError: false,
       userName: '',
       bxhError: false,
+      id: '',
+      sodu: '',
     };
   }
 
-  componentDidMount() {
+  componentDidMount = async () => {
     this.refreshDataFromServer();
+    var tokenAsync = await AsyncStorage.getItem('tokenLogin');
+    getUserByToken(tokenAsync)
+      .then(resID => resID['idNguoiDung'])
+      .then(resJSON => {
+        this.setState({id: resJSON});
+      })
+      .catch(error => console.log(error));
+  };
+  componentDidUpdate(preProps, preState, a) {
+    const {id} = this.state;
+    if (preState.id !== id) {
+      this.getData();
+    }
   }
-
+  getData = () => {
+    this.setState({refreshing: true});
+    const {id} = this.state;
+    getUserByID(id)
+      .then(resName => resName[0]['SoDuTK'])
+      .then(resJSON => {
+        this.setState({sodu: resJSON});
+        this.setState({refreshing: false});
+      })
+      .catch(error => console.log(error));
+  };
   refreshDataFromServer = () => {
     this.setState({refreshing: true});
     getBXHFromServer()
@@ -69,16 +100,28 @@ class home extends Component {
   };
   onRefresh = () => {
     this.refreshDataFromServer();
+    this.getData();
   };
   khaosat() {
     Alert.alert('Notice!', 'Khảo sát!');
   }
+
   diemdanh() {
-    Alert.alert('Notice!', 'Điểm danh!');
+    const {id} = this.state;
+    diemdanh(id)
+      .then(resJSON => resJSON['message'])
+      .then(res => {
+        if (res === 'Success') {
+          Alert.alert('Notice!', 'Điểm danh thành công!');
+        } else {
+          Alert.alert('Error!', 'Đã hết lượt điểm danh trong ngày!');
+        }
+      })
+      .catch(error => console.log(error));
   }
   render() {
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         <View style={styles.header}>
           <ImageBackground style={styles.headerImage} source={heart}>
             <TouchableOpacity
@@ -93,29 +136,35 @@ class home extends Component {
           </ImageBackground>
         </View>
         <View style={styles.between}>
-          <View style={styles.diemdanh}>
-            <TouchableOpacity>
-              <AntDesign name={'profile'} />
-              <Text>Khảo sát</Text>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity style={styles.khaosat}>
+            <View style={styles.khaosat}>
+              <AntDesign name={'areachart'} size={wp('5%')} color={'#AE1F17'} />
+              <Text style={styles.txtBetween}>Khảo sát</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={this.diemdanh.bind(this)}
+            style={styles.khaosat}>
+            <View style={styles.khaosat}>
+              <AntDesign name={'profile'} size={wp('5%')} color={'#AE1F17'} />
+              <Text style={styles.txtBetween}>Điểm danh</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.khaosat}>
+            <View style={styles.khaosat}>
+              <FontAwesome name={'bell'} size={wp('5%')} color={'#AE1F17'} />
+              <Text style={styles.txtBetween}>Thông báo</Text>
+            </View>
+          </TouchableOpacity>
           <View style={styles.khaosat}>
-            <TouchableOpacity>
-              <AntDesign name={'profile'} />
-              <Text>Điểm danh</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.sodu}>
-            <TouchableOpacity>
-              <AntDesign name={'profile'} />
-              <Text>Số dư</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.thongbao}>
-            <TouchableOpacity>
-              <AntDesign name={'profile'} />
-              <Text>Thông báo</Text>
-            </TouchableOpacity>
+            <View style={styles.khaosat}>
+              <MaterialCommunityIcons
+                name={'square-inc-cash'}
+                size={wp('5%')}
+                color={'#AE1F17'}
+              />
+              <Text style={styles.txtBetween}>{this.state.sodu}</Text>
+            </View>
           </View>
         </View>
         <View style={styles.footer}>
@@ -164,7 +213,7 @@ class home extends Component {
             />
           )}
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
 }
@@ -181,31 +230,31 @@ const styles = StyleSheet.create({
   },
   diemdanh: {
     flex: 2.5,
-    backgroundColor: 'red',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
   },
   khaosat: {
     flex: 2.5,
-    backgroundColor: 'green',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
   },
   sodu: {
     flex: 2.5,
-    backgroundColor: 'blue',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
   },
   thongbao: {
     flex: 2.5,
-    backgroundColor: 'white',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  txtBetween: {
+    fontSize: f(2),
+    color: '#AE1F17',
   },
   footer: {
     flex: 4,

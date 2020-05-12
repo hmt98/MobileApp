@@ -1,5 +1,5 @@
 const quyengop = (idNguoiDung, idHoatDong, SoTien) =>
-  fetch('https://misappmobile.000webhostapp.com/Quyengop/themquyengop.php', {
+  fetch('http://smallgiving.cf/mobileapp/Quyengop/themquyengop.php', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

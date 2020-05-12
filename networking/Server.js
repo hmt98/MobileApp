@@ -1,11 +1,8 @@
-const apiBlog =
-  'https://misappmobile.000webhostapp.com/Tinhoatdong/tinhoatdong.php';
+const apiBlog = 'http://smallgiving.cf/mobileapp/Tinhoatdong/tinhoatdong.php';
 
-const apiBXH =
-  'https://misappmobile.000webhostapp.com/Bangxephang/bangxephang.php';
+const apiBXH = 'http://smallgiving.cf/mobileapp/Bangxephang/bangxephang.php';
 
-const apiHoatDong =
-  'https://misappmobile.000webhostapp.com/Hoatdong/hoatdong.php';
+const apiHoatDong = 'http://smallgiving.cf/mobileapp/Hoatdong/hoatdong.php';
 
 async function getBlogFromServer() {
   try {

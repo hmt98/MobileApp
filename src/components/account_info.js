@@ -197,7 +197,7 @@ export default class account_info extends Component {
               <Text style={styles.txtNameCol}>SĐT</Text>
             </View>
             <View style={styles.nameInput}>
-              <Text style={[{fontSize: f(1.8)}]}>{this.state.sdt}</Text>
+              <Text style={[{fontSize: f(1.8)}]}>{this.state.sdt}******</Text>
             </View>
             <View style={styles.btnEdit} />
           </View>
@@ -206,7 +206,9 @@ export default class account_info extends Component {
               <Text style={styles.txtNameCol}>Email</Text>
             </View>
             <View style={styles.nameInput}>
-              <Text style={[{fontSize: f(1.8)}]}>{this.state.email}</Text>
+              <Text style={[{fontSize: f(1.8)}]}>
+                {this.state.email}*********
+              </Text>
             </View>
             <View style={styles.btnEdit} />
           </View>

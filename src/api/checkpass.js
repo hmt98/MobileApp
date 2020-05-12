@@ -1,5 +1,5 @@
 const checkpass = (Email, SDT) =>
-  fetch('https://misappmobile.000webhostapp.com/Doimatkhau/kiemtrapass.php', {
+  fetch('http://smallgiving.cf/mobileapp/Doimatkhau/kiemtrapass.php', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

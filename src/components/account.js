@@ -64,7 +64,7 @@ export default class account extends Component {
       .catch(error => console.log(error));
 
     getUserByID(id)
-      .then(resPass => resPass[0]['SoDuTK'])
+      .then(resSodu => resSodu[0]['SoDuTK'])
       .then(resJSON => {
         this.setState({sodu: resJSON});
       })
