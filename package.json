@@ -23,7 +23,7 @@
     "react-native-looped-carousel": "^0.1.13",
     "react-native-paper": "^3.6.0",
     "react-native-progress": "^4.0.3",
-    "react-native-reanimated": "^1.7.0",
+    "react-native-reanimated": "^2.10.0",
     "react-native-responsive-dimensions": "^3.1.1",
     "react-native-responsive-screen": "^1.4.1",
     "react-native-safe-area-context": "^0.7.3",
